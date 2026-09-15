@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-anek), var(--font-inter), ui-sans-serif, sans-serif;
+
+  /* Surfaces */
+  --color-page: #ffffff;
+  --color-shell-border: #eaeaea;
+  --color-nav-border: #ececec;
+  --color-beyond-surface: #f6f6f6;
+  --color-experience-border: #d1d1d1;
+
+  /* Type */
+  --color-ink: #000000;
+  --color-ink-body: #5c5c5c;
+  --color-ink-muted: #999999;
+  --color-ink-nav: #262626;
+  --color-ink-label: #6e6e6e;
+  --color-ink-date: #898989;
+
+  /* Tab chips */
+  --color-chip-idle: #eeeeee;
+  --color-chip-idle-border: #e4e4e4;
+
+  /* AI section */
+  --color-ai-surface: #050505;
+  --color-ai-chip: #111827;
+  --color-ai-chip-border: #334155;
+  --color-ai-card-border: #505861;
+
+  --radius-card: 40px;
+  --radius-tile: 32px;
+  --radius-media: 24px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Refer & Earn level-card animation. */
+@keyframes rlFloor {
+  to { background-position: 0 0, 0 56px; }
+}
+@keyframes rlFloat {
+  0%, 100% { transform: translateY(-5px); }
+  50% { transform: translateY(6px); }
+}
+@keyframes rlGlow {
+  0%, 100% { opacity: 0.72; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.07); }
+}
+@keyframes rlSpark {
+  0% { opacity: 0; transform: translate3d(0, 40px, 0) scale(0.6); }
+  18% { opacity: 0.85; }
+  70% { opacity: 0.5; }
+  100% { opacity: 0; transform: translate3d(18px, -190px, 0) scale(1); }
+}
+@keyframes rlRing {
+  0% { opacity: 0.85; transform: translate(-50%, -50%) scale(0.25); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.7); }
+}
+@keyframes rlRays {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(0deg); }
+  22% { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5) rotate(38deg); }
+}
+@keyframes rlFlare {
+  0% { opacity: 0; }
+  20% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+@keyframes rlConf {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(0deg); }
+  10% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(var(--dx), 300px, 0) rotate(540deg); }
+}
+@keyframes rlRain {
+  0% { opacity: 0; transform: translate3d(0, -30px, 0) rotate(0deg); }
+  12% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(var(--dx), 430px, 0) rotate(600deg); }
+}
+@keyframes rlPop {
+  0% { opacity: 0; transform: translateY(26px) scale(0.5); }
+  70% { opacity: 1; transform: translateY(-4px) scale(1.08); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes rlSwap {
+  0% { opacity: 0.15; transform: scale(0.82); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes rlRise {
+  0% { opacity: 0; transform: translateY(18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes rlNum {
+  0% { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}
+
+/* Lifts a hover animation into place from where the static panel sat. */
+@keyframes panelRise {
+  from {
+    transform: translateY(var(--rise, 20%));
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Idle bob for the coin in the Delhivery Coins hover animation. */
+@keyframes coinFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Entrance keyframes for the Order Tracking timeline animation. */
+@keyframes tlDot {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes tlRow {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes tlSeg {
+  0% { transform: scaleY(0); }
+  100% { transform: scaleY(1); }
+}
+@keyframes tlRing {
+  0% { transform: scale(0.55); opacity: 0.85; }
+  70% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes tlCard {
+  0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes tlShine {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(220%); }
+}
+@keyframes tlDash {
+  0% { background-position-y: 0; }
+  100% { background-position-y: 14px; }
+}
+@keyframes tlBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+@keyframes tlArrow {
+  0%, 100% { transform: translateY(0); opacity: 0.55; }
+  50% { transform: translateY(5px); opacity: 1; }
+}
+@keyframes tlFade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Seeded mode: show the timeline fully settled at once (no entrance stagger),
+   so the lifted card dissolves into an already-populated live card instead of a
+   blank one. Ongoing pulses/bobs (tlRing/tlDash/tlBob/tlArrow) keep running. */
+.tl-instant [style*="tlDot"],
+.tl-instant [style*="tlRow"],
+.tl-instant [style*="tlSeg"],
+.tl-instant [style*="tlCard"],
+.tl-instant [style*="tlFade"] {
+  animation: none !important;
+}
+.tl-instant [style*="tlShine"] {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Order-tracking hover: the real tracking card lifts out of the stripe,
+   straightens, and comes forward, then the live animation reveals in its place. */
+@keyframes trackLift {
+  0% { transform: none; opacity: 1; }
+  8% { opacity: 1; }
+  /* Baked tilt is 30° clockwise; rotate left (counterclockwise) to straighten. */
+  62% { transform: translate(-27%, 13%) scale(1.08) rotate(-30deg); opacity: 1; }
+  100% { transform: translate(-27%, 14%) scale(1.1) rotate(-30deg); opacity: 0; }
+}
+@keyframes trackReveal {
+  0% { opacity: 0; transform: scale(0.93); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes arrowBounce {
+  0%, 16%, 100% { transform: translateY(0); }
+  4% { transform: translateY(-8px); }
+  8% { transform: translateY(2px); }
+  12% { transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
