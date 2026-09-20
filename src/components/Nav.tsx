@@ -14,7 +14,7 @@ export function Nav() {
       <ul className="hidden gap-[48px] text-[13.714px] font-medium text-ink-nav md:flex">
         {site.nav.map((item) => (
           <li key={item.label}>
-            <a href={item.href} className="hover:text-ink">
+            <a href={item.href} className="rounded-full px-[14px] py-[7px] transition-colors hover:bg-[#f0f0f0] hover:text-ink">
               {item.label}
             </a>
           </li>
