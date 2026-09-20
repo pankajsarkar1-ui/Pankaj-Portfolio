@@ -34,7 +34,7 @@ export function Carousel({
           "--inset-lg": `${lgStartInset ?? startInset}px`,
         } as React.CSSProperties
       }
-      className="no-scrollbar w-full overflow-x-auto overscroll-x-contain scroll-smooth px-[var(--inset)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink lg:px-[var(--inset-lg)]"
+      className="no-scrollbar -my-[14px] w-full overflow-x-auto overscroll-x-contain scroll-smooth px-[var(--inset)] py-[14px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink lg:px-[var(--inset-lg)]"
     >
       <div style={{ gap }} className="flex w-max items-start">
         {children}

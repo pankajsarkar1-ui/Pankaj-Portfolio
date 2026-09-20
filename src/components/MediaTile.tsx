@@ -65,7 +65,7 @@ export function MediaTile({
   return (
     <figure
       style={{ height, width: card.width, flex: `0 0 ${card.width}px` }}
-      className={`group relative overflow-hidden bg-[#141414] ${shell}`}
+      className={`group relative overflow-hidden bg-[#141414] transition-transform duration-300 ease-out will-change-transform hover:z-20 hover:scale-[1.05] motion-reduce:transition-none motion-reduce:hover:scale-100 ${shell}`}
     >
       {card.video ? (
         <video

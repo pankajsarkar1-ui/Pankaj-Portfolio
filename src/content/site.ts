@@ -7,7 +7,6 @@ export const site = {
     "I lead mobile design for one of India's largest logistics platform - from courier booking to order tracking.",
   summaryLines: [
     "I lead mobile design for one of India's largest logistics platform",
-    "- from courier booking to order tracking.",
   ],
   portrait: "/assets/hero/portrait.png",
   ctaLabel: "Coffee's on me",
@@ -18,7 +17,7 @@ export const site = {
   ],
   contact: {
     eyebrow: "LAST STOP",
-    headline: "Coffee's on me.",
+    headline: "Drink's on me.",
     links: [
       {
         label: "sapankaj48@gmail.com",

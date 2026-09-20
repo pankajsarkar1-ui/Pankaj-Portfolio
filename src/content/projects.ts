@@ -35,8 +35,6 @@ export type Project = {
     /** Solid banner background. */
     bg: string;
     title: string;
-    grid: string;
-    pill: { bg: string; color: string };
     /** Progress slider: filled colour, position marker, and start icon. */
     timeline: {
       fill: string;
@@ -71,8 +69,6 @@ export const projects: Project[] = [
     theme: {
       bg: "#4354EE",
       title: "#96FF9A",
-      grid: "rgba(255,255,255,0.16)",
-      pill: { bg: "#F46868", color: "#FFFFFF" },
       timeline: { fill: "#96FF9A", marker: "#27457A", icon: "pin" },
     },
     // Two upright card stripes exported from Figma (transparent gaps), rotated
@@ -99,8 +95,6 @@ export const projects: Project[] = [
     theme: {
       bg: "#FF6C6C",
       title: "#FFF375",
-      grid: "rgba(255,255,255,0.18)",
-      pill: { bg: "#000000", color: "#FFFFFF" },
       timeline: { fill: "#FFF375", marker: "#8A3A18", icon: "sparkle" },
     },
     // Coins has no baked static — CoinCardAnimation renders continuously (still
@@ -123,8 +117,6 @@ export const projects: Project[] = [
     theme: {
       bg: "#7220BF",
       title: "#FF7779",
-      grid: "rgba(255,255,255,0.16)",
-      pill: { bg: "#FFF375", color: "#000000" },
       timeline: { fill: "#FFF375", marker: "#7A1E10", icon: "crown" },
     },
     layers: [],

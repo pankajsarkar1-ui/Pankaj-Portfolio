@@ -5,10 +5,13 @@ import { useEffect, useRef, useState } from "react";
 export function CopyButton({
   value,
   label,
+  tone = "light",
 }: {
   value: string;
   /** Used for the accessible name, e.g. "email address". */
   label: string;
+  /** "dark" flips the icon and hover fill for use on an ink surface. */
+  tone?: "light" | "dark";
 }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -36,7 +39,11 @@ export function CopyButton({
       type="button"
       onClick={copy}
       aria-label={copied ? `Copied ${label}` : `Copy ${label}`}
-      className="-mr-[6px] flex size-[26px] shrink-0 cursor-pointer items-center justify-center rounded-full text-ink/55 transition-colors hover:bg-black/[0.06] hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+      className={`flex size-[26px] shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${
+        tone === "dark"
+          ? "text-white/50 hover:bg-white/10 hover:text-white focus-visible:outline-white"
+          : "-mr-[6px] text-ink/55 hover:bg-black/[0.06] hover:text-ink focus-visible:outline-ink"
+      }`}
     >
       {copied ? <CheckIcon /> : <CopyIcon />}
       <span aria-live="polite" className="sr-only">

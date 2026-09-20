@@ -19,9 +19,9 @@ export function BeyondWork() {
     <section id="beyond" className="flex flex-col gap-8">
       <SectionLabel>{beyondWork.label}</SectionLabel>
 
-      <div className="flex flex-col gap-[48px] rounded-[var(--radius-card)] bg-beyond-surface p-[24px] sm:p-[53.333px]">
-        <div className="flex flex-col gap-[27px]">
-          <h2 className="font-display text-[28px] font-bold text-ink sm:text-[36px]">
+      <div className="flex flex-col gap-[24px] rounded-[var(--radius-card)] bg-beyond-surface p-[16px] sm:gap-[48px] sm:p-[53.333px]">
+        <div className="flex flex-col gap-[16px] sm:gap-[27px]">
+          <h2 className="font-display text-[20px] font-bold text-ink sm:text-[36px]">
             {beyondWork.title}
           </h2>
           <TabChips
@@ -33,10 +33,10 @@ export function BeyondWork() {
         </div>
 
         {/* Negative margins let the row scroll to the card's own edges. */}
-        <div className="-mx-[24px] sm:-mx-[53.333px]">
+        <div className="-mx-[16px] sm:-mx-[53.333px]">
           <Carousel
             gap={20}
-            startInset={24}
+            startInset={16}
             lgStartInset={53.333}
             ariaLabel={`${active.label} gallery`}
           >

@@ -46,21 +46,19 @@ export function BannerCard({ project }: { project: Project }) {
       onBlur={stop}
       className="group relative block aspect-[10/7] w-full overflow-hidden rounded-[28px] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:aspect-[var(--card-ratio)] sm:rounded-[40px]"
     >
-      {/* Perspective grid floor */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute inset-x-[-40%] bottom-[-18%] h-[92%]"
-          style={{
-            transform: "perspective(560px) rotateX(66deg)",
-            transformOrigin: "50% 100%",
-            backgroundImage: `repeating-linear-gradient(to right, ${theme.grid} 0 1.4px, transparent 1.4px 64px), repeating-linear-gradient(to bottom, ${theme.grid} 0 1.4px, transparent 1.4px 64px)`,
-            maskImage:
-              "linear-gradient(to bottom, transparent 0%, #000 46%, #000 100%)",
-            WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, #000 46%, #000 100%)",
-          }}
-        />
-      </div>
+      {/* Perspective grid floor (exact vector from Figma) */}
+      <img
+        src="/assets/work/grid.svg"
+        alt=""
+        aria-hidden
+        style={{
+          left: pct(-18.49, design.w),
+          bottom: 0,
+          width: pct(1036.99, design.w),
+          height: pct(314.6, design.h),
+        }}
+        className="pointer-events-none absolute max-w-none select-none"
+      />
 
       {/* Illustration / stripes. Rotated stripes with a `move` slide along their
           own axis on hover (rotate first, so translateY runs down the stripe). */}
@@ -176,8 +174,7 @@ export function BannerCard({ project }: { project: Project }) {
 
         <div className="flex items-center gap-[16px]">
           <span
-            style={{ background: theme.pill.bg, color: theme.pill.color }}
-            className="rounded-full px-[15px] py-[6px] text-[11px] font-medium whitespace-nowrap"
+            className="rounded-full bg-white/20 px-[2.4cqw] py-[1cqw] text-[clamp(11px,1.3cqw,14px)] font-medium whitespace-nowrap text-white backdrop-blur-[8px]"
           >
             {project.readLabel}
           </span>

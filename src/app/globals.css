@@ -34,6 +34,20 @@
   --radius-media: 24px;
 }
 
+:root {
+  --radius-card: 24px;
+  --radius-tile: 20px;
+  --radius-media: 16px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --radius-card: 40px;
+    --radius-tile: 32px;
+    --radius-media: 24px;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -212,6 +226,21 @@ body {
   4% { transform: translateY(-8px); }
   8% { transform: translateY(2px); }
   12% { transform: translateY(-4px); }
+}
+
+/* Beer fizz — each bubble rises and drifts on its own --dx/--dy, swelling
+   as it climbs, then bursting at the top. */
+@keyframes bubbleRise {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.3); }
+  14% { opacity: 0.95; transform: translate(calc(var(--dx) * 0.14), calc(var(--dy) * 0.14)) scale(1); }
+  78% { opacity: 0.9; transform: translate(calc(var(--dx) * 0.8), calc(var(--dy) * 0.8)) scale(1.05); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.8); }
+}
+
+/* Hero copy entrance, staggered per word/line on first paint */
+@keyframes heroRise {
+  0% { opacity: 0; transform: translateY(0.42em); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* Scroll reveal for project cards */
