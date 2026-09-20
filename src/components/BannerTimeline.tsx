@@ -25,7 +25,7 @@ export function BannerTimeline({
         <ActiveTrack fill={fill} lead={30} rest={78} />
         <Sparkle color="rgba(255,255,255,0.5)" />
         <Bar w={14} color={MUTED} />
-        <Dot color={MUTED} />
+        <SquareDot color={MUTED} />
       </Row>
     );
   }
@@ -39,7 +39,7 @@ export function BannerTimeline({
         <Bar w={14} color={fill} />
         <Crown color={fill} />
         <ActiveTrack fill={fill} lead={26} rest={70} />
-        <Dot color="rgba(255,255,255,0.85)" />
+        <SquareDot color="rgba(255,255,255,0.85)" />
       </Row>
     );
   }
@@ -49,11 +49,11 @@ export function BannerTimeline({
     <Row>
       <Pin ring={fill} core={marker} />
       <ActiveTrack fill={fill} lead={34} rest={84} marker={marker} />
-      <Dot color={MUTED} />
+      <Dot color={MUTED} size={8} />
       <Bar w={14} color={MUTED} />
-      <Dot color={MUTED} />
+      <Dot color={MUTED} size={8} />
       <Bar w={14} color={MUTED} />
-      <Dot color={MUTED} />
+      <SquareDot color={MUTED} />
     </Row>
   );
 }
@@ -103,11 +103,20 @@ function Bar({ w, color }: { w: number; color: string }) {
   );
 }
 
-function Dot({ color }: { color: string }) {
+function Dot({ color, size = 6 }: { color: string; size?: number }) {
   return (
     <span
-      className="size-[6px] rounded-full"
-      style={{ background: color }}
+      className="rounded-full"
+      style={{ width: size, height: size, background: color }}
+    />
+  );
+}
+
+function SquareDot({ color, size = 7 }: { color: string; size?: number }) {
+  return (
+    <span
+      className="rounded-[1.5px]"
+      style={{ width: size, height: size, background: color }}
     />
   );
 }

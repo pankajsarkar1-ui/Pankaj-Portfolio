@@ -112,7 +112,9 @@ export function BannerCard({ project }: { project: Project }) {
         />
       ) : null}
 
-      {playing && anim ? (
+      {/* Coins & Levels render continuously (no static swap): rest = still
+          frame, hover = interactive — so there is no transition to smooth. */}
+      {anim && (anim.kind === "coins" || anim.kind === "levels" || playing) ? (
         <div
           aria-hidden
           style={{
@@ -125,12 +127,12 @@ export function BannerCard({ project }: { project: Project }) {
                 ? "trackReveal 360ms ease 300ms both"
                 : undefined,
           }}
-          className="pointer-events-none absolute"
+          className={`absolute ${anim.kind === "levels" ? "" : "pointer-events-none"}`}
         >
           {anim.kind === "coins" ? (
             <CoinCardAnimation className="absolute inset-0" />
           ) : anim.kind === "levels" ? (
-            <LevelCardAnimation className="absolute inset-0" />
+            <LevelCardAnimation className="absolute inset-0" hovered={hovered} />
           ) : (
             <TrackingAnimation className="absolute inset-0" instant />
           )}

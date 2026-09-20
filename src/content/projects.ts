@@ -81,8 +81,8 @@ export const projects: Project[] = [
     // s2 renders first (behind); S1 paints on top, matching Figma z-order.
     // S1's PNG has a 60px left margin, offset via originX so it pivots correctly.
     layers: [
-      { src: "/assets/work/stripe-s2.png", x: 1348, y: -784, w: 263, h: 1454, rotate: 30, move: { x: 0, y: 22 } },
-      { src: "/assets/work/stripe-s1.png", x: 752.17, y: -145, w: 350.67, h: 1477.9, rotate: 30, originX: 12.5, move: { x: 0, y: -22 } },
+      { src: "/assets/work/stripe-s2.png", x: 1451.95, y: -724, w: 263, h: 1454, rotate: 30, move: { x: 0, y: 34 } },
+      { src: "/assets/work/stripe-s1.png", x: 752.17, y: -145, w: 350.67, h: 1477.9, rotate: 30, originX: 12.5, move: { x: 0, y: -34 } },
     ],
     // Timeline card lift/reveal is turned off for now. To re-enable, restore an
     // `animation: { kind: "tracking", box, hides, lift }` block (lift asset:
@@ -103,13 +103,14 @@ export const projects: Project[] = [
       pill: { bg: "#000000", color: "#FFFFFF" },
       timeline: { fill: "#FFF375", marker: "#8A3A18", icon: "sparkle" },
     },
-    layers: [
-      { src: "/assets/work/banner-coins.png", x: 490.55, y: 100.87, w: 460.91, h: 301.53 },
-    ],
+    // Coins has no baked static — CoinCardAnimation renders continuously (still
+    // frame at rest, pointer parallax on hover), so there is no swap to smooth.
+    layers: [],
     animation: {
       kind: "coins",
-      box: { x: 470, y: 96, w: 470, h: 250 },
-      hides: ["/assets/work/banner-coins.png"],
+      // Card size; the component draws the front coin (hidden on hover) + rear coin.
+      box: { x: 452, y: 86, w: 480, h: 288 },
+      hides: [],
     },
   },
   {
@@ -124,15 +125,13 @@ export const projects: Project[] = [
       title: "#FF7779",
       grid: "rgba(255,255,255,0.16)",
       pill: { bg: "#FFF375", color: "#000000" },
-      timeline: { fill: "#F46868", marker: "#7A1E10", icon: "crown" },
+      timeline: { fill: "#FFF375", marker: "#7A1E10", icon: "crown" },
     },
-    layers: [
-      { src: "/assets/work/banner-refer.png", x: 500.23, y: 81, w: 419.77, h: 342.46 },
-    ],
+    layers: [],
     animation: {
       kind: "levels",
-      box: { x: 590, y: 96, w: 300, h: 314 },
-      hides: ["/assets/work/banner-refer.png"],
+      box: { x: 560, y: 70, w: 340, h: 314 },
+      hides: [],
     },
   },
 ];

@@ -1,16 +1,11 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- fixed-size stage, scaled as a whole */
 
-import { useEffect, useRef, useState } from "react";
-
-/* Ported from the exported "Refer and Earn Levels" scene. */
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 const FONT = "var(--font-plex), system-ui, sans-serif";
-/** Natural stage size the scene is authored at (aspect-ratio 0.955). */
 const STAGE = { w: 420, h: 440 };
-/** Refers added per tick, and the tick interval. */
-const PACE = 190;
-const START_REFERS = 3;
 const MAX_REFERS = 20;
 
 const CROWNS = [
@@ -21,7 +16,6 @@ const CROWNS = [
 ];
 const BONUS = [100, 100, 200, 0];
 
-/** left%, size, duration, delay — the rising sparkles. */
 const SPARKS: [number, number, number, number][] = [
   [6, 3, 8.5, 0], [14, 2, 10, 2.4], [22, 4, 7.5, 5.1], [31, 2, 9.5, 1.2],
   [38, 3, 8, 3.8], [46, 2, 11, 6.2], [53, 4, 8.8, 0.6], [61, 2, 9.2, 4.4],
@@ -29,7 +23,6 @@ const SPARKS: [number, number, number, number][] = [
   [96, 3, 11.5, 6.8], [10, 2, 12, 4.9], [58, 2, 12.5, 7.4], [43, 3, 10.8, 2.9],
 ];
 
-/** left%, dx, size, duration, delay — confetti for bursts and the finale rain. */
 const CONFETTI = Array.from({ length: 30 }, (_, i) => [
   8 + ((i * 37) % 84),
   -60 + ((i * 53) % 120),
@@ -45,18 +38,21 @@ const earningsFor = (refers: number) => {
   return refers * 100 + bonus;
 };
 
-/**
- * The gold level card, alive: referrals tick up, the crown swaps and bursts at
- * every fifth, and the whole thing lands on a congratulations state. Tilts
- * toward the cursor, with each layer parallaxing at its own depth.
- */
-export function LevelCardAnimation({ className }: { className?: string }) {
+export function LevelCardAnimation({
+  className,
+  hovered,
+}: {
+  className?: string;
+  hovered?: boolean;
+}) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
-  const [refers, setRefers] = useState(START_REFERS);
-  const [earnDisp, setEarnDisp] = useState(earningsFor(START_REFERS));
-  const earnFromRef = useRef(earningsFor(START_REFERS));
+  const [refers, setRefers] = useState(0);
+  const [earnDisp, setEarnDisp] = useState(0);
+  const earnFromRef = useRef(0);
   const [p, setP] = useState({ x: 0, y: 0 });
+  const [vp, setVp] = useState({ vx: 0, vy: 0 });
+  const [tapping, setTapping] = useState(false);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -68,16 +64,18 @@ export function LevelCardAnimation({ className }: { className?: string }) {
     return () => observer.disconnect();
   }, []);
 
-  // Referral ticker — stops once every level is complete.
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => {
-      setRefers((r) => (r >= MAX_REFERS ? r : r + 1));
-    }, PACE);
-    return () => clearInterval(id);
-  }, []);
+    if (!hovered) {
+      const id = setTimeout(() => {
+        setRefers(0);
+        setEarnDisp(0);
+        earnFromRef.current = 0;
+        setTapping(false);
+      }, 200);
+      return () => clearTimeout(id);
+    }
+  }, [hovered]);
 
-  // Ease the earnings total toward its new value on each referral.
   useEffect(() => {
     const target = earningsFor(refers);
     const from = earnFromRef.current;
@@ -108,25 +106,43 @@ export function LevelCardAnimation({ className }: { className?: string }) {
         x: Math.max(-1, Math.min(1, x)),
         y: Math.max(-1, Math.min(1, y)),
       });
+      setVp({ vx: e.clientX, vy: e.clientY });
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
   }, []);
 
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!hovered) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      setTapping(true);
+      setRefers((r) => Math.min(MAX_REFERS, r + 5));
+    },
+    [hovered],
+  );
+
   const congrats = refers >= MAX_REFERS;
-  // Remounting on each new level step replays the burst animation.
   const levelStep = Math.floor(refers / 5);
   const crownIdx = Math.min(3, levelStep);
   const level = crownIdx + 1;
   const remaining = Math.max(0, level * 5 - refers);
   const { x: px, y: py } = p;
+  const showTooltip = hovered && !congrats;
 
   const layer = (mx: number, my: number, extra = "") =>
     `translate3d(${px * mx}px, ${py * my}px, 0)${extra}`;
   const glide = "transform 240ms cubic-bezier(.2,.8,.3,1)";
 
   return (
-    <div ref={hostRef} className={className} style={{ fontFamily: FONT }}>
+    <div
+      ref={hostRef}
+      className={className}
+      style={{ fontFamily: FONT, cursor: hovered ? "pointer" : undefined }}
+      onClick={handleClick}
+    >
       {scale > 0 ? (
         <div
           style={{
@@ -136,7 +152,8 @@ export function LevelCardAnimation({ className }: { className?: string }) {
             width: STAGE.w,
             height: STAGE.h,
             transformOrigin: "top left",
-            transform: `scale(${scale})`,
+            transform: `scale(${scale * (hovered ? 1.15 : 1)})`,
+            transition: "transform 400ms cubic-bezier(.22,1,.36,1)",
           }}
         >
           <div
@@ -151,6 +168,7 @@ export function LevelCardAnimation({ className }: { className?: string }) {
               transition: "transform 260ms cubic-bezier(.2,.8,.3,1)",
               background:
                 "radial-gradient(115% 85% at 50% 66%, #D0A11A 0%, #B2860F 26%, #7A5A08 50%, #3A2A04 74%, #120D03 92%, #0B0803 100%)",
+              border: "1px solid rgba(255,255,255,.18)",
               boxShadow:
                 "0 30px 80px -30px rgba(200,150,20,.45), 0 0 0 1px rgba(255,255,255,.06)",
             }}
@@ -241,11 +259,9 @@ export function LevelCardAnimation({ className }: { className?: string }) {
               ))}
             </div>
 
-            {/* Level-up burst, replayed by keying on burstId */}
+            {/* Level-up burst */}
             <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-              {levelStep > Math.floor(START_REFERS / 5) ? (
-                <Burst key={levelStep} />
-              ) : null}
+              {levelStep > 0 ? <Burst key={levelStep} /> : null}
             </div>
 
             <div
@@ -390,8 +406,42 @@ export function LevelCardAnimation({ className }: { className?: string }) {
               </div>
             ) : null}
           </div>
+
         </div>
       ) : null}
+
+      {/* Cursor-sticky tooltip rendered via portal to escape overflow:hidden */}
+      {showTooltip && typeof document !== "undefined"
+        ? createPortal(
+            <div
+              style={{
+                position: "fixed",
+                left: vp.vx + 6,
+                top: vp.vy + 10,
+                zIndex: 9999,
+                pointerEvents: "none",
+                animation: "rlTooltip 200ms ease-out both",
+              }}
+            >
+              <div
+                style={{
+                  background: "#fff",
+                  color: "#7A5A08",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  padding: "5px 14px",
+                  borderRadius: 999,
+                  whiteSpace: "nowrap",
+                  boxShadow: "0 2px 12px rgba(0,0,0,.25)",
+                  letterSpacing: ".3px",
+                }}
+              >
+                Tap Fast!
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }
@@ -403,7 +453,6 @@ function Stat({
 }: {
   label: string;
   value: string;
-  /** Changing this replays the pop on the number. */
   pulseKey?: number;
 }) {
   return (
@@ -441,6 +490,7 @@ function Stat({
           fontSize: 28,
           fontWeight: 700,
           color: "#fff",
+          fontVariantNumeric: "tabular-nums",
         }}
       >
         {value}

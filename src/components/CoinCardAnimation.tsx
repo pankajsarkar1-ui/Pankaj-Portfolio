@@ -28,6 +28,11 @@ export function CoinCardAnimation({ className }: { className?: string }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
   const [p, setP] = useState({ on: false, tx: 0, ty: 0, px: 50, py: 50 });
+  // Balance counts up on hover (coins being earned), eases back on leave.
+  const BASE = 342;
+  const PEAK = 366;
+  const [count, setCount] = useState(BASE);
+  const countRef = useRef(BASE);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -68,6 +73,27 @@ export function CoinCardAnimation({ className }: { className?: string }) {
   }, []);
 
   const { on, tx, ty, px, py } = p;
+
+  useEffect(() => {
+    countRef.current = count;
+  }, [count]);
+
+  useEffect(() => {
+    const from = countRef.current;
+    const to = on ? PEAK : BASE;
+    if (from === to) return;
+    const dur = on ? 850 : 320;
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setCount(Math.round(from + (to - from) * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [on]);
 
   return (
     <div ref={hostRef} className={className} style={{ fontFamily: FONT }}>
@@ -181,9 +207,10 @@ export function CoinCardAnimation({ className }: { className?: string }) {
                     lineHeight: 1,
                     letterSpacing: "-.025em",
                     color: "#e08c0b",
+                    fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  342
+                  {count}
                 </div>
               </div>
 
