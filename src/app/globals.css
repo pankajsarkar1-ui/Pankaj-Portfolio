@@ -214,6 +214,28 @@ body {
   12% { transform: translateY(-4px); }
 }
 
+/* Lightbox entrance */
+@keyframes lbBackdrop {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes lbContent {
+  0% { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes lbSlide {
+  0% { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes lbSlideFromRight {
+  0% { opacity: 0; transform: translateX(60px) scale(0.94); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes lbSlideFromLeft {
+  0% { opacity: 0; transform: translateX(-60px) scale(0.94); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
