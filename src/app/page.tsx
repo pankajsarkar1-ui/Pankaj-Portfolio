@@ -14,7 +14,7 @@ function Column({ children }: { children: React.ReactNode }) {
 
 export default function Home() {
   return (
-    <main className="flex flex-col gap-8 pt-[28px] pb-[80px]">
+    <main className="flex flex-col gap-[80px] pt-[28px] pb-[80px]">
       <Column>
         <Hero />
       </Column>

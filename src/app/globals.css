@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-anek), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-anek), var(--font-inter), ui-sans-serif, sans-serif;
 
   /* Surfaces */
@@ -212,6 +212,12 @@ body {
   4% { transform: translateY(-8px); }
   8% { transform: translateY(2px); }
   12% { transform: translateY(-4px); }
+}
+
+/* Scroll reveal for project cards */
+@keyframes scrollReveal {
+  0% { opacity: 0; transform: translateY(40px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* Lightbox entrance */

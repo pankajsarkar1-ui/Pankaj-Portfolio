@@ -2,7 +2,8 @@ import { site } from "@/content/site";
 
 export function Nav() {
   return (
-    <nav className="flex h-[112.673px] items-center justify-between border-b border-nav-border bg-white px-[32px]">
+    <nav className="border-b border-nav-border bg-white">
+      <div className="mx-auto flex h-[112.673px] w-full max-w-[1190px] items-center justify-between px-[20px]">
       <a href="#top" className="flex items-center gap-[9.796px]">
         <span className="size-[13px] rounded-full bg-ink" />
         <span className="text-[17.633px] font-bold text-ink">
@@ -27,6 +28,7 @@ export function Nav() {
       >
         {site.ctaLabel}
       </a>
+      </div>
     </nav>
   );
 }

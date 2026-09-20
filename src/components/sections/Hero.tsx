@@ -29,7 +29,6 @@ export function Hero() {
           <p className="text-[18.182px] font-medium text-ink-muted">
             {site.greeting}
           </p>
-          {/* max-width is tuned to keep the two-line break from the design. */}
           <h1 className="font-display max-w-[360px] text-[32px] leading-[1.14] font-bold tracking-[-0.0426em] text-ink sm:max-w-[440px] sm:text-[48px] sm:leading-[1.12]">
             {site.role}
           </h1>
