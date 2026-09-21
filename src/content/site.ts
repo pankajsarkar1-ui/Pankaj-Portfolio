@@ -16,7 +16,7 @@ export const site = {
     { label: "Resume", href: "#experience" },
   ],
   contact: {
-    eyebrow: "LAST STOP",
+    eyebrow: "Let's talk",
     headline: "Drink's on me.",
     links: [
       {

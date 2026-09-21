@@ -54,6 +54,7 @@ const DRINKS = [
   {
     id: "chai",
     label: "Chai",
+    icon: <Cup kind="chai" className="size-[20px] sm:size-[24px]" />,
     time: "60 min",
     title: "Cutting chai",
     blurb: "One cup, one hour, and we'll have solved half of it.",
@@ -61,6 +62,7 @@ const DRINKS = [
   {
     id: "coffee",
     label: "Coffee",
+    icon: <Cup kind="coffee" className="size-[20px] sm:size-[24px]" />,
     time: "2 hours",
     title: "The sensible one",
     blurb: 'A proper portfolio review. I\'ll say "it depends" at least four times.',
@@ -68,6 +70,7 @@ const DRINKS = [
   {
     id: "beer",
     label: "Beer",
+    icon: <Cup kind="beer" className="size-[20px] sm:size-[24px]" />,
     time: "No cap",
     title: "No filter",
     blurb: "Two in and I'll tell you what I really think of your design system.",
@@ -183,15 +186,15 @@ export function Contact() {
           <p className="text-[11px] font-medium tracking-[2.6667px] text-ink-label uppercase sm:text-[16px]">
             {eyebrow}
           </p>
-          <h2 className="font-display text-[28px] leading-[1.12] font-semibold text-white sm:text-[64px] sm:leading-[72px]">
+          <h2 className="font-display text-[26px] leading-[1.12] font-semibold text-white sm:text-[44px] sm:leading-[1.1]">
             {headline}
           </h2>
         </div>
 
         {/* drink picker — the pour sets how long the chat runs */}
-        <div className="w-full rounded-[20px] border border-white/12 p-[18px] sm:rounded-[24px] sm:p-[26px] lg:max-w-[460px] lg:shrink-0">
+        <div className="w-full rounded-[20px] border border-white/20 bg-white/[0.03] p-[18px] sm:rounded-[24px] sm:p-[26px] lg:max-w-[460px] lg:shrink-0">
           <p className="mb-[14px] text-[13px] text-white/50 sm:text-[15px]">
-            Pick your poison — it sets how long we talk.
+            Let&rsquo;s see how long we talk.
           </p>
           <div ref={chipsRef} className="relative">
             <TabChips
@@ -228,28 +231,20 @@ export function Contact() {
           </div>
 
           {/* what that round gets you */}
-          <div className="mt-[18px] flex items-center gap-[16px] rounded-[16px] bg-white/[0.04] p-[16px] sm:gap-[18px]">
-            <Cup
-              key={drink.id}
-              kind={drink.id}
-              className="size-[38px] shrink-0 text-white sm:size-[44px]"
-            />
-            <div className="min-w-0">
-              <p className="font-display text-[17px] font-semibold text-white sm:text-[20px]">
-                {drink.time} · {drink.title}
-              </p>
-              <p className="mt-[2px] text-[12px] text-white/50 sm:text-[13px]">
-                {drink.blurb}
-              </p>
-            </div>
+          <div className="mt-[18px] rounded-[16px] bg-white/[0.07] p-[16px]">
+            <p className="font-display text-[17px] font-semibold text-white sm:text-[20px]">
+              {drink.time} · {drink.title}
+            </p>
+            <p className="mt-[2px] text-[12px] text-white/50 sm:text-[13px]">
+              {drink.blurb}
+            </p>
           </div>
         </div>
       </div>
 
       {/* bottom row: reach me left, nav right */}
       <div className="flex flex-col gap-[20px] border-t border-white/10 pt-[26px] lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-col gap-[10px]">
-          <div className="flex flex-wrap items-center gap-[12px] sm:gap-[16px]">
+        <div className="flex flex-wrap items-center gap-[12px] sm:gap-[16px]">
           <a
             href={mailto}
             className="flex items-center gap-[10px] text-[14px] text-white/75 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-[15px]"
@@ -258,11 +253,7 @@ export function Contact() {
             {links[0].label}
           </a>
 
-          <CopyButton
-            value={links[0].label}
-            label="email address"
-            tone="dark"
-          />
+          <CopyButton value={links[0].label} label="email address" tone="dark" />
 
           <span aria-hidden className="hidden h-[16px] w-px bg-white/15 sm:block" />
 
@@ -285,11 +276,6 @@ export function Contact() {
               );
             })}
           </div>
-          </div>
-
-          <p className="text-[11px] text-white/35 sm:text-[12px]">
-            The email opens already written for a {drink.label.toLowerCase()}.
-          </p>
         </div>
 
         <ul className="flex gap-[24px] text-[14px] text-white sm:gap-[30px]">

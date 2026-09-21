@@ -2,7 +2,12 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 
-type Tab = { id: string; label: string };
+type Tab = {
+  id: string;
+  label: string;
+  /** Optional glyph shown before the label; inherits the chip's text colour. */
+  icon?: React.ReactNode;
+};
 
 export function TabChips({
   tabs,
@@ -100,7 +105,14 @@ export function TabChips({
             onClick={() => onChange(tab.id)}
             className={`${base} ${skin}`}
           >
-            {tab.label}
+            {tab.icon ? (
+              <span className="flex items-center gap-[7px]">
+                {tab.icon}
+                {tab.label}
+              </span>
+            ) : (
+              tab.label
+            )}
           </button>
         );
       })}
