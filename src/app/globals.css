@@ -228,6 +228,24 @@ body {
   12% { transform: translateY(-4px); }
 }
 
+/* Chai steam — wisps rise and curl, swaying one way then back before they
+   thin out. --sway reverses so the trail reads as a curl, not a straight line. */
+@keyframes steamRise {
+  0% { opacity: 0; transform: translate(0, 0) scaleY(0.5); }
+  20% { opacity: 0.6; }
+  55% { opacity: 0.5; transform: translate(var(--sway), calc(var(--dy) * 0.55)) scaleY(1); }
+  100% { opacity: 0; transform: translate(calc(var(--sway) * -0.7), var(--dy)) scaleY(1.4); }
+}
+
+/* Coffee beans — tumble in from above the chip, spinning between --r0 and
+   --r1 as they fall, and fade as they land. */
+@keyframes beanDrop {
+  0% { opacity: 0; transform: translate(0, var(--from)) rotate(var(--r0)) scale(0.9); }
+  10% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), 20px) rotate(var(--r1)) scale(1); }
+}
+
 /* Beer fizz — each bubble rises and drifts on its own --dx/--dy, swelling
    as it climbs, then bursting at the top. */
 @keyframes bubbleRise {

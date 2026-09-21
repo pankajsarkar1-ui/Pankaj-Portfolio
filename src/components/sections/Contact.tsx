@@ -13,6 +13,22 @@ const stroke = {
   strokeLinejoin: "round" as const,
 };
 
+/** Coffee bean: a filled oval split by the S-shaped crease. */
+function Bean({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 22" className={className} aria-hidden>
+      <ellipse cx="8" cy="11" rx="6.2" ry="9.6" fill="currentColor" />
+      <path
+        d="M8 2.4C5.5 5.8 5.5 8 8 11s2.5 5.2 0 8.6"
+        fill="none"
+        stroke="#08080a"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function MailIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 20 20" className={className} aria-hidden>
@@ -108,6 +124,24 @@ function Cup({ kind, className }: { kind: string; className?: string }) {
   );
 }
 
+/** Chai steam: thin wisps off the top of the chip, each swaying a different
+ *  way so they curl instead of rising in parallel. */
+const STEAM = [
+  { w: 3, h: 15, x: -24, sway: 9, dy: -60, delay: 0, dur: 1800 },
+  { w: 4, h: 19, x: -7, sway: -10, dy: -76, delay: 200, dur: 2000 },
+  { w: 3, h: 16, x: 11, sway: 8, dy: -64, delay: 400, dur: 1850 },
+  { w: 2, h: 12, x: 27, sway: -7, dy: -52, delay: 620, dur: 1700 },
+];
+
+/** Coffee beans tumbling into the chip from above. `w` is the bean's width;
+ *  height follows the 16:22 viewBox. `r0`/`r1` are its spin. */
+const BEANS = [
+  { w: 17, x: -22, from: -118, dx: 4, r0: -18, r1: 148, delay: 0, dur: 1400 },
+  { w: 13, x: 3, from: -140, dx: -5, r0: 26, r1: -132, delay: 330, dur: 1550 },
+  { w: 19, x: 26, from: -106, dx: 3, r0: -42, r1: 116, delay: 640, dur: 1320 },
+  { w: 14, x: -38, from: -128, dx: -4, r0: 12, r1: 172, delay: 950, dur: 1480 },
+];
+
 /** Carbonation off the beer chip: `x` seeds each bubble across the chip,
  *  `dx`/`dy` are its drift and climb, and the sizes stay mixed so it reads
  *  like fizz rather than a uniform row. */
@@ -130,25 +164,106 @@ const FIZZ = [
   { size: 12, x: -20, dx: -14, dy: -205, delay: 840, dur: 1750 },
 ];
 
+/** The flourish that plays off the chip when a drink is picked. Anchored on
+ *  the chip's centre (`x`/`y`), measured by the caller. */
+function Burst({ drink, x, y }: { drink: string; x: number; y: number }) {
+  const motion = "opacity-0 motion-reduce:[animation:none]";
+
+  if (drink === "chai") {
+    return (
+      <>
+        {STEAM.map((s, i) => (
+          <span
+            key={i}
+            style={
+              {
+                width: s.w,
+                height: s.h,
+                left: x + s.x - s.w / 2,
+                top: y - 20,
+                "--sway": `${s.sway}px`,
+                "--dy": `${s.dy}px`,
+                animationDelay: `${s.delay}ms`,
+                animationDuration: `${s.dur}ms`,
+              } as CSSProperties
+            }
+            className={`absolute rounded-full bg-white/45 blur-[1.5px] [animation:steamRise_ease-out_infinite] ${motion}`}
+          />
+        ))}
+      </>
+    );
+  }
+
+  if (drink === "coffee") {
+    return (
+      <>
+        {BEANS.map((b, i) => (
+          <span
+            key={i}
+            style={
+              {
+                width: b.w,
+                height: (b.w * 22) / 16,
+                left: x + b.x - b.w / 2,
+                top: y - 14,
+                "--from": `${b.from}px`,
+                "--dx": `${b.dx}px`,
+                "--r0": `${b.r0}deg`,
+                "--r1": `${b.r1}deg`,
+                animationDelay: `${b.delay}ms`,
+                animationDuration: `${b.dur}ms`,
+              } as CSSProperties
+            }
+            className={`absolute text-white/85 [animation:beanDrop_ease-in_infinite] ${motion}`}
+          >
+            <Bean className="block size-full" />
+          </span>
+        ))}
+      </>
+    );
+  }
+
+  return (
+    <>
+      {FIZZ.map((b, i) => (
+        <span
+          key={i}
+          style={
+            {
+              width: b.size,
+              height: b.size,
+              left: x + b.x - b.size / 2,
+              top: y + 16 - b.size / 2,
+              "--dx": `${b.dx}px`,
+              "--dy": `${b.dy}px`,
+              animationDelay: `${b.delay}ms`,
+              animationDuration: `${b.dur}ms`,
+            } as CSSProperties
+          }
+          className={`absolute rounded-full bg-white/70 [animation:bubbleRise_linear_both] ${motion}`}
+        />
+      ))}
+    </>
+  );
+}
+
 export function Contact() {
   const [drinkId, setDrinkId] = useState("coffee");
   const drink = DRINKS.find((d) => d.id === drinkId) ?? DRINKS[1];
 
-  // Bubbles launch from the beer chip itself, so the chip is measured on click.
-  // `id` increments per click so the element remounts and the animation replays.
+  // The flourish launches from the chip itself, so the chip is measured on
+  // click. `key` increments per click so the burst remounts and replays.
   const chipsRef = useRef<HTMLDivElement>(null);
-  const popId = useRef(0);
-  const [pop, setPop] = useState<{ id: number; x: number; y: number } | null>(
-    null,
-  );
+  const burstKey = useRef(0);
+  const [burst, setBurst] = useState<{
+    key: number;
+    drink: string;
+    x: number;
+    y: number;
+  } | null>(null);
 
   const pickDrink = (id: string) => {
     setDrinkId(id);
-
-    if (id !== "beer") {
-      setPop(null);
-      return;
-    }
 
     const wrap = chipsRef.current;
     const chip = wrap?.querySelectorAll('[role="tab"]')[
@@ -158,9 +273,10 @@ export function Contact() {
 
     const w = wrap.getBoundingClientRect();
     const c = chip.getBoundingClientRect();
-    popId.current += 1;
-    setPop({
-      id: popId.current,
+    burstKey.current += 1;
+    setBurst({
+      key: burstKey.current,
+      drink: id,
       x: c.left - w.left + c.width / 2,
       y: c.top - w.top + c.height / 2,
     });
@@ -205,27 +321,10 @@ export function Contact() {
               ariaLabel="Pick a drink"
             />
 
-            {/* fizz off the beer chip — bubbles climb and burst at the top */}
-            {pop ? (
-              <div key={pop.id} aria-hidden className="pointer-events-none">
-                {FIZZ.map((b, i) => (
-                  <span
-                    key={i}
-                    style={
-                      {
-                        width: b.size,
-                        height: b.size,
-                        left: pop.x + b.x - b.size / 2,
-                        top: pop.y + 16 - b.size / 2,
-                        "--dx": `${b.dx}px`,
-                        "--dy": `${b.dy}px`,
-                        animationDelay: `${b.delay}ms`,
-                        animationDuration: `${b.dur}ms`,
-                      } as CSSProperties
-                    }
-                    className="absolute rounded-full bg-white/70 opacity-0 [animation:bubbleRise_linear_both] motion-reduce:[animation:none]"
-                  />
-                ))}
+            {/* steam, drip or fizz — whichever suits the drink just picked */}
+            {burst ? (
+              <div key={burst.key} aria-hidden className="pointer-events-none">
+                <Burst drink={burst.drink} x={burst.x} y={burst.y} />
               </div>
             ) : null}
           </div>
