@@ -54,21 +54,21 @@ const DRINKS = [
   {
     id: "chai",
     label: "Chai",
-    minutes: 15,
+    time: "60 min",
     title: "Cutting chai",
-    blurb: "Tapri rules: strong, quick, and we fix everything in one cup.",
+    blurb: "One cup, one hour, and we'll have solved half of it.",
   },
   {
     id: "coffee",
     label: "Coffee",
-    minutes: 30,
+    time: "2 hours",
     title: "The sensible one",
-    blurb: 'Portfolio review. I\'ll say "it depends" at least four times.',
+    blurb: 'A proper portfolio review. I\'ll say "it depends" at least four times.',
   },
   {
     id: "beer",
     label: "Beer",
-    minutes: 60,
+    time: "No cap",
     title: "No filter",
     blurb: "Two in and I'll tell you what I really think of your design system.",
   },
@@ -167,9 +167,9 @@ export function Contact() {
 
   // Pre-composes the mail so the picked drink carries through to the inbox.
   const mailto = `${links[0].href}?subject=${encodeURIComponent(
-    `Drink's on me — ${drink.label} (${drink.minutes} min)`,
+    `Drink's on me — ${drink.label} (${drink.time})`,
   )}&body=${encodeURIComponent(
-    `Hi Pankaj,\n\nI'd like to grab a ${drink.minutes}-minute ${drink.label.toLowerCase()} — ${drink.title.toLowerCase()}.\n\nWhat I'd love to talk about:\n\n`,
+    `Hi Pankaj,\n\nI'd like to grab a ${drink.label.toLowerCase()} — ${drink.time.toLowerCase()}.\n\nWhat I'd love to talk about:\n\n`,
   )}`;
 
   return (
@@ -236,7 +236,7 @@ export function Contact() {
             />
             <div className="min-w-0">
               <p className="font-display text-[17px] font-semibold text-white sm:text-[20px]">
-                {drink.minutes} min · {drink.title}
+                {drink.time} · {drink.title}
               </p>
               <p className="mt-[2px] text-[12px] text-white/50 sm:text-[13px]">
                 {drink.blurb}
