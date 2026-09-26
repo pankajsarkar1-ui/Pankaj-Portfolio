@@ -14,7 +14,7 @@ export const heroCards = [
   {
     id: "comics",
     image: "/assets/hero/card-comics.png",
-    alt: "Printed pages of Iron Curse, a comic I wrote and drew",
+    alt: "Thought Circuit, a graphic anthology I made, with its printed poster",
     title: "I make graphic narratives",
   },
   {
