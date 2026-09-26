@@ -15,8 +15,15 @@ import type { AnimationItem } from "lottie-web";
 
 /** Beat between plays — a periodic wink rather than a constant loop. */
 const REPLAY_DELAY_MS = 4000;
-/** Share of the frame the artwork should fill once cropped. */
-const FILL = 0.76;
+/**
+ * Share of the frame the artwork's HEIGHT should fill once cropped.
+ *
+ * Height rather than the larger side, so every mark stands the same height
+ * whatever its width. Fitting the larger side makes a wide mark small: the
+ * cheers is two glasses abreast, 468 x 295 against the coffee's 385 x 317, so
+ * its width set the scale and each glass came out half the size of a cup.
+ */
+const FILL = 0.74;
 /** Frames sampled when measuring the artwork's extent. */
 const SAMPLES = 12;
 
@@ -44,10 +51,18 @@ function fitToArtwork(anim: AnimationItem, svg: SVGSVGElement) {
   const cx1 = cx0 + cw;
   const cy1 = cy0 + ch;
 
-  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  /**
+   * Each sampled frame's own extent, rather than the union of them all. A
+   * union is set by whatever the animation does at its most extreme — the
+   * cheers throws out impact marks on the clink, the coffee's steam reaches
+   * its highest — and sizing to that shrinks the mark for the whole of the
+   * rest of the loop. The middle frame is what the eye actually settles on.
+   */
+  const frames: Array<{ h: number; cx: number; cy: number }> = [];
   const total = anim.totalFrames;
   for (let i = 0; i <= SAMPLES; i++) {
     anim.goToAndStop((total * i) / SAMPLES, true);
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
     for (const path of svg.querySelectorAll("path")) {
       // Lottie parks hidden and empty shapes far off-canvas, and their rects
       // are fractionally non-zero rather than exactly zero — left in, a single
@@ -67,14 +82,28 @@ function fitToArtwork(anim: AnimationItem, svg: SVGSVGElement) {
       x1 = Math.max(x1, Math.min(px1, cx1));
       y1 = Math.max(y1, Math.min(py1, cy1));
     }
+    if (Number.isFinite(x0) && x1 > x0) {
+      frames.push({ h: y1 - y0, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 });
+    }
   }
-  if (!Number.isFinite(x0) || x1 <= x0) return;
+  if (!frames.length) return;
 
-  // A square keeps the mark's proportions whatever box it is given.
-  const side = Math.max(x1 - x0, y1 - y0) / FILL;
-  const cx = (x0 + x1) / 2;
-  const cy = (y0 + y1) / 2;
+  const median = (values: number[]) => {
+    const v = [...values].sort((a, b) => a - b);
+    return v[Math.floor(v.length / 2)];
+  };
+  const height = median(frames.map((f) => f.h));
+  const cx = median(frames.map((f) => f.cx));
+  const cy = median(frames.map((f) => f.cy));
+
+  svg.dataset.fit = [Math.round(height), Math.round(cx), Math.round(cy)].join(",");
+
+  // A square keeps the mark's proportions whatever box it is given. A mark
+  // wider than it is tall then runs past the sides, which is why the drawing
+  // is allowed to spill out of the viewBox.
+  const side = height / FILL;
   svg.setAttribute("viewBox", `${cx - side / 2} ${cy - side / 2} ${side} ${side}`);
+  svg.style.overflow = "visible";
 }
 
 export function LottieMark({
