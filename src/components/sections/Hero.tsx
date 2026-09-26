@@ -40,7 +40,11 @@ export function Hero() {
             {site.greeting}
           </p>
 
-          <h1 className="font-display max-w-[280px] text-[24px] leading-[1.14] font-bold tracking-[-0.0426em] text-ink sm:max-w-[440px] sm:text-[48px] sm:leading-[1.12]">
+          {/* Fluid only from lg, where the copy shares the row with the card deck:
+              at 48px the longest line (410px) overruns the column on any laptop
+              narrower than ~1540px and drops to three lines. Below lg the hero
+              stacks and the copy has the full width, so 48px stands. */}
+          <h1 className="font-display max-w-[280px] text-[24px] leading-[1.14] font-bold tracking-[-0.0426em] text-ink sm:max-w-[440px] sm:text-[48px] sm:leading-[1.12] lg:text-[clamp(32px,3vw,48px)]">
             {roleWords.map((word, i) => (
               <Fragment key={`${word}-${i}`}>
                 {i > 0 ? " " : null}
