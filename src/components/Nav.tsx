@@ -34,7 +34,7 @@ export function Nav() {
               0fr -> 1fr grid track animates width without a magic max-width. */}
           <a
             href="#contact"
-            className="group flex items-center rounded-full border border-transparent py-[4px] pr-[4px] pl-[4px] transition-colors duration-300 hover:border-[#e6e6e6] hover:bg-[#f7f7f7]"
+            className="group flex items-center rounded-full border border-transparent py-[4px] pr-[4px] pl-[12px] transition-colors duration-300 hover:border-[#e6e6e6] hover:bg-[#f7f7f7]"
           >
             <CoffeeLottie className="size-[32px] shrink-0 sm:size-[38px]" />
             <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-[350ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:grid-cols-[1fr] motion-reduce:transition-none">
