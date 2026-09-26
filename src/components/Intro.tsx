@@ -20,6 +20,14 @@ const MIN_MS = 750;
 const CAP_MS = 4000;
 /** Progress parks here until the page is actually ready, then completes. */
 const HOLD_AT = 0.9;
+/** Steepness of the fill's approach to the hold — higher surges harder. */
+const FILL_K = 2.8;
+/** How long the run from the hold to full takes once the page is ready. */
+const COMPLETE_MS = 280;
+/** How long the bowl takes to snap shut afterwards. */
+const SNAP_MS = 240;
+
+const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
 /**
  * The gate lives on <html>, outside React, so it is read as an external store:
@@ -94,14 +102,28 @@ export function Intro() {
     });
 
     let shown = 0;
+    let completeFrom: number | null = null;
+    let completeAt = 0;
+
     const tick = () => {
       const elapsed = performance.now() - start;
-      const paced = Math.min(elapsed / MIN_MS, 1);
-      const target = ready && elapsed >= MIN_MS ? 1 : Math.min(paced, HOLD_AT);
 
-      // Creeps while it waits, then rushes once the page is ready.
-      shown += (target - shown) * (target === 1 ? 0.24 : 0.12);
-      if (target === 1 && 1 - shown < 0.004) shown = 1;
+      if (completeFrom === null && ready && elapsed >= MIN_MS) {
+        completeFrom = shown;
+        completeAt = performance.now();
+      }
+
+      if (completeFrom === null) {
+        // Surges away from nothing and decelerates into the hold, approaching
+        // it without arriving — the page, not the clock, decides when it does.
+        shown = HOLD_AT * (1 - Math.exp((-FILL_K * elapsed) / MIN_MS));
+      } else {
+        // Then eases the rest of the way from wherever it had got to.
+        const t = Math.min((performance.now() - completeAt) / COMPLETE_MS, 1);
+        shown = completeFrom + (1 - completeFrom) * easeOutCubic(t);
+        if (t >= 1) shown = 1;
+      }
+
       path.setAttribute("d", markPath(shown * MARK_STRETCH));
 
       if (shown === 1 && !snapping) {
@@ -110,8 +132,8 @@ export function Intro() {
         path.style.transition = "none";
         const snapFrom = performance.now();
         const snap = () => {
-          const t = Math.min((performance.now() - snapFrom) / 240, 1);
-          const eased = 1 - Math.pow(1 - t, 3);
+          const t = Math.min((performance.now() - snapFrom) / SNAP_MS, 1);
+          const eased = easeOutCubic(t);
           path.setAttribute("d", markPath((1 - eased) * MARK_STRETCH));
           if (t < 1) {
             raf = requestAnimationFrame(snap);
