@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { CoffeeLottie } from "@/components/CoffeeLottie";
 import { site } from "@/content/site";
 
 /**
@@ -43,9 +44,11 @@ export function PillNav() {
       // Out of the way of assistive tech until it is actually on screen.
       aria-hidden={!shown}
     >
+      {/* Opaque rather than translucent: it floats over the dark sections, and
+          a see-through fill picks their colour up through it. */}
       <nav
         aria-label="Sections"
-        className="rounded-full border border-shell-border bg-white/85 px-[6px] py-[6px] shadow-[0_8px_24px_-12px_rgba(0,0,0,0.30)] backdrop-blur-md"
+        className="flex items-center rounded-full border border-shell-border bg-white py-[5px] pr-[5px] pl-[6px] shadow-[0_8px_24px_-12px_rgba(0,0,0,0.30)]"
       >
         <ul className="flex items-center gap-[2px]">
           {site.nav.map((item) => (
@@ -60,6 +63,17 @@ export function PillNav() {
             </li>
           ))}
         </ul>
+
+        <span aria-hidden className="mx-[6px] h-[18px] w-px bg-shell-border" />
+
+        <a
+          href="#contact"
+          aria-label={site.contact.eyebrow}
+          tabIndex={shown ? undefined : -1}
+          className="grid place-items-center rounded-full p-[3px] transition-colors hover:bg-[#f0f0f0]"
+        >
+          <CoffeeLottie className="size-[30px] sm:size-[32px]" />
+        </a>
       </nav>
     </div>
   );
