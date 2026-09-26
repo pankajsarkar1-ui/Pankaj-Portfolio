@@ -284,14 +284,17 @@ export function Contact() {
           {/* glass on a spotlight; the burst launches from here */}
           <div
             ref={stageRef}
-            /* Pale rather than dark: the animations are black line art, which
-               would all but vanish against the panel behind them. */
-            className="relative grid size-[150px] shrink-0 place-items-center self-center rounded-full bg-[#faf9f5] ring-1 ring-white/10 sm:size-[196px]"
+            /* No surface of its own — the mark sits straight on the panel, and
+               this box is here to size the column and anchor the burst. */
+            className="relative grid size-[150px] shrink-0 place-items-center self-center sm:size-[196px]"
           >
+            {/* The files are black line art; this drives every colour in them
+                to white so they read on the dark panel, the coffee's pink
+                accent included. */}
             <LottieMark
               key={drink.id}
               src={drink.lottie}
-              className="relative size-[96px] sm:size-[132px]"
+              className="relative size-[104px] [filter:brightness(0)_invert(1)] sm:size-[140px]"
             />
             {burst ? (
               <div
