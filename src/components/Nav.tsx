@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { CoffeeLottie } from "@/components/CoffeeLottie";
+import { Logo } from "@/components/Logo";
 import { site } from "@/content/site";
 
 export function Nav() {
@@ -9,11 +11,8 @@ export function Nav() {
   return (
     <nav className="relative border-b border-nav-border bg-white">
       <div className="mx-auto flex h-[64px] w-full max-w-[1190px] items-center justify-between px-[16px] sm:h-[112.673px] sm:px-[20px]">
-        <a href="#top" className="flex items-baseline gap-[9.796px]">
-          <span className="size-[13px] shrink-0 self-center rounded-full bg-ink" />
-          <span className="text-[17.633px] font-bold leading-none text-ink">
-            {site.initials}
-          </span>
+        <a href="#top" className="ml-[10px] flex items-center text-ink sm:ml-[12px]">
+          <Logo className="h-[20px] w-auto sm:h-[24px]" />
           <span className="sr-only">{site.name} — home</span>
         </a>
 
@@ -31,11 +30,20 @@ export function Nav() {
         </ul>
 
         <div className="flex items-center gap-[12px]">
+          {/* The coffee plays on its own; the label unfurls on hover. The
+              0fr -> 1fr grid track animates width without a magic max-width. */}
           <a
             href="#contact"
-            className="flex items-center rounded-full border-[1.469px] border-ink bg-ink px-[12px] py-[6px] text-[13px] leading-none text-white transition-colors hover:bg-[#1a1a1a] sm:px-[15.673px] sm:py-[7.837px] sm:text-[15px]"
+            className="group flex items-center rounded-full border border-transparent py-[4px] pr-[4px] pl-[4px] transition-colors duration-300 hover:border-[#e6e6e6] hover:bg-[#f7f7f7]"
           >
-            {site.ctaLabel}
+            <CoffeeLottie className="size-[32px] shrink-0 sm:size-[38px]" />
+            <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-[350ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:grid-cols-[1fr] motion-reduce:transition-none">
+              <span className="overflow-hidden">
+                <span className="block pr-[12px] pl-[8px] text-[13px] leading-none font-medium whitespace-nowrap text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none sm:text-[15px]">
+                  {site.ctaLabel}
+                </span>
+              </span>
+            </span>
           </a>
 
           <button

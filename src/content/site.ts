@@ -1,5 +1,4 @@
 export const site = {
-  initials: "PS",
   name: "Pankaj Sarkar",
   greeting: "Hey, I'm Pankaj Sarkar",
   role: "Senior Product Designer at Delhivery",
@@ -9,7 +8,7 @@ export const site = {
     "I lead mobile design for one of India's largest logistics platform",
   ],
   portrait: "/assets/hero/portrait.png",
-  ctaLabel: "Coffee's on me",
+  ctaLabel: "Let's talk",
   nav: [
     { label: "Work", href: "#work" },
     { label: "About", href: "#beyond" },
