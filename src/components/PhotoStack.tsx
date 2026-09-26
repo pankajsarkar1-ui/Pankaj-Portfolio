@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Logo } from "@/components/Logo";
-import { site } from "@/content/site";
+import type { HeroCard } from "@/content/heroCards";
 
 /**
  * The hero's profile card deck. Tapping the front card arcs it out to the
@@ -21,7 +21,7 @@ import { site } from "@/content/site";
 const STAGE = { w: 680, h: 700 };
 /** Top-left of the front card within the stage. */
 const ORIGIN = { x: 110, y: 60 };
-const COUNT = 3;
+
 
 /** Resting poses, front to back — depth comes from translateZ + perspective. */
 const SLOTS = [
@@ -39,7 +39,17 @@ function Monogram() {
   );
 }
 
-export function PhotoStack({ className }: { className?: string }) {
+export function PhotoStack({
+  className,
+  cards,
+  onActiveChange,
+}: {
+  className?: string;
+  cards: readonly HeroCard[];
+  /** Fires with the index of the card that has come to the front. */
+  onActiveChange?: (index: number) => void;
+}) {
+  const COUNT = cards.length;
   const hostRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
   const [top, setTop] = useState(0);
@@ -81,8 +91,10 @@ export function PhotoStack({ className }: { className?: string }) {
   // One shuffle at a time; the flight is 1.5s, so the lock lifts just after.
   const tap = () => {
     if (busy) return;
+    const next = (top + 1) % COUNT;
     setSending(top);
-    setTop((t) => (t + 1) % COUNT);
+    setTop(next);
+    onActiveChange?.(next);
     timer.current = window.setTimeout(() => setSending(null), 1550);
   };
 
@@ -118,7 +130,7 @@ export function PhotoStack({ className }: { className?: string }) {
                 "psDeckIn 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both",
             }}
           >
-          {[0, 1, 2].map((id) => {
+          {cards.map((card, id) => {
             const slot = (((id - top) % COUNT) + COUNT) % COUNT;
             const pose = SLOTS[slot];
             const isFront = slot === 0;
@@ -132,16 +144,12 @@ export function PhotoStack({ className }: { className?: string }) {
 
             return (
               <button
-                key={id}
+                key={card.id}
                 type="button"
                 className={cls}
                 disabled={!active}
                 onClick={tap}
-                aria-label={
-                  id === 0
-                    ? `Portrait of ${site.name} — flip and shuffle the stack`
-                    : "Flip and shuffle the card stack"
-                }
+                aria-label="Show the next card"
                 style={
                   {
                     left: ORIGIN.x,
@@ -156,14 +164,10 @@ export function PhotoStack({ className }: { className?: string }) {
                   <span className="ps-depth">
                     <span className="ps-flipper">
                       <span className="ps-lift">
-                        {/* every card carries the portrait, so a shuffle never
-                            leaves the hero without a photo — at rest only their
-                            edges show anyway */}
                         <span className="ps-face ps-face-front">
                           <Image
-                            src="/assets/hero/portrait-card.png"
-                            alt={id === 0 ? site.name : ""}
-                            aria-hidden={id === 0 ? undefined : true}
+                            src={card.image}
+                            alt={card.alt}
                             fill
                             sizes="(max-width: 1024px) 80vw, 420px"
                             priority={id === 0}

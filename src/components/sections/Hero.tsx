@@ -1,15 +1,21 @@
-import { Fragment, type CSSProperties } from "react";
+"use client";
+
+import { Fragment, useState, type CSSProperties } from "react";
 import { Nav } from "@/components/Nav";
 import { PhotoStack } from "@/components/PhotoStack";
+import { heroCards } from "@/content/heroCards";
 import { site } from "@/content/site";
 
 const RISE =
   "[animation:heroRise_680ms_cubic-bezier(.22,1,.36,1)_both] motion-reduce:[animation:none]";
 
 export function Hero() {
-  const roleWords = site.role.split(" ");
+  /** Which card is at the front of the deck; its headline sits beside it. */
+  const [active, setActive] = useState(0);
+  const headline = heroCards[active].title;
+  const words = headline.split(" ");
   /** The scroll cue picks up where the last word of the headline left off. */
-  const afterRole = 140 + roleWords.length * 70;
+  const afterRole = 140 + heroCards[0].title.split(" ").length * 70;
 
   return (
     <section
@@ -46,8 +52,11 @@ export function Hero() {
               is set below the width that merely fits, so the line stops short
               of the column edge rather than crowding the deck. Below lg the
               hero stacks and the copy has the full width, so 48px stands. */}
-          <h1 className="font-display max-w-[280px] text-[24px] leading-[1.14] font-bold tracking-[-0.0426em] text-ink text-balance sm:max-w-[440px] sm:text-[48px] sm:leading-[1.12] lg:text-[clamp(30px,2.7vw,48px)]">
-            {roleWords.map((word, i) => (
+          <h1
+            key={active}
+            className="font-display max-w-[280px] min-h-[2.28em] text-[24px] leading-[1.14] font-bold tracking-[-0.0426em] text-ink text-balance sm:max-w-[440px] sm:min-h-[2.24em] sm:text-[48px] sm:leading-[1.12] lg:text-[clamp(30px,2.7vw,48px)]"
+          >
+            {words.map((word, i) => (
               <Fragment key={`${word}-${i}`}>
                 {i > 0 ? " " : null}
                 <span
@@ -85,7 +94,11 @@ export function Hero() {
           </a>
         </div>
 
-        <PhotoStack className="mx-auto w-full max-w-[420px] lg:mx-0 lg:ml-auto lg:max-w-[560px]" />
+        <PhotoStack
+          cards={heroCards}
+          onActiveChange={setActive}
+          className="mx-auto w-full max-w-[420px] lg:mx-0 lg:ml-auto lg:max-w-[560px]"
+        />
       </div>
     </section>
   );
