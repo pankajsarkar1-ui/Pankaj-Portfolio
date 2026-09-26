@@ -10,8 +10,8 @@ export function Nav() {
 
   return (
     <nav className="relative border-b border-nav-border bg-white">
-      <div className="mx-auto flex h-[64px] w-full max-w-[1190px] items-center justify-between px-[16px] sm:h-[112.673px] sm:px-[20px]">
-        <a href="#top" className="ml-[10px] flex items-center text-ink sm:ml-[12px]">
+      <div className="mx-auto flex h-[64px] w-full max-w-[1190px] items-center justify-between px-[16px] sm:h-[112.673px] sm:px-[32px] lg:px-[6.4%]">
+        <a href="#top" className="flex items-center text-ink">
           <Logo className="h-[20px] w-auto sm:h-[24px]" />
           <span className="sr-only">{site.name} — home</span>
         </a>

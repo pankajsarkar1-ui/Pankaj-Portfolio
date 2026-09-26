@@ -130,7 +130,8 @@ export default function OrderTrackingPage() {
       {/* ── hero ─────────────────────────────────────────────── */}
       <Shell>
         <div className="mt-[16px] flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-shell-border bg-white sm:mt-[28px]">
-          <nav className="flex items-center justify-between border-b border-nav-border px-[16px] py-[16px] sm:px-[32px] sm:py-[22px]">
+          {/* gutters track the hero copy below, so the mark lines up with the title */}
+          <nav className="flex items-center justify-between border-b border-nav-border px-[16px] py-[16px] sm:px-[48px] sm:py-[22px]">
             <a href="/" className="flex items-center text-ink">
               <Logo className="h-[20px] w-auto sm:h-[24px]" />
               <span className="sr-only">{site.name} — home</span>
