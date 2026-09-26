@@ -82,7 +82,7 @@ export function TabChips({
         const active = tab.id === activeId;
         const base =
           size === "lg"
-            ? "relative z-10 cursor-pointer rounded-full px-[20px] py-[12px] text-[15px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[30px] sm:py-[16px] sm:text-[19px]"
+            ? "relative z-10 cursor-pointer rounded-full px-[20px] py-[8px] text-[15px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[30px] sm:py-[10px] sm:text-[19px]"
             : "relative z-10 cursor-pointer rounded-full px-[12px] py-[6px] text-[13px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[17.323px] sm:py-[8.662px] sm:text-[15.158px]";
 
         // When the sliding pill is present it provides the active fill, so the

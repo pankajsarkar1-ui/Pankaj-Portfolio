@@ -38,7 +38,7 @@ const SAMPLES = 12;
  * stroke — which on line art hangs outside the geometry. Sampling across frames
  * catches parts that are not drawn at frame 0, such as trimmed steam.
  */
-function fitToArtwork(anim: AnimationItem, svg: SVGSVGElement) {
+function fitToArtwork(anim: AnimationItem, svg: SVGSVGElement, scale: number) {
   const box = svg.getBoundingClientRect();
   if (!box.width || !box.height) return;
 
@@ -101,7 +101,10 @@ function fitToArtwork(anim: AnimationItem, svg: SVGSVGElement) {
   // A square keeps the mark's proportions whatever box it is given. A mark
   // wider than it is tall then runs past the sides, which is why the drawing
   // is allowed to spill out of the viewBox.
-  const side = height / FILL;
+  //
+  // `scale` widens the crop to render the mark smaller: the marks stand at a
+  // common measured height, but some read heavier than others at it.
+  const side = height / (FILL * scale);
   svg.setAttribute("viewBox", `${cx - side / 2} ${cy - side / 2} ${side} ${side}`);
   svg.style.overflow = "visible";
 }
@@ -109,9 +112,12 @@ function fitToArtwork(anim: AnimationItem, svg: SVGSVGElement) {
 export function LottieMark({
   src,
   className,
+  scale = 1,
 }: {
   src: string;
   className?: string;
+  /** Fine trim on the fitted size — 0.8 renders the mark a fifth smaller. */
+  scale?: number;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
 
@@ -141,7 +147,7 @@ export function LottieMark({
 
       anim.addEventListener("DOMLoaded", () => {
         const svg = host.querySelector("svg");
-        if (svg && anim) fitToArtwork(anim, svg);
+        if (svg && anim) fitToArtwork(anim, svg, scale);
         if (still) {
           anim?.goToAndStop(0, true);
           return;
@@ -162,7 +168,7 @@ export function LottieMark({
       if (timer) window.clearTimeout(timer);
       anim?.destroy();
     };
-  }, [src]);
+  }, [src, scale]);
 
   return <div ref={hostRef} className={className} aria-hidden />;
 }

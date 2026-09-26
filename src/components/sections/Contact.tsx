@@ -72,6 +72,7 @@ const DRINKS = [
     id: "chai",
     label: "Chai",
     lottie: "/assets/lottie/tea.json",
+    scale: 1,
     time: "60 min",
     title: "Cutting chai",
     blurb: "One cup, one hour, and we'll have solved half of it.",
@@ -80,6 +81,9 @@ const DRINKS = [
     id: "coffee",
     label: "Coffee",
     lottie: "/assets/lottie/coffee.json",
+    // Cup and glasses carry more ink than the chai, so they are trimmed back
+    // to sit at the same visual weight rather than the same measured height.
+    scale: 0.8,
     time: "2 hours",
     title: "The sensible one",
     blurb: 'A proper portfolio review. I\'ll say "it depends" at least four times.',
@@ -88,6 +92,7 @@ const DRINKS = [
     id: "beer",
     label: "Beer",
     lottie: "/assets/lottie/cheers.json",
+    scale: 0.8,
     time: "No cap",
     title: "No filter",
     blurb: "Two in and I'll tell you what I really think of your design system.",
@@ -264,7 +269,7 @@ export function Contact() {
           {headline}
         </h2>
         <p className="max-w-[560px] text-[14px] leading-[1.5] text-white/55 sm:text-[19px]">
-          Pick your drink &mdash; it sets how long, and how honest, the chat gets.
+          Pick your drink - it sets how long, and how honest, the chat gets.
         </p>
       </div>
 
@@ -294,6 +299,7 @@ export function Contact() {
             <LottieMark
               key={drink.id}
               src={drink.lottie}
+              scale={drink.scale}
               className="relative size-[104px] [filter:brightness(0)_invert(1)] sm:size-[140px]"
             />
             {burst ? (
@@ -309,9 +315,6 @@ export function Contact() {
 
           {/* copy + CTA */}
           <div className="flex min-w-0 flex-1 flex-col items-start gap-[10px] sm:gap-[14px]">
-            <span className="font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase sm:text-[12px]">
-              {drink.label} &middot; {drink.time}
-            </span>
             <p className="font-display text-[30px] leading-[1.02] font-bold text-white sm:text-[48px]">
               {drink.title}
             </p>
