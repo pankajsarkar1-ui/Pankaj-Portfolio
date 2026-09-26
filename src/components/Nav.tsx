@@ -31,7 +31,10 @@ export function Nav() {
 
         <div className="flex items-center gap-[12px]">
           {/* The coffee plays on its own; the label unfurls on hover. The
-              0fr -> 1fr grid track animates width without a magic max-width. */}
+              0fr -> 1fr grid track animates width without a magic max-width.
+              Anek's font box is lopsided (15 up, 10 down) for Devanagari
+              matras, so Latin ink rides ~0.19em above the centre of its line
+              box — the nudge puts the text's ink on the pill's centre line. */}
           <a
             href="#contact"
             className="group flex items-center rounded-full border border-transparent py-[4px] pr-[4px] pl-[12px] transition-colors duration-300 hover:border-[#e6e6e6] hover:bg-[#f7f7f7]"
@@ -39,7 +42,7 @@ export function Nav() {
             <CoffeeLottie className="size-[32px] shrink-0 sm:size-[38px]" />
             <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-[350ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:grid-cols-[1fr] motion-reduce:transition-none">
               <span className="overflow-hidden">
-                <span className="block pr-[12px] pl-[8px] text-[13px] leading-none font-medium whitespace-nowrap text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none sm:text-[15px]">
+                <span className="block translate-y-[0.19em] pr-[12px] pl-[8px] text-[13px] leading-none font-medium whitespace-nowrap text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none sm:text-[15px]">
                   {site.ctaLabel}
                 </span>
               </span>
