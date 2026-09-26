@@ -87,44 +87,12 @@ const DRINKS = [
   {
     id: "beer",
     label: "Beer",
-    /* No animation for this one yet, so it keeps the drawn glass. */
-    lottie: undefined as string | undefined,
+    lottie: "/assets/lottie/cheers.json",
     time: "No cap",
     title: "No filter",
     blurb: "Two in and I'll tell you what I really think of your design system.",
   },
 ];
-
-/** Flat line glassware, seen slightly from above so each rim reads as an ellipse. */
-function Cup({ kind, className }: { kind: string; className?: string }) {
-  return (
-    <svg viewBox="0 0 34 34" className={className} aria-hidden>
-      {kind === "chai" ? (
-        // Tapered cutting-chai glass
-        <g {...stroke}>
-          <ellipse cx="17" cy="10.4" rx="5.3" ry="2.1" />
-          <path d="M11.7 10.4l1.5 9.7c.2 1.2 1.6 1.8 3.8 1.8s3.6-.6 3.8-1.8l1.5-9.7" />
-          <path d="M12.6 15.9c1.2.5 2.7.7 4.4.7s3.2-.2 4.4-.7" />
-        </g>
-      ) : kind === "coffee" ? (
-        // Mug with handle
-        <g {...stroke}>
-          <ellipse cx="16.2" cy="10.6" rx="6.5" ry="2.7" />
-          <path d="M9.7 10.6v8.1c0 2 2.9 3 6.5 3s6.5-1 6.5-3v-8.1" />
-          <path d="M22.7 12.6c2.8 0 4.1 1.3 4.1 2.9s-1.4 2.8-3.5 2.8" />
-        </g>
-      ) : (
-        // Beer mug — foam line across the head, handle on the right
-        <g {...stroke}>
-          <ellipse cx="16" cy="9.6" rx="5.4" ry="2.2" />
-          <path d="M10.6 9.6v10.6c0 1.5 1.5 2.2 5.4 2.2s5.4-.7 5.4-2.2V9.6" />
-          <path d="M11.1 13.5c.9.7 2 .7 2.9 0s2-.7 2.9 0 2 .7 2.9 0" />
-          <path d="M21.4 12c2.5 0 3.6 1.1 3.6 2.6s-1.1 2.5-3.1 2.5" />
-        </g>
-      )}
-    </svg>
-  );
-}
 
 /** Chai steam: thin wisps off the top of the chip, each swaying a different
  *  way so they curl instead of rising in parallel. */
@@ -320,18 +288,11 @@ export function Contact() {
                would all but vanish against the panel behind them. */
             className="relative grid size-[150px] shrink-0 place-items-center self-center rounded-full bg-[#faf9f5] ring-1 ring-white/10 sm:size-[196px]"
           >
-            {drink.lottie ? (
-              <LottieMark
-                key={drink.id}
-                src={drink.lottie}
-                className="relative size-[96px] sm:size-[132px]"
-              />
-            ) : (
-              <Cup
-                kind={drink.id}
-                className="relative size-[78px] text-ink sm:size-[108px]"
-              />
-            )}
+            <LottieMark
+              key={drink.id}
+              src={drink.lottie}
+              className="relative size-[96px] sm:size-[132px]"
+            />
             {burst ? (
               <div
                 key={burst.key}
