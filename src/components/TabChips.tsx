@@ -14,6 +14,7 @@ export function TabChips({
   activeId,
   onChange,
   tone = "light",
+  size = "md",
   ariaLabel,
 }: {
   tabs: readonly Tab[];
@@ -21,6 +22,8 @@ export function TabChips({
   onChange: (id: string) => void;
   /** On the dark AI backdrop the active/idle fills swap. */
   tone?: "light" | "dark";
+  /** `lg` is the oversized picker used in the contact footer. */
+  size?: "md" | "lg";
   ariaLabel: string;
 }) {
   const listRef = useRef<HTMLDivElement>(null);
@@ -59,7 +62,9 @@ export function TabChips({
       ref={listRef}
       role="tablist"
       aria-label={ariaLabel}
-      className="relative flex flex-wrap gap-[8px] sm:gap-[10.827px]"
+      className={`relative flex flex-wrap ${
+        size === "lg" ? "gap-[10px] sm:gap-[14px]" : "gap-[8px] sm:gap-[10.827px]"
+      }`}
     >
       {pill ? (
         <span
@@ -76,7 +81,9 @@ export function TabChips({
       {tabs.map((tab) => {
         const active = tab.id === activeId;
         const base =
-          "relative z-10 cursor-pointer rounded-full px-[12px] py-[6px] text-[13px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[17.323px] sm:py-[8.662px] sm:text-[15.158px]";
+          size === "lg"
+            ? "relative z-10 cursor-pointer rounded-full px-[20px] py-[12px] text-[15px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[30px] sm:py-[16px] sm:text-[19px]"
+            : "relative z-10 cursor-pointer rounded-full px-[12px] py-[6px] text-[13px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[17.323px] sm:py-[8.662px] sm:text-[15.158px]";
 
         // When the sliding pill is present it provides the active fill, so the
         // active chip goes transparent and lets it show through. Before the
@@ -106,7 +113,7 @@ export function TabChips({
             className={`${base} ${skin}`}
           >
             {tab.icon ? (
-              <span className="flex items-center gap-[7px]">
+              <span className={`flex items-center ${size === "lg" ? "gap-[10px]" : "gap-[7px]"}`}>
                 {tab.icon}
                 {tab.label}
               </span>

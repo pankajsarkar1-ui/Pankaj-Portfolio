@@ -70,7 +70,6 @@ const DRINKS = [
   {
     id: "chai",
     label: "Chai",
-    icon: <Cup kind="chai" className="size-[20px] sm:size-[24px]" />,
     time: "60 min",
     title: "Cutting chai",
     blurb: "One cup, one hour, and we'll have solved half of it.",
@@ -78,7 +77,6 @@ const DRINKS = [
   {
     id: "coffee",
     label: "Coffee",
-    icon: <Cup kind="coffee" className="size-[20px] sm:size-[24px]" />,
     time: "2 hours",
     title: "The sensible one",
     blurb: 'A proper portfolio review. I\'ll say "it depends" at least four times.',
@@ -86,7 +84,6 @@ const DRINKS = [
   {
     id: "beer",
     label: "Beer",
-    icon: <Cup kind="beer" className="size-[20px] sm:size-[24px]" />,
     time: "No cap",
     title: "No filter",
     blurb: "Two in and I'll tell you what I really think of your design system.",
@@ -251,9 +248,9 @@ export function Contact() {
   const [drinkId, setDrinkId] = useState("coffee");
   const drink = DRINKS.find((d) => d.id === drinkId) ?? DRINKS[1];
 
-  // The flourish launches from the chip itself, so the chip is measured on
-  // click. `key` increments per click so the burst remounts and replays.
-  const chipsRef = useRef<HTMLDivElement>(null);
+  // The flourish erupts from the big glass, so the stage is measured on click.
+  // `key` increments per click so the burst remounts and replays.
+  const stageRef = useRef<HTMLDivElement>(null);
   const burstKey = useRef(0);
   const [burst, setBurst] = useState<{
     key: number;
@@ -264,77 +261,86 @@ export function Contact() {
 
   const pickDrink = (id: string) => {
     setDrinkId(id);
-
-    const wrap = chipsRef.current;
-    const chip = wrap?.querySelectorAll('[role="tab"]')[
-      DRINKS.findIndex((d) => d.id === id)
-    ];
-    if (!wrap || !chip) return;
-
-    const w = wrap.getBoundingClientRect();
-    const c = chip.getBoundingClientRect();
+    const stage = stageRef.current;
+    if (!stage) return;
+    const r = stage.getBoundingClientRect();
     burstKey.current += 1;
-    setBurst({
-      key: burstKey.current,
-      drink: id,
-      x: c.left - w.left + c.width / 2,
-      y: c.top - w.top + c.height / 2,
-    });
+    setBurst({ key: burstKey.current, drink: id, x: r.width / 2, y: r.height / 2 });
   };
 
   const { eyebrow, headline, links } = site.contact;
 
   // Pre-composes the mail so the picked drink carries through to the inbox.
   const mailto = `${links[0].href}?subject=${encodeURIComponent(
-    `Drink's on me — ${drink.label} (${drink.time})`,
+    `Drink's on me \u2014 ${drink.label} (${drink.time})`,
   )}&body=${encodeURIComponent(
-    `Hi Pankaj,\n\nI'd like to grab a ${drink.label.toLowerCase()} — ${drink.time.toLowerCase()}.\n\nWhat I'd love to talk about:\n\n`,
+    `Hi Pankaj,\n\nI'd like to grab a ${drink.label.toLowerCase()} \u2014 ${drink.time.toLowerCase()}.\n\nWhat I'd love to talk about:\n\n`,
   )}`;
 
   return (
     <footer
       id="contact"
-      className="flex flex-col gap-[36px] overflow-hidden rounded-[var(--radius-card)] bg-ink p-[20px] sm:gap-[56px] sm:p-[74.667px]"
+      className="flex flex-col gap-[36px] overflow-hidden rounded-[var(--radius-card)] bg-ink p-[20px] sm:gap-[52px] sm:p-[74.667px]"
     >
-      {/* statement left, picker panel right */}
-      <div className="flex flex-col gap-[28px] lg:flex-row lg:items-start lg:justify-between lg:gap-[60px]">
-        <div className="flex flex-col items-start gap-[12px] sm:gap-[19px]">
-          <p className="text-[11px] font-medium tracking-[2.6667px] text-ink-label uppercase sm:text-[16px]">
-            {eyebrow}
-          </p>
-          <h2 className="font-display text-[26px] leading-[1.12] font-semibold text-white sm:text-[44px] sm:leading-[1.1]">
-            {headline}
-          </h2>
-        </div>
+      {/* header */}
+      <div className="flex flex-col items-start gap-[10px] sm:gap-[16px]">
+        <p className="text-[11px] font-medium tracking-[2.6667px] text-ink-label uppercase sm:text-[16px]">
+          {eyebrow}
+        </p>
+        <h2 className="font-display text-[34px] leading-[1.04] font-semibold text-white sm:text-[64px] sm:leading-[1.02]">
+          {headline}
+        </h2>
+        <p className="max-w-[560px] text-[14px] leading-[1.5] text-white/55 sm:text-[19px]">
+          Pick your drink &mdash; it sets how long, and how honest, the chat gets.
+        </p>
+      </div>
 
-        {/* drink picker — the pour sets how long the chat runs */}
-        <div className="w-full rounded-[20px] border border-white/20 bg-white/[0.03] p-[18px] sm:rounded-[24px] sm:p-[26px] lg:max-w-[460px] lg:shrink-0">
-          <p className="mb-[14px] text-[13px] text-white/50 sm:text-[15px]">
-            Let&rsquo;s see how long we talk.
-          </p>
-          <div ref={chipsRef} className="relative">
-            <TabChips
-              tabs={DRINKS}
-              activeId={drinkId}
-              onChange={pickDrink}
-              tone="dark"
-              ariaLabel="Pick a drink"
+      {/* the picker, front and centre */}
+      <div className="flex flex-col gap-[22px] sm:gap-[30px]">
+        <TabChips
+          tabs={DRINKS}
+          activeId={drinkId}
+          onChange={pickDrink}
+          tone="dark"
+          size="lg"
+          ariaLabel="Pick a drink"
+        />
+
+        {/* what that round gets you */}
+        <div className="relative flex flex-col gap-[24px] rounded-[24px] border border-white/10 bg-gradient-to-br from-white/[0.09] to-white/[0.02] p-[24px] sm:flex-row sm:items-center sm:gap-[44px] sm:p-[40px]">
+          {/* glass on a spotlight; the burst launches from here */}
+          <div
+            ref={stageRef}
+            className="relative grid size-[150px] shrink-0 place-items-center self-center rounded-full bg-white/[0.05] ring-1 ring-white/10 sm:size-[196px]"
+          >
+            <div
+              aria-hidden
+              className="absolute inset-[14%] rounded-full bg-white/[0.04] blur-[2px]"
             />
-
-            {/* steam, drip or fizz — whichever suits the drink just picked */}
+            <Cup
+              kind={drink.id}
+              className="relative size-[78px] text-white sm:size-[108px]"
+            />
             {burst ? (
-              <div key={burst.key} aria-hidden className="pointer-events-none">
+              <div
+                key={burst.key}
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+              >
                 <Burst drink={burst.drink} x={burst.x} y={burst.y} />
               </div>
             ) : null}
           </div>
 
-          {/* what that round gets you */}
-          <div className="mt-[18px] rounded-[16px] bg-white/[0.07] p-[16px]">
-            <p className="font-display text-[17px] font-semibold text-white sm:text-[20px]">
-              {drink.time} · {drink.title}
+          {/* copy + CTA */}
+          <div className="flex min-w-0 flex-1 flex-col items-start gap-[10px] sm:gap-[14px]">
+            <span className="font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase sm:text-[12px]">
+              {drink.label} &middot; {drink.time}
+            </span>
+            <p className="font-display text-[30px] leading-[1.02] font-bold text-white sm:text-[48px]">
+              {drink.title}
             </p>
-            <p className="mt-[2px] text-[12px] text-white/50 sm:text-[13px]">
+            <p className="max-w-[520px] text-[14px] leading-[1.55] text-white/55 sm:text-[17px]">
               {drink.blurb}
             </p>
           </div>
