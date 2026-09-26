@@ -3,6 +3,7 @@ import { BeyondWork } from "@/components/sections/BeyondWork";
 import { Contact } from "@/components/sections/Contact";
 import { Experience } from "@/components/sections/Experience";
 import { Intro } from "@/components/Intro";
+import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { SelectedWork } from "@/components/sections/SelectedWork";
 
@@ -12,9 +13,17 @@ import { SelectedWork } from "@/components/sections/SelectedWork";
  * with the window rather than collapsing on laptops; the 720px floor keeps it
  * above the viewport on phones and tablets, where `w-full` takes over.
  */
-function Column({ children }: { children: React.ReactNode }) {
+function Column({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="mx-auto w-full max-w-[min(1190px,max(64vw,720px))] px-[16px] sm:px-[20px]">
+    <div
+      className={`mx-auto w-full max-w-[min(1190px,max(64vw,720px))] px-[16px] sm:px-[20px] ${className}`}
+    >
       {children}
     </div>
   );
@@ -25,7 +34,12 @@ export default function Home() {
     <>
     <Intro />
     <main className="flex flex-col gap-[40px] pt-[16px] pb-[40px] sm:gap-[80px] sm:pt-[28px] sm:pb-[80px]">
-      <Column>
+      {/* Sticky has to hang off main, not a Column — a Column only spans its
+          own section, so the bar would unstick the moment the hero ended. The
+          negative margin cancels main's flex gap so it stays welded to the
+          hero card. */}
+      <Nav />
+      <Column className="-mt-[40px] sm:-mt-[80px]">
         <Hero />
       </Column>
       <Column>

@@ -1,7 +1,6 @@
 "use client";
 
 import { Fragment, useState, type CSSProperties } from "react";
-import { Nav } from "@/components/Nav";
 import { PhotoStack } from "@/components/PhotoStack";
 import { heroCards } from "@/content/heroCards";
 import { site } from "@/content/site";
@@ -29,12 +28,12 @@ export function Hero() {
            * section label and gaps between the hero and that card.
            */
           "--fold-peek": "calc(0.0437 * min(1150px, 100vw - 40px))",
+          /* The bar is its own element now, so the fold has to allow for it. */
+          "--nav-h": "112.673px",
         } as CSSProperties
       }
-      className="flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-shell-border bg-white lg:min-h-[min(calc(100svh-115px-var(--fold-peek)),750px)]"
+      className="flex flex-col overflow-hidden rounded-b-[var(--radius-card)] border-x border-b border-shell-border bg-white lg:min-h-[min(calc(100svh-115px-var(--nav-h)-var(--fold-peek)),calc(750px-var(--nav-h)))]"
     >
-      <Nav />
-
       {/* Copy left, card deck right. 6.4% matches the 64px gutter the Figma
           frame carries at its 1002px width. */}
       <div className="flex flex-col gap-[24px] px-[16px] pt-[20px] pb-[28px] sm:gap-[36px] sm:px-[32px] sm:py-[40px] lg:grow lg:flex-row lg:items-center lg:gap-[24px] lg:px-[6.4%] lg:py-[40px]">
