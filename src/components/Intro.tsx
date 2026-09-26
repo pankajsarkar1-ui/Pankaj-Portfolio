@@ -48,13 +48,15 @@ const gateOnServer = () => false;
 export function Intro() {
   const playing = useSyncExternalStore(subscribeGate, readGate, gateOnServer);
   const pathRef = useRef<SVGPathElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!playing) return;
     const path = pathRef.current;
+    const svg = svgRef.current;
     const root = rootRef.current;
-    if (!path || !root) return;
+    if (!path || !svg || !root) return;
 
     // Declared ahead of `finish` because the reduced-motion branch calls it
     // immediately, before a `let` further down would be initialised.
@@ -79,6 +81,19 @@ export function Intro() {
     }
 
     const start = performance.now();
+
+    /**
+     * The bowl only grows to the right, so on its own the mark slides sideways
+     * as it fills — 67px off centre at full stretch, which reads as a lurch
+     * rather than a load. Pulling it back by half the width it gains keeps the
+     * mark centred, so it opens out from the middle instead.
+     */
+    const unit = svg.getBoundingClientRect().height / MARK_BOX.h;
+    const draw = (value: number) => {
+      const grown = value * MARK_STRETCH;
+      path.setAttribute("d", markPath(grown));
+      svg.style.transform = `translateX(${(-grown * unit) / 2}px)`;
+    };
 
     /**
      * The curtain is drawn frame by frame, and a tab that never gets frames —
@@ -124,7 +139,7 @@ export function Intro() {
         if (t >= 1) shown = 1;
       }
 
-      path.setAttribute("d", markPath(shown * MARK_STRETCH));
+      draw(shown);
 
       if (shown === 1 && !snapping) {
         snapping = true;
@@ -134,7 +149,7 @@ export function Intro() {
         const snap = () => {
           const t = Math.min((performance.now() - snapFrom) / SNAP_MS, 1);
           const eased = easeOutCubic(t);
-          path.setAttribute("d", markPath((1 - eased) * MARK_STRETCH));
+          draw(1 - eased);
           if (t < 1) {
             raf = requestAnimationFrame(snap);
           } else {
@@ -165,6 +180,7 @@ export function Intro() {
       className="intro-curtain fixed inset-0 z-[100] grid place-items-center bg-white"
     >
       <svg
+        ref={svgRef}
         viewBox={`0 0 ${MARK_BOX.w} ${MARK_BOX.h}`}
         className="h-[40px] overflow-visible text-ink sm:h-[52px]"
         fill="currentColor"
