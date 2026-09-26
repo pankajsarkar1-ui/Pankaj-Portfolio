@@ -2,6 +2,7 @@
 
 import { type CSSProperties, useRef, useState } from "react";
 import { CopyButton } from "@/components/CopyButton";
+import { LottieMark } from "@/components/LottieMark";
 import { TabChips } from "@/components/TabChips";
 import { site } from "@/content/site";
 
@@ -70,6 +71,7 @@ const DRINKS = [
   {
     id: "chai",
     label: "Chai",
+    lottie: "/assets/lottie/tea.json",
     time: "60 min",
     title: "Cutting chai",
     blurb: "One cup, one hour, and we'll have solved half of it.",
@@ -77,6 +79,7 @@ const DRINKS = [
   {
     id: "coffee",
     label: "Coffee",
+    lottie: "/assets/lottie/coffee.json",
     time: "2 hours",
     title: "The sensible one",
     blurb: 'A proper portfolio review. I\'ll say "it depends" at least four times.',
@@ -84,6 +87,8 @@ const DRINKS = [
   {
     id: "beer",
     label: "Beer",
+    /* No animation for this one yet, so it keeps the drawn glass. */
+    lottie: undefined as string | undefined,
     time: "No cap",
     title: "No filter",
     blurb: "Two in and I'll tell you what I really think of your design system.",
@@ -311,16 +316,22 @@ export function Contact() {
           {/* glass on a spotlight; the burst launches from here */}
           <div
             ref={stageRef}
-            className="relative grid size-[150px] shrink-0 place-items-center self-center rounded-full bg-white/[0.05] ring-1 ring-white/10 sm:size-[196px]"
+            /* Pale rather than dark: the animations are black line art, which
+               would all but vanish against the panel behind them. */
+            className="relative grid size-[150px] shrink-0 place-items-center self-center rounded-full bg-[#faf9f5] ring-1 ring-white/10 sm:size-[196px]"
           >
-            <div
-              aria-hidden
-              className="absolute inset-[14%] rounded-full bg-white/[0.04] blur-[2px]"
-            />
-            <Cup
-              kind={drink.id}
-              className="relative size-[78px] text-white sm:size-[108px]"
-            />
+            {drink.lottie ? (
+              <LottieMark
+                key={drink.id}
+                src={drink.lottie}
+                className="relative size-[96px] sm:size-[132px]"
+              />
+            ) : (
+              <Cup
+                kind={drink.id}
+                className="relative size-[78px] text-ink sm:size-[108px]"
+              />
+            )}
             {burst ? (
               <div
                 key={burst.key}

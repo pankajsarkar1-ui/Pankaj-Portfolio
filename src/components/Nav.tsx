@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CoffeeLottie } from "@/components/CoffeeLottie";
+import { LottieMark } from "@/components/LottieMark";
 import { Logo } from "@/components/Logo";
 import { site } from "@/content/site";
 
@@ -39,7 +39,7 @@ export function Nav() {
             href="#contact"
             className="group flex items-center rounded-full border border-transparent py-[4px] pr-[4px] pl-[12px] transition-colors duration-300 hover:border-[#e6e6e6] hover:bg-[#f7f7f7]"
           >
-            <CoffeeLottie className="size-[32px] shrink-0 sm:size-[38px]" />
+            <LottieMark src="/assets/lottie/coffee.json" className="size-[32px] shrink-0 sm:size-[38px]" />
             <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-[350ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:grid-cols-[1fr] motion-reduce:transition-none">
               <span className="overflow-hidden">
                 <span className="block translate-y-[0.19em] pr-[12px] pl-[8px] text-[13px] leading-none font-medium whitespace-nowrap text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none sm:text-[15px]">

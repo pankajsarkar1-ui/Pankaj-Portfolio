@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { CoffeeLottie } from "@/components/CoffeeLottie";
+import { LottieMark } from "@/components/LottieMark";
 import { site } from "@/content/site";
 
 /**
@@ -72,7 +72,7 @@ export function PillNav() {
           tabIndex={shown ? undefined : -1}
           className="grid place-items-center rounded-full p-[3px] transition-colors hover:bg-[#f0f0f0]"
         >
-          <CoffeeLottie className="size-[30px] sm:size-[32px]" />
+          <LottieMark src="/assets/lottie/coffee.json" className="size-[30px] sm:size-[32px]" />
         </a>
       </nav>
     </div>
