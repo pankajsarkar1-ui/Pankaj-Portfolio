@@ -7,6 +7,7 @@ import {
   Poppins,
   DM_Sans,
   IBM_Plex_Sans,
+  IBM_Plex_Mono,
 } from "next/font/google";
 import "./globals.css";
 import { site } from "@/content/site";
@@ -70,6 +71,14 @@ const poppins = Poppins({
   preload: false,
 });
 
+/** Case-study eyebrows and the section rail. */
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: `${site.name} — ${site.role}`,
   description: site.summary,
@@ -79,7 +88,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${anek.variable} ${manrope.variable} ${jakarta.variable} ${poppins.variable} ${dmSans.variable} ${plex.variable} h-full antialiased`}
+      className={`${inter.variable} ${anek.variable} ${manrope.variable} ${jakarta.variable} ${poppins.variable} ${dmSans.variable} ${plex.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>

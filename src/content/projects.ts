@@ -64,7 +64,7 @@ export const projects: Project[] = [
     subtitle:
       "Track all your shipments from e-commerce sites and couriers in one place",
     readLabel: "4 min read →",
-    href: "#",
+    href: "/work/order-tracking",
     design: { w: 1000, h: 437 },
     theme: {
       bg: "#4354EE",
