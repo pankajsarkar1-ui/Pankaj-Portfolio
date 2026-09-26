@@ -1,0 +1,66 @@
+"use client";
+
+import { useSyncExternalStore } from "react";
+import { site } from "@/content/site";
+
+/**
+ * The compact nav that takes over once the hero has scrolled away. The bar in
+ * the hero card stays where it is and scrolls off with it; this is a separate,
+ * narrower pill that carries just the section links.
+ */
+
+/** Shown once the hero's last pixel has left the viewport. */
+const readPastHero = () => {
+  const hero = document.getElementById("top");
+  return hero ? hero.getBoundingClientRect().bottom <= 0 : false;
+};
+const pastHeroOnServer = () => false;
+
+/** Read straight off the scroll position, so it cannot fall out of step. */
+const subscribeScroll = (cb: () => void) => {
+  window.addEventListener("scroll", cb, { passive: true });
+  window.addEventListener("resize", cb);
+  return () => {
+    window.removeEventListener("scroll", cb);
+    window.removeEventListener("resize", cb);
+  };
+};
+
+export function PillNav() {
+  const shown = useSyncExternalStore(
+    subscribeScroll,
+    readPastHero,
+    pastHeroOnServer,
+  );
+
+  return (
+    <div
+      className={`fixed inset-x-0 top-[12px] z-50 flex justify-center transition-all duration-300 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none sm:top-[18px] ${
+        shown
+          ? "translate-y-0 opacity-100"
+          : "pointer-events-none -translate-y-[12px] opacity-0"
+      }`}
+      // Out of the way of assistive tech until it is actually on screen.
+      aria-hidden={!shown}
+    >
+      <nav
+        aria-label="Sections"
+        className="rounded-full border border-shell-border bg-white/85 px-[6px] py-[6px] shadow-[0_8px_24px_-12px_rgba(0,0,0,0.30)] backdrop-blur-md"
+      >
+        <ul className="flex items-center gap-[2px]">
+          {site.nav.map((item) => (
+            <li key={item.label}>
+              <a
+                href={item.href}
+                tabIndex={shown ? undefined : -1}
+                className="block rounded-full px-[14px] py-[7px] text-[14px] font-medium text-ink-nav transition-colors hover:bg-[#f0f0f0] hover:text-ink sm:px-[18px] sm:text-[15px]"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  );
+}

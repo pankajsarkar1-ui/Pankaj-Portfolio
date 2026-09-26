@@ -1,57 +1,16 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import { CoffeeLottie } from "@/components/CoffeeLottie";
 import { Logo } from "@/components/Logo";
 import { site } from "@/content/site";
 
-/**
- * Fixed trigger line, deliberately not the bar's own height: the bar shrinks
- * when it condenses, so measuring it would move the very threshold that decided
- * to condense, and the two could chase each other near the boundary.
- */
-const CONDENSE_AT = 64;
-
-/** Read straight off the scroll position — no state to fall out of step. */
-const subscribeScroll = (cb: () => void) => {
-  window.addEventListener("scroll", cb, { passive: true });
-  window.addEventListener("resize", cb);
-  return () => {
-    window.removeEventListener("scroll", cb);
-    window.removeEventListener("resize", cb);
-  };
-};
-const readCondensed = () => {
-  const hero = document.getElementById("top");
-  return hero ? hero.getBoundingClientRect().bottom <= CONDENSE_AT : false;
-};
-const condensedOnServer = () => false;
-
 export function Nav() {
   const [open, setOpen] = useState(false);
-  /** True once the hero has scrolled entirely behind the bar. */
-  const condensed = useSyncExternalStore(
-    subscribeScroll,
-    readCondensed,
-    condensedOnServer,
-  );
 
   return (
-    <nav className="sticky top-0 z-50">
-      {/* Matches Column, so the bar sits exactly over the cards below it. */}
-      <div className="mx-auto w-full max-w-[min(1190px,max(64vw,720px))] px-[16px] sm:px-[20px]">
-        <div
-          className={`rounded-t-[var(--radius-card)] border-x border-t border-b border-shell-border border-b-nav-border bg-white/90 backdrop-blur-md transition-shadow duration-300 ${
-            condensed
-              ? "shadow-[0_10px_28px_-18px_rgba(0,0,0,0.35)]"
-              : "shadow-none"
-          }`}
-        >
-          <div
-            className={`flex w-full items-center justify-between px-[16px] transition-[height] duration-300 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none sm:px-[32px] lg:px-[6.4%] ${
-              condensed ? "h-[56px] sm:h-[68px]" : "h-[64px] sm:h-[112.673px]"
-            }`}
-          >
+    <nav className="relative border-b border-nav-border bg-white">
+      <div className="mx-auto flex h-[64px] w-full max-w-[1190px] items-center justify-between px-[16px] sm:h-[112.673px] sm:px-[32px] lg:px-[6.4%]">
         <a href="#top" className="flex items-center text-ink">
           <Logo className="h-[20px] w-auto sm:h-[24px]" />
           <span className="sr-only">{site.name} — home</span>
@@ -107,15 +66,11 @@ export function Nav() {
             </svg>
           </button>
         </div>
-          </div>
-        </div>
       </div>
 
       {open ? (
-        <div className="absolute inset-x-0 top-full z-50 md:hidden">
-          {/* Same column as the bar, so the panel hangs off its exact edges. */}
-          <div className="mx-auto w-full max-w-[min(1190px,max(64vw,720px))] px-[16px] sm:px-[20px]">
-            <ul className="flex flex-col rounded-b-[var(--radius-card)] border-x border-b border-shell-border bg-white px-[12px] py-[12px]">
+        <div className="absolute inset-x-0 top-full z-50 border-b border-nav-border bg-white md:hidden">
+          <ul className="flex flex-col px-[16px] py-[12px]">
             {site.nav.map((item) => (
               <li key={item.label}>
                 <a
@@ -127,8 +82,7 @@ export function Nav() {
                 </a>
               </li>
             ))}
-            </ul>
-          </div>
+          </ul>
         </div>
       ) : null}
     </nav>
