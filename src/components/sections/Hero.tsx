@@ -7,7 +7,7 @@ import { heroCards } from "@/content/heroCards";
 import { site } from "@/content/site";
 
 const RISE =
-  "[animation:heroRise_680ms_cubic-bezier(.22,1,.36,1)_both] motion-reduce:[animation:none]";
+  "hero-rise [animation:heroRise_680ms_cubic-bezier(.22,1,.36,1)_both] motion-reduce:[animation:none]";
 
 export function Hero() {
   /** Which card is at the front of the deck; its headline sits beside it. */

@@ -449,3 +449,35 @@ body {
   .ps-card.fan-1 .ps-swing,
   .ps-card.fan-2 .ps-swing { animation: none; }
 }
+
+/* ─── homepage intro ────────────────────────────────────────────────
+   `data-intro` is set before first paint by the gate in layout.tsx, so the
+   page is held back rather than flashing behind the curtain. The hero's own
+   entrance is paused rather than delayed, so it plays once the curtain lifts
+   instead of running unseen underneath it. */
+html[data-intro="playing"] body {
+  background: #fff;
+}
+html[data-intro="playing"] main {
+  opacity: 0;
+}
+html[data-intro="playing"] .hero-rise {
+  animation-play-state: paused;
+}
+main {
+  transition: opacity 0.5s ease 0.05s;
+}
+
+.intro-curtain {
+  transition: opacity 0.34s ease;
+}
+.intro-curtain[data-state="leaving"] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main,
+  .intro-curtain {
+    transition: none;
+  }
+}

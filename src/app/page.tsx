@@ -2,6 +2,7 @@ import { AiExperiments } from "@/components/sections/AiExperiments";
 import { BeyondWork } from "@/components/sections/BeyondWork";
 import { Contact } from "@/components/sections/Contact";
 import { Experience } from "@/components/sections/Experience";
+import { Intro } from "@/components/Intro";
 import { Hero } from "@/components/sections/Hero";
 import { SelectedWork } from "@/components/sections/SelectedWork";
 
@@ -21,6 +22,8 @@ function Column({ children }: { children: React.ReactNode }) {
 
 export default function Home() {
   return (
+    <>
+    <Intro />
     <main className="flex flex-col gap-[40px] pt-[16px] pb-[40px] sm:gap-[80px] sm:pt-[28px] sm:pb-[80px]">
       <Column>
         <Hero />
@@ -42,5 +45,6 @@ export default function Home() {
         <Contact />
       </Column>
     </main>
+    </>
   );
 }

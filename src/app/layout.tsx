@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import {
   Anek_Devanagari,
   Inter,
@@ -79,6 +80,27 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+/**
+ * Decides before first paint whether the homepage intro runs, so the hero is
+ * never briefly visible behind it. Plays on a first visit and on a refresh, but
+ * not when returning to the homepage later in the same session.
+ *
+ * `data-intro` holds the page back (see globals.css); the Intro component
+ * clears it when the curtain lifts, and the timeout is a failsafe so a hydration
+ * failure can never leave the page hidden.
+ */
+const INTRO_GATE = `(function(){try{
+  if(location.pathname!=='/')return;
+  var n=performance.getEntriesByType('navigation')[0];
+  var t=n&&n.type;
+  var seen=sessionStorage.getItem('intro-seen');
+  if(t==='back_forward')return;
+  if(t!=='reload'&&seen)return;
+  sessionStorage.setItem('intro-seen','1');
+  document.documentElement.dataset.intro='playing';
+  setTimeout(function(){delete document.documentElement.dataset.intro;},6000);
+}catch(e){}})();`;
+
 export const metadata: Metadata = {
   title: `${site.name} — ${site.role}`,
   description: site.summary,
@@ -88,9 +110,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      // `data-intro` is set by the gate below before React hydrates.
+      suppressHydrationWarning
       className={`${inter.variable} ${anek.variable} ${manrope.variable} ${jakarta.variable} ${poppins.variable} ${dmSans.variable} ${plex.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <Script
+          id="intro-gate"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: INTRO_GATE }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
