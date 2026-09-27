@@ -43,6 +43,14 @@ export type Project = {
     };
   };
   layers: BannerLayer[];
+  /**
+   * Below `sm` the banner turns portrait: the artwork moves into a box at the
+   * top and the copy stacks under it. Rather than a second set of layers, the
+   * box is a window onto this same stage — a rect in Figma px that the card
+   * scales up to fill the box. Its proportions also set the box's, so each
+   * card's art keeps its own shape instead of being squeezed into one.
+   */
+  mobileCrop: { x: number; y: number; w: number; h: number };
   /** Plays over the illustration on hover. Box is in Figma px, like the layers. */
   animation?: {
     kind: "tracking" | "coins" | "levels";
@@ -80,6 +88,8 @@ export const projects: Project[] = [
       { src: "/assets/work/stripe-s2.png", x: 1451.95, y: -724, w: 263, h: 1454, rotate: 30, move: { x: 0, y: 34 } },
       { src: "/assets/work/stripe-s1.png", x: 752.17, y: -145, w: 350.67, h: 1477.9, rotate: 30, originX: 12.5, move: { x: 0, y: -34 } },
     ],
+    // A window on the stripes where they read as a run of screens.
+    mobileCrop: { x: 622, y: 44, w: 360, h: 272 },
     // Timeline card lift/reveal is turned off for now. To re-enable, restore an
     // `animation: { kind: "tracking", box, hides, lift }` block (lift asset:
     // /assets/work/track-card-lift.png) and swap the stripes back to the baked
@@ -100,6 +110,8 @@ export const projects: Project[] = [
     // Coins has no baked static — CoinCardAnimation renders continuously (still
     // frame at rest, pointer parallax on hover), so there is no swap to smooth.
     layers: [],
+    // The balance card fills the box, so the crop is the animation box itself.
+    mobileCrop: { x: 452, y: 86, w: 480, h: 288 },
     animation: {
       kind: "coins",
       // Card size; the component draws the front coin (hidden on hover) + rear coin.
@@ -120,6 +132,9 @@ export const projects: Project[] = [
       timeline: { fill: "#FFF375", marker: "#7A1E10", icon: "crown" },
     },
     layers: [],
+    // The level card draws taller than its declared box (its own stage is
+    // 420x440 and it scales on width), so the crop follows the ink, not the box.
+    mobileCrop: { x: 560, y: 62, w: 340, h: 364 },
     animation: {
       kind: "levels",
       box: { x: 560, y: 70, w: 340, h: 314 },

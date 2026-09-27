@@ -37,11 +37,11 @@ export function Hero() {
 
       {/* Copy left, card deck right. 6.4% matches the 64px gutter the Figma
           frame carries at its 1002px width. */}
-      <div className="flex flex-col gap-[24px] px-[16px] pt-[20px] pb-[28px] sm:gap-[36px] sm:px-[32px] sm:py-[40px] lg:grow lg:flex-row lg:items-center lg:gap-[24px] lg:px-[6.4%] lg:py-[40px]">
-        <div className="flex shrink-0 flex-col items-start gap-[8px] sm:gap-[18px] lg:w-[50%]">
+      <div className="flex flex-col gap-[32px] px-[16px] py-[37px] sm:gap-[36px] sm:px-[32px] sm:py-[40px] lg:grow lg:flex-row lg:items-center lg:gap-[24px] lg:px-[6.4%] lg:py-[40px]">
+        <div className="flex shrink-0 flex-col items-center gap-[16px] text-center sm:items-start sm:gap-[18px] sm:text-left lg:w-[50%]">
           <p
             style={{ animationDelay: "60ms" }}
-            className={`text-[13px] font-medium text-ink-muted sm:text-[18.182px] ${RISE}`}
+            className={`text-[16px] font-semibold text-ink-muted sm:text-[18.182px] sm:font-medium ${RISE}`}
           >
             {site.greeting}
           </p>
@@ -54,7 +54,7 @@ export function Hero() {
               hero stacks and the copy has the full width, so 48px stands. */}
           <h1
             key={active}
-            className="font-display max-w-[280px] min-h-[2.28em] text-[24px] leading-[1.14] font-bold tracking-[-0.0426em] text-ink text-balance sm:max-w-[440px] sm:min-h-[2.24em] sm:text-[48px] sm:leading-[1.12] lg:text-[clamp(30px,2.7vw,48px)]"
+            className="font-display max-w-[294px] min-h-[72px] text-[28px] leading-[36px] font-bold tracking-[-1px] text-ink text-balance sm:max-w-[440px] sm:min-h-[2.24em] sm:text-[48px] sm:leading-[1.12] sm:tracking-[-0.0426em] lg:text-[clamp(30px,2.7vw,48px)]"
           >
             {words.map((word, i) => (
               <Fragment key={`${word}-${i}`}>
@@ -97,7 +97,7 @@ export function Hero() {
         <PhotoStack
           cards={heroCards}
           onActiveChange={setActive}
-          className="mx-auto w-full max-w-[420px] lg:mx-0 lg:ml-auto lg:max-w-[560px]"
+          className="mx-auto w-full max-w-[250px] sm:max-w-[420px] lg:mx-0 lg:ml-auto lg:max-w-[560px]"
         />
       </div>
     </section>

@@ -10,7 +10,7 @@ export function Nav() {
 
   return (
     <nav className="relative border-b border-nav-border bg-white">
-      <div className="mx-auto flex h-[64px] w-full max-w-[1190px] items-center justify-between px-[16px] sm:h-[112.673px] sm:px-[32px] lg:px-[6.4%]">
+      <div className="mx-auto flex h-[72px] w-full max-w-[1190px] items-center justify-between px-[24px] sm:h-[112.673px] sm:px-[32px] lg:px-[6.4%]">
         <a href="#top" className="flex items-center text-ink">
           <Logo className="h-[20px] w-auto sm:h-[24px]" />
           <span className="sr-only">{site.name} — home</span>
@@ -59,9 +59,9 @@ export function Nav() {
               {open ? (
                 <path d="M4.5 4.5L13.5 13.5M4.5 13.5L13.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               ) : (
-                <>
-                  <path d="M3 5.5h12M3 9h12M3 12.5h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </>
+                /* Two bars, not three — the mark it sits beside is light, and
+                   a third rung reads heavier than the rest of the nav. */
+                <path d="M3 6.5h12M3 11.5h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               )}
             </svg>
           </button>
