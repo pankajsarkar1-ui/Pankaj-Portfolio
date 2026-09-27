@@ -16,8 +16,16 @@ function ScrollReveal({ children }: { children: React.ReactNode }) {
       setVisible(true);
       return;
     }
+    // Reveal once and stay revealed. Setting `visible` to isIntersecting in
+    // both directions meant a card scrolling out of the top edge flipped back
+    // to its hidden pose the instant it fell under the threshold, so any small
+    // scroll around that line made it flicker.
     const observer = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setVisible(true);
+        observer.disconnect();
+      },
       { threshold: 0.15 },
     );
     observer.observe(el);
