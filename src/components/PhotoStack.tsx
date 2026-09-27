@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { createPortal } from "react-dom";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Logo } from "@/components/Logo";
 import type { HeroCard } from "@/content/heroCards";
@@ -30,6 +31,15 @@ const SLOTS = [
   { x: -88, y: -56, z: -140, r: -15, zi: 10 },
 ];
 
+/** The deck's own entrance (psDeckIn), delay included. */
+const DECK_IN_MS = 1200;
+/** How long after the deck has settled the front card gives its one tug. */
+const NUDGE_AFTER_MS = 500;
+/** Matches the psNudge keyframe, so the class comes off when the tug ends. */
+const NUDGE_MS = 950;
+/** Horizontal travel that counts as a swipe rather than a stray finger. */
+const SWIPE_PX = 44;
+
 /** The mark on the dark reverse of every card — the flip's payoff. */
 function Monogram() {
   return (
@@ -55,6 +65,15 @@ export function PhotoStack({
   const [top, setTop] = useState(0);
   const [sending, setSending] = useState<number | null>(null);
   const timer = useRef<number | null>(null);
+  /** The one-off hint; cancelled for good the moment the deck is used. */
+  const [nudging, setNudging] = useState(false);
+  const usedRef = useRef(false);
+  /** Cursor-following hint, desktop only — there is no hover to catch on touch. */
+  const [tip, setTip] = useState<{ x: number; y: number } | null>(null);
+  const fineRef = useRef(false);
+  /** In-flight swipe, and whether the last gesture already counted as one. */
+  const dragRef = useRef<{ x: number; y: number; id: number } | null>(null);
+  const swipedRef = useRef(false);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -86,11 +105,61 @@ export function PhotoStack({
     [],
   );
 
+  useEffect(() => {
+    fineRef.current = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+  }, []);
+
+  /**
+   * The load hint. It waits for the intro curtain, because the deck's own
+   * entrance is not paused with the rest of the hero and would otherwise tug
+   * at nothing behind a white screen; then for the entrance itself to land.
+   */
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let start = 0;
+    let stop = 0;
+    const run = (delay: number) => {
+      start = window.setTimeout(() => {
+        if (usedRef.current) return;
+        setNudging(true);
+        stop = window.setTimeout(() => setNudging(false), NUDGE_MS);
+      }, delay);
+    };
+
+    const root = document.documentElement;
+    let observer: MutationObserver | null = null;
+    if (root.dataset.intro) {
+      // The entrance has already played out under the curtain, so the tug can
+      // follow the moment it lifts.
+      observer = new MutationObserver(() => {
+        if (root.dataset.intro) return;
+        observer?.disconnect();
+        run(NUDGE_AFTER_MS);
+      });
+      observer.observe(root, { attributes: true, attributeFilter: ["data-intro"] });
+    } else {
+      run(DECK_IN_MS + NUDGE_AFTER_MS);
+    }
+
+    return () => {
+      observer?.disconnect();
+      window.clearTimeout(start);
+      window.clearTimeout(stop);
+    };
+  }, []);
+
   const busy = sending !== null;
 
   // One shuffle at a time; the flight is 1.5s, so the lock lifts just after.
   const tap = () => {
     if (busy) return;
+    // Whoever got here first has understood the deck; the hint is done.
+    usedRef.current = true;
+    setNudging(false);
+    setTip(null);
     const next = (top + 1) % COUNT;
     setSending(top);
     setTop(next);
@@ -98,11 +167,46 @@ export function PhotoStack({
     timer.current = window.setTimeout(() => setSending(null), 1550);
   };
 
+  /**
+   * Swipe, for touch. Either direction runs the same shuffle — the deck only
+   * cycles one way, and a swipe that did nothing would read as broken. The
+   * gesture is claimed on the move that crosses the threshold rather than on
+   * release, so it answers under the finger; a mostly-vertical drag is left
+   * alone so the page still scrolls.
+   */
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") return;
+    swipedRef.current = false;
+    dragRef.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    const d = dragRef.current;
+    if (!d || d.id !== e.pointerId) return;
+    const dx = e.clientX - d.x;
+    const dy = e.clientY - d.y;
+    if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) <= Math.abs(dy)) return;
+    dragRef.current = null;
+    swipedRef.current = true;
+    tap();
+  };
+  const endDrag = () => {
+    dragRef.current = null;
+  };
+
   return (
     <div
       ref={hostRef}
       className={className}
-      style={{ position: "relative", aspectRatio: `${STAGE.w} / ${STAGE.h}` }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
+      style={{
+        position: "relative",
+        aspectRatio: `${STAGE.w} / ${STAGE.h}`,
+        // Vertical panning stays with the browser; the sideways drag is ours.
+        touchAction: "pan-y",
+      }}
     >
       {scale > 0 ? (
         <div
@@ -141,6 +245,7 @@ export function PhotoStack({
             if (isFront) cls += " is-front";
             if (isSending) cls += " is-sending";
             else if (busy) cls += slot === 0 ? " fan-1" : " fan-2";
+            else if (isFront && nudging) cls += " is-nudging";
 
             return (
               <button
@@ -148,7 +253,22 @@ export function PhotoStack({
                 type="button"
                 className={cls}
                 disabled={!active}
-                onClick={tap}
+                onClick={() => {
+                  // A swipe that ended on the card has already shuffled it.
+                  if (swipedRef.current) return;
+                  tap();
+                }}
+                onPointerEnter={(e) => {
+                  if (fineRef.current && active) {
+                    setTip({ x: e.clientX, y: e.clientY });
+                  }
+                }}
+                onPointerMove={(e) => {
+                  if (fineRef.current && active) {
+                    setTip({ x: e.clientX, y: e.clientY });
+                  }
+                }}
+                onPointerLeave={() => setTip(null)}
                 aria-label="Show the next card"
                 style={
                   {
@@ -187,6 +307,40 @@ export function PhotoStack({
           </div>
         </div>
       ) : null}
+
+      {/* Portalled to the body: the hero card clips its own corners, and the
+          deck sits right up against them. */}
+      {tip && !busy && typeof document !== "undefined"
+        ? createPortal(
+            <div
+              style={{
+                position: "fixed",
+                left: tip.x + 6,
+                top: tip.y + 10,
+                zIndex: 9999,
+                pointerEvents: "none",
+                animation: "rlTooltip 200ms ease-out both",
+              }}
+            >
+              <div
+                style={{
+                  background: "#141413",
+                  color: "#faf9f5",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  padding: "5px 14px",
+                  borderRadius: 999,
+                  whiteSpace: "nowrap",
+                  boxShadow: "0 2px 12px rgba(0,0,0,.25)",
+                  letterSpacing: ".3px",
+                }}
+              >
+                Tap Tap!
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }
