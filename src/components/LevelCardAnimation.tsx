@@ -41,9 +41,18 @@ const earningsFor = (refers: number) => {
 export function LevelCardAnimation({
   className,
   hovered,
+  contained,
 }: {
   className?: string;
   hovered?: boolean;
+  /**
+   * True when the card sits in the tight mobile crop rather than the roomy
+   * landscape banner. The hover "pop" grows the stage 15% from its top-left
+   * corner — fine when the card has space around it, but in the crop it shoves
+   * the right-hand crown and the summary card past the window edge. So the pop
+   * is dropped here; the stage just fills the frame.
+   */
+  contained?: boolean;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
@@ -152,7 +161,7 @@ export function LevelCardAnimation({
             width: STAGE.w,
             height: STAGE.h,
             transformOrigin: "top left",
-            transform: `scale(${scale * (hovered ? 1.15 : 1)})`,
+            transform: `scale(${scale * (hovered && !contained ? 1.15 : 1)})`,
             transition: "transform 400ms cubic-bezier(.22,1,.36,1)",
           }}
         >

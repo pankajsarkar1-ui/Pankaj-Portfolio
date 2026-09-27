@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- decorative layers are pre-sized and positioned in % of the card box */
 
-import { type CSSProperties, useState } from "react";
+import { type CSSProperties, useState, useSyncExternalStore } from "react";
 import { BannerTimeline } from "@/components/BannerTimeline";
 import { CoinCardAnimation } from "@/components/CoinCardAnimation";
 import { LevelCardAnimation } from "@/components/LevelCardAnimation";
@@ -11,6 +11,21 @@ import type { Project } from "@/content/projects";
 const pct = (value: number, total: number) => `${(value / total) * 100}%`;
 /** Figma px → container-query width units, so type scales with the card. */
 const cq = (value: number, width: number) => `${(value / width) * 100}cqw`;
+
+/**
+ * Below `sm` the card is portrait and its artwork sits in a tight crop window.
+ * Some animations behave differently in that box, so they need to know — read
+ * as an external store to keep the server and first client render in step
+ * (both `false`), with the real value arriving without a hydration mismatch.
+ */
+const PORTRAIT_MQ = "(max-width: 639.98px)";
+const subscribePortrait = (cb: () => void) => {
+  const mq = window.matchMedia(PORTRAIT_MQ);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
+const readPortrait = () => window.matchMedia(PORTRAIT_MQ).matches;
+const portraitOnServer = () => false;
 
 /**
  * The banner is one card in two shapes. Landscape from `sm` up — artwork across
@@ -29,6 +44,11 @@ export function BannerCard({ project }: { project: Project }) {
 
   const [playing, setPlaying] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const portrait = useSyncExternalStore(
+    subscribePortrait,
+    readPortrait,
+    portraitOnServer,
+  );
   const anim = project.animation;
 
   const start = () => {
@@ -167,7 +187,7 @@ export function BannerCard({ project }: { project: Project }) {
               {anim.kind === "coins" ? (
                 <CoinCardAnimation className="absolute inset-0" />
               ) : anim.kind === "levels" ? (
-                <LevelCardAnimation className="absolute inset-0" hovered={hovered} />
+                <LevelCardAnimation className="absolute inset-0" hovered={hovered} contained={portrait} />
               ) : (
                 <TrackingAnimation className="absolute inset-0" instant />
               )}
