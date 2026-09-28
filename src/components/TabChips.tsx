@@ -82,7 +82,7 @@ export function TabChips({
         const active = tab.id === activeId;
         const base =
           size === "lg"
-            ? "relative z-10 cursor-pointer rounded-full px-[20px] py-[8px] text-[15px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[30px] sm:py-[10px] sm:text-[19px]"
+            ? "relative z-10 cursor-pointer rounded-full px-[20px] py-[5px] text-[15px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[30px] sm:py-[7px] sm:text-[17px]"
             : "relative z-10 cursor-pointer rounded-full px-[12px] py-[6px] text-[13px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[17.323px] sm:py-[8.662px] sm:text-[15.158px]";
 
         // When the sliding pill is present it provides the active fill, so the
@@ -93,7 +93,7 @@ export function TabChips({
         if (tone === "dark") {
           skin = active
             ? `font-semibold text-ink focus-visible:outline-white ${pill ? "bg-transparent" : "bg-chip-idle"}`
-            : "bg-ai-chip border border-ai-chip-border text-white hover:bg-[#1b2436] focus-visible:outline-white";
+            : "bg-ai-chip border border-ai-chip-border text-white hover:bg-[#303136] focus-visible:outline-white";
         } else {
           skin = active
             ? `font-semibold text-white focus-visible:outline-ink ${pill ? "bg-transparent" : "bg-ink"}`
@@ -115,10 +115,13 @@ export function TabChips({
             {tab.icon ? (
               <span className={`flex items-center ${size === "lg" ? "gap-[10px]" : "gap-[7px]"}`}>
                 {tab.icon}
-                {tab.label}
+                {/* Anek's font box is taller above the baseline than below, so
+                    Latin ink rides ~0.18em high in the line box; nudge it back
+                    onto the pill's centre line. */}
+                <span className="translate-y-[0.18em]">{tab.label}</span>
               </span>
             ) : (
-              tab.label
+              <span className="inline-block translate-y-[0.18em]">{tab.label}</span>
             )}
           </button>
         );

@@ -69,15 +69,6 @@ const SOCIAL_ICONS: Record<
 /** The drink you pick is the length — and the honesty level — of the chat. */
 const DRINKS = [
   {
-    id: "chai",
-    label: "Chai",
-    lottie: "/assets/lottie/tea.json",
-    scale: 1,
-    time: "60 min",
-    title: "Cutting chai",
-    blurb: "One cup, one hour, and we'll have solved half of it.",
-  },
-  {
     id: "coffee",
     label: "Coffee",
     lottie: "/assets/lottie/coffee.json",
@@ -87,6 +78,15 @@ const DRINKS = [
     time: "2 hours",
     title: "The sensible one",
     blurb: 'A proper portfolio review. I\'ll say "it depends" at least four times.',
+  },
+  {
+    id: "chai",
+    label: "Chai",
+    lottie: "/assets/lottie/tea.json",
+    scale: 1,
+    time: "60 min",
+    title: "Cutting chai",
+    blurb: "One cup, one hour, and we'll have solved half of it.",
   },
   {
     id: "beer",
@@ -224,7 +224,7 @@ function Burst({ drink, x, y }: { drink: string; x: number; y: number }) {
 
 export function Contact() {
   const [drinkId, setDrinkId] = useState("coffee");
-  const drink = DRINKS.find((d) => d.id === drinkId) ?? DRINKS[1];
+  const drink = DRINKS.find((d) => d.id === drinkId) ?? DRINKS[0];
 
   // The flourish erupts from the big glass, so the stage is measured on click.
   // `key` increments per click so the burst remounts and replays.
@@ -268,9 +268,6 @@ export function Contact() {
         <h2 className="font-display text-[34px] leading-[1.04] font-semibold text-white sm:text-[64px] sm:leading-[1.02]">
           {headline}
         </h2>
-        <p className="max-w-[560px] text-[14px] leading-[1.5] text-white/55 sm:text-[19px]">
-          Pick your drink - it sets how long, and how honest, the chat gets.
-        </p>
       </div>
 
       {/* the picker, front and centre */}
@@ -315,7 +312,7 @@ export function Contact() {
 
           {/* copy + CTA */}
           <div className="flex min-w-0 flex-1 flex-col items-start gap-[10px] sm:gap-[14px]">
-            <p className="font-display text-[30px] leading-[1.02] font-bold text-white sm:text-[48px]">
+            <p className="font-display text-[26px] leading-[1.05] font-bold text-white sm:text-[34px]">
               {drink.title}
             </p>
             <p className="max-w-[520px] text-[14px] leading-[1.55] text-white/55 sm:text-[17px]">
