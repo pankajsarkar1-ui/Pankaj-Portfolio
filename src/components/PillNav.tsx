@@ -66,13 +66,25 @@ export function PillNav() {
 
         <span aria-hidden className="mx-[6px] h-[18px] w-px bg-shell-border" />
 
+        {/* The cup plays on its own; "Let's talk" unfurls to its left on hover.
+            The 0fr -> 1fr grid track animates width with no magic max-width,
+            and it opens inward from the pill's right edge rather than pushing
+            past its rounded corner. Anek's font box sits high, so the label is
+            nudged down onto the row's centre line. */}
         <a
           href="#contact"
           aria-label={site.contact.eyebrow}
           tabIndex={shown ? undefined : -1}
-          className="grid place-items-center rounded-full p-[3px] transition-colors hover:bg-[#f0f0f0]"
+          className="group flex items-center rounded-full p-[3px] pr-[4px] transition-colors hover:bg-[#f0f0f0]"
         >
-          <LottieMark src="/assets/lottie/coffee.json" className="size-[30px] sm:size-[32px]" />
+          <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-[350ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:grid-cols-[1fr] motion-reduce:transition-none">
+            <span className="overflow-hidden">
+              <span className="block translate-y-[0.19em] pr-[8px] pl-[10px] text-[14px] leading-none font-medium whitespace-nowrap text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none sm:text-[15px]">
+                {site.ctaLabel}
+              </span>
+            </span>
+          </span>
+          <LottieMark src="/assets/lottie/coffee.json" className="size-[30px] shrink-0 sm:size-[32px]" />
         </a>
       </nav>
     </div>
