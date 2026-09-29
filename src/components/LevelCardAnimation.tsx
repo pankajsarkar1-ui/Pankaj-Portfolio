@@ -139,7 +139,10 @@ export function LevelCardAnimation({
   const level = crownIdx + 1;
   const remaining = Math.max(0, level * 5 - refers);
   const { x: px, y: py } = p;
-  const showTooltip = hovered && !congrats;
+  // Desktop follows the cursor; the mobile crop shows a static, pulsing hint
+  // instead, since there is no pointer to trail and tap is the whole point.
+  const showCursorTip = hovered && !congrats && !contained;
+  const showTapHint = hovered && !congrats && !!contained;
 
   const layer = (mx: number, my: number, extra = "") =>
     `translate3d(${px * mx}px, ${py * my}px, 0)${extra}`;
@@ -382,6 +385,32 @@ export function LevelCardAnimation({
               </div>
             )}
 
+            {/* A pulsing nudge to tap — mobile only, where there is no hover. */}
+            {showTapHint ? (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 18,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  zIndex: 5,
+                  pointerEvents: "none",
+                  background: "#fff",
+                  color: "#7A5A08",
+                  fontSize: 15,
+                  fontWeight: 700,
+                  padding: "7px 18px",
+                  borderRadius: 999,
+                  whiteSpace: "nowrap",
+                  letterSpacing: ".3px",
+                  boxShadow: "0 6px 18px rgba(0,0,0,.28)",
+                  animation: "rlTapHint 1.15s ease-in-out infinite",
+                }}
+              >
+                Tap Tap!
+              </div>
+            ) : null}
+
             {/* Finale confetti rain */}
             {congrats ? (
               <div
@@ -420,7 +449,7 @@ export function LevelCardAnimation({
       ) : null}
 
       {/* Cursor-sticky tooltip rendered via portal to escape overflow:hidden */}
-      {showTooltip && typeof document !== "undefined"
+      {showCursorTip && typeof document !== "undefined"
         ? createPortal(
             <div
               style={{

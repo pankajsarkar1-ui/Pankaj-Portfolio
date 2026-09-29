@@ -113,6 +113,10 @@ body {
   0% { opacity: 0; transform: translateY(-10px) scale(0.85); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
+@keyframes rlTapHint {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50%      { transform: translateX(-50%) scale(1.09); }
+}
 @keyframes rlPop {
   0% { opacity: 0; transform: translateY(26px) scale(0.5); }
   70% { opacity: 1; transform: translateY(-4px) scale(1.08); }

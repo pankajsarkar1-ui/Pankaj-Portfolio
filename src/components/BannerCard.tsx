@@ -1,7 +1,13 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- decorative layers are pre-sized and positioned in % of the card box */
 
-import { type CSSProperties, useState, useSyncExternalStore } from "react";
+import {
+  type CSSProperties,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { BannerTimeline } from "@/components/BannerTimeline";
 import { CoinCardAnimation } from "@/components/CoinCardAnimation";
 import { LevelCardAnimation } from "@/components/LevelCardAnimation";
@@ -61,6 +67,37 @@ export function BannerCard({ project }: { project: Project }) {
     setPlaying(false);
   };
 
+  /**
+   * Touch has no hover to play the artwork off, so on the portrait layout the
+   * card runs itself: it starts when it scrolls into view and resets when it
+   * leaves, so scrolling back to it plays it again. Desktop is left to hover.
+   */
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  useEffect(() => {
+    // Runs for every card, not just the ones with a live animation: the order
+    // tracking card's motion is its stripes sliding on `hovered`, no `anim`.
+    if (!portrait) return;
+    const el = cardRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHovered(true);
+          setPlaying(true);
+        } else {
+          setHovered(false);
+          setPlaying(false);
+        }
+      },
+      // Wait until it is comfortably on screen before it plays.
+      { threshold: 0.5 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [portrait, anim]);
+
   const vars = {
     "--card-ratio": `${design.w} / ${design.h}`,
     "--art-ratio": `${mobileCrop.w} / ${mobileCrop.h}`,
@@ -76,19 +113,21 @@ export function BannerCard({ project }: { project: Project }) {
     "--title-size": `clamp(22px, ${cq(64, w)}, 64px)`,
     "--body-size": `clamp(10px, ${cq(14, w)}, 15px)`,
     "--body-width": cq(340, w),
+    "--card-bg": theme.bgMobile ?? theme.bg,
+    "--card-bg-sm": theme.bg,
     containerType: "inline-size",
-    background: theme.bg,
   } as CSSProperties;
 
   return (
     <a
+      ref={cardRef}
       href={project.href}
       style={vars}
       onMouseEnter={start}
       onMouseLeave={stop}
       onFocus={start}
       onBlur={stop}
-      className="group relative flex w-full flex-col overflow-hidden rounded-[24px] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:block sm:aspect-[var(--card-ratio)] sm:rounded-[40px]"
+      className="group relative flex w-full flex-col overflow-hidden rounded-[24px] bg-[var(--card-bg)] sm:bg-[var(--card-bg-sm)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:block sm:aspect-[var(--card-ratio)] sm:rounded-[40px]"
     >
       {/* Perspective grid floor (exact vector from Figma). Both shapes stand it
           on the card's bottom edge; only its scale differs. */}
@@ -185,7 +224,7 @@ export function BannerCard({ project }: { project: Project }) {
               className={`absolute ${anim.kind === "levels" ? "" : "pointer-events-none"}`}
             >
               {anim.kind === "coins" ? (
-                <CoinCardAnimation className="absolute inset-0" />
+                <CoinCardAnimation className="absolute inset-0" active={hovered} />
               ) : anim.kind === "levels" ? (
                 <LevelCardAnimation className="absolute inset-0" hovered={hovered} contained={portrait} />
               ) : (

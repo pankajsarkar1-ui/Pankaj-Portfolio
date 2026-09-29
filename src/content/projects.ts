@@ -34,6 +34,8 @@ export type Project = {
   theme: {
     /** Solid banner background. */
     bg: string;
+    /** Optional override used only on the portrait (mobile) card. */
+    bgMobile?: string;
     title: string;
     /** Progress slider: filled colour, position marker, and start icon. */
     timeline: {
@@ -76,6 +78,7 @@ export const projects: Project[] = [
     design: { w: 1000, h: 437 },
     theme: {
       bg: "#4354EE",
+      bgMobile: "#3D5375",
       title: "#96FF9A",
       timeline: { fill: "#96FF9A", marker: "#27457A", icon: "pin" },
     },

@@ -24,10 +24,23 @@ const HEX_CLIP = "polygon(50% 0%, 100% 26%, 100% 74%, 50% 100%, 0% 74%, 0% 26%)"
  * and stats ride at different depths. The pointer is read from the window and
  * mapped to this box, because the layer itself is pointer-transparent.
  */
-export function CoinCardAnimation({ className }: { className?: string }) {
+export function CoinCardAnimation({
+  className,
+  active,
+}: {
+  className?: string;
+  /**
+   * Play the hover state without a pointer — for the mobile card, which scrolls
+   * itself into its animated pose. It lifts the coin, warms the glow and counts
+   * the balance up, and drives a slow parallax sway in place of the cursor.
+   */
+  active?: boolean;
+}) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
   const [p, setP] = useState({ on: false, tx: 0, ty: 0, px: 50, py: 50 });
+  // A live pointer over the card takes precedence over the `active` auto-sway.
+  const [pointerActive, setPointerActive] = useState(false);
   // Balance counts up on hover (coins being earned), eases back on leave.
   const BASE = 342;
   const PEAK = 366;
@@ -56,9 +69,10 @@ export function CoinCardAnimation({ className }: { className?: string }) {
       // Track a little beyond the card so the tilt settles rather than snapping.
       const near = x > -0.35 && x < 1.35 && y > -0.5 && y < 1.5;
       if (!near) {
-        setP({ on: false, tx: 0, ty: 0, px: 50, py: 50 });
+        setPointerActive(false);
         return;
       }
+      setPointerActive(true);
       setP({
         on: true,
         tx: Math.max(-1, Math.min(1, x * 2 - 1)),
@@ -71,6 +85,36 @@ export function CoinCardAnimation({ className }: { className?: string }) {
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
   }, []);
+
+  // When driven by `active` (no pointer), sway the tilt on a slow loop so the
+  // parallax the hover shows still plays; a live pointer takes over the moment
+  // it moves onto the card.
+  useEffect(() => {
+    let raf = 0;
+    if (active && !pointerActive) {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        raf = requestAnimationFrame(() =>
+          setP({ on: true, tx: 0, ty: 0, px: 50, py: 50 }),
+        );
+      } else {
+        const start = performance.now();
+        const loop = (now: number) => {
+          const t = (now - start) / 1000;
+          const sx = Math.sin(t * 0.9) * 0.6;
+          const sy = Math.cos(t * 0.7) * 0.45;
+          setP({ on: true, tx: sx, ty: sy, px: 50 + sx * 26, py: 50 + sy * 26 });
+          raf = requestAnimationFrame(loop);
+        };
+        raf = requestAnimationFrame(loop);
+      }
+    } else if (!active && !pointerActive) {
+      // Ease back to rest once nothing holds the card open.
+      raf = requestAnimationFrame(() =>
+        setP({ on: false, tx: 0, ty: 0, px: 50, py: 50 }),
+      );
+    }
+    return () => cancelAnimationFrame(raf);
+  }, [active, pointerActive]);
 
   const { on, tx, ty, px, py } = p;
 
