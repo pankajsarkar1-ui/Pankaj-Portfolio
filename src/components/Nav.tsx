@@ -52,7 +52,7 @@ export function Nav() {
               open ? "pointer-events-none opacity-0 md:pointer-events-auto" : "opacity-100"
             }`}
           >
-            <LottieMark src="/assets/lottie/coffee.json" className="size-[32px] shrink-0 sm:size-[38px]" />
+            <LottieMark src="/assets/lottie/coffee.json" className="size-[27px] shrink-0 sm:size-[38px]" />
             <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-[350ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:grid-cols-[1fr] motion-reduce:transition-none">
               <span className="overflow-hidden">
                 <span className="block translate-y-[0.19em] pr-[12px] pl-[8px] text-[13px] leading-none font-medium whitespace-nowrap text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none sm:text-[15px]">
@@ -72,7 +72,7 @@ export function Nav() {
             {/* Two bars that swing into an X — each rotates about its own centre
                 and slides to the middle, so the change is one motion, not a
                 swap. Two rungs, not three: the mark it sits beside is light. */}
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
+            <svg width="22" height="22" viewBox="0 0 18 18" fill="none" aria-hidden>
               <line
                 x1="3"
                 y1="6.5"
