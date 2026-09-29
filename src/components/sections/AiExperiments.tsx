@@ -17,7 +17,7 @@ export function AiExperiments() {
     aiExperiments.tabs.find((t) => t.id === activeId) ?? aiExperiments.tabs[0];
 
   return (
-    <section id="ai" className="flex flex-col gap-8">
+    <section id="ai" className="flex flex-col gap-8 [--tile-scale:0.8] sm:[--tile-scale:1]">
       <SectionLabel>{aiExperiments.label}</SectionLabel>
 
       <div className="relative w-full py-[92px] lg:h-[784px] lg:py-0">

@@ -16,7 +16,7 @@ export function BeyondWork() {
     beyondWork.tabs.find((t) => t.id === activeId) ?? beyondWork.tabs[0];
 
   return (
-    <section id="beyond" className="flex flex-col gap-8">
+    <section id="beyond" className="flex flex-col gap-8 [--tile-scale:0.85] sm:[--tile-scale:1]">
       <SectionLabel>{beyondWork.label}</SectionLabel>
 
       <div className="flex flex-col gap-[24px] rounded-[var(--radius-card)] bg-beyond-surface p-[16px] sm:gap-[48px] sm:p-[53.333px]">
@@ -28,6 +28,7 @@ export function BeyondWork() {
             tabs={beyondWork.tabs}
             activeId={activeId}
             onChange={setActiveId}
+            scroll
             ariaLabel="Personal interests"
           />
         </div>

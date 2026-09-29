@@ -15,6 +15,7 @@ export function TabChips({
   onChange,
   tone = "light",
   size = "md",
+  scroll = false,
   ariaLabel,
 }: {
   tabs: readonly Tab[];
@@ -24,6 +25,8 @@ export function TabChips({
   tone?: "light" | "dark";
   /** `lg` is the oversized picker used in the contact footer. */
   size?: "md" | "lg";
+  /** Keep the row on one line and let it scroll sideways rather than wrap. */
+  scroll?: boolean;
   ariaLabel: string;
 }) {
   const listRef = useRef<HTMLDivElement>(null);
@@ -43,8 +46,8 @@ export function TabChips({
       const b = btn.getBoundingClientRect();
       const l = list.getBoundingClientRect();
       setPill({
-        left: b.left - l.left,
-        top: b.top - l.top,
+        left: b.left - l.left + list.scrollLeft,
+        top: b.top - l.top + list.scrollTop,
         width: b.width,
         height: b.height,
       });
@@ -62,7 +65,11 @@ export function TabChips({
       ref={listRef}
       role="tablist"
       aria-label={ariaLabel}
-      className={`relative flex flex-wrap ${
+      className={`relative flex ${
+        scroll
+          ? "flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          : "flex-wrap"
+      } ${
         size === "lg" ? "gap-[10px] sm:gap-[14px]" : "gap-[8px] sm:gap-[10.827px]"
       }`}
     >
@@ -82,8 +89,8 @@ export function TabChips({
         const active = tab.id === activeId;
         const base =
           size === "lg"
-            ? "relative z-10 cursor-pointer rounded-full px-[20px] py-[5px] text-[15px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[30px] sm:py-[7px] sm:text-[17px]"
-            : "relative z-10 cursor-pointer rounded-full px-[12px] py-[6px] text-[13px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[17.323px] sm:py-[8.662px] sm:text-[15.158px]";
+            ? "relative z-10 shrink-0 cursor-pointer rounded-full px-[20px] py-[5px] text-[15px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[30px] sm:py-[7px] sm:text-[17px]"
+            : "relative z-10 shrink-0 cursor-pointer rounded-full px-[12px] py-[6px] text-[13px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-[17.323px] sm:py-[8.662px] sm:text-[15.158px]";
 
         // When the sliding pill is present it provides the active fill, so the
         // active chip goes transparent and lets it show through. Before the

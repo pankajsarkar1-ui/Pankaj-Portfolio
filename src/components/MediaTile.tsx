@@ -56,6 +56,9 @@ export function MediaTile({
   }, []);
 
   const isMedia = variant === "media";
+  // Both galleries shrink their tiles on small screens via a scale set on the
+  // section; it defaults to 1, so anywhere that does not set it is unaffected.
+  const k = "var(--tile-scale, 1)";
   const shell = isMedia
     ? `rounded-[var(--radius-media)] border-[0.5px] ${
         card.lightBorder ? "border-ai-card-border" : "border-chip-idle"
@@ -64,7 +67,11 @@ export function MediaTile({
 
   return (
     <figure
-      style={{ height, width: card.width, flex: `0 0 ${card.width}px` }}
+      style={{
+        height: `calc(${height}px * ${k})`,
+        width: `calc(${card.width}px * ${k})`,
+        flex: `0 0 calc(${card.width}px * ${k})`,
+      }}
       className={`group relative overflow-hidden bg-[#141414] transition-transform duration-300 ease-out will-change-transform hover:z-20 hover:scale-[1.05] motion-reduce:transition-none motion-reduce:hover:scale-100 ${shell}`}
     >
       {card.video ? (
