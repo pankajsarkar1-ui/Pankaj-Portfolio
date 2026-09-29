@@ -113,9 +113,10 @@ export function BannerCard({ project }: { project: Project }) {
     "--title-size": `clamp(22px, ${cq(64, w)}, 64px)`,
     "--body-size": `clamp(10px, ${cq(14, w)}, 15px)`,
     "--body-width": cq(340, w),
-    "--card-bg": theme.bgMobile ?? theme.bg,
-    "--card-bg-sm": theme.bg,
+    // Behind the portrait artwork only; the banner itself keeps theme.bg.
+    "--art-bg": theme.bgMobile ?? "transparent",
     containerType: "inline-size",
+    background: theme.bg,
   } as CSSProperties;
 
   return (
@@ -127,7 +128,7 @@ export function BannerCard({ project }: { project: Project }) {
       onMouseLeave={stop}
       onFocus={start}
       onBlur={stop}
-      className="group relative flex w-full flex-col overflow-hidden rounded-[24px] bg-[var(--card-bg)] sm:bg-[var(--card-bg-sm)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:block sm:aspect-[var(--card-ratio)] sm:rounded-[40px]"
+      className="group relative flex w-full flex-col overflow-hidden rounded-[24px] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:block sm:aspect-[var(--card-ratio)] sm:rounded-[40px]"
     >
       {/* Perspective grid floor (exact vector from Figma). Both shapes stand it
           on the card's bottom edge; only its scale differs. */}
@@ -153,7 +154,7 @@ export function BannerCard({ project }: { project: Project }) {
 
       {/* The artwork box: a cropped window on the stage when portrait, the whole
           card when landscape. */}
-      <div className="relative mx-[21px] mt-[23px] aspect-[var(--art-ratio)] overflow-hidden rounded-[16px] sm:absolute sm:inset-0 sm:m-0 sm:aspect-auto sm:rounded-none">
+      <div className="relative mx-[21px] mt-[23px] aspect-[var(--art-ratio)] overflow-hidden rounded-[16px] bg-[var(--art-bg)] sm:absolute sm:inset-0 sm:m-0 sm:aspect-auto sm:rounded-none sm:bg-transparent">
         <div className="absolute top-[calc(-100%*var(--cy)/var(--ch))] left-[calc(-100%*var(--cx)/var(--cw))] h-[calc(100%*var(--dh)/var(--ch))] w-[calc(100%*var(--dw)/var(--cw))] sm:inset-0 sm:size-full">
           {/* Illustration / stripes. Rotated stripes with a `move` slide along
               their own axis on hover (rotate first, so translateY runs down the
