@@ -76,6 +76,7 @@ export function AiExperiments() {
           {active.cards.length > 0 ? (
             /* Full-bleed: the row scrolls the whole viewport width. */
             <Carousel
+              key={activeId}
               gap={16}
               startInset={24}
               lgStartInset={60}

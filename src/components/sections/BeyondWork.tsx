@@ -36,6 +36,9 @@ export function BeyondWork() {
         {/* Negative margins let the row scroll to the card's own edges. */}
         <div className="-mx-[16px] sm:-mx-[53.333px]">
           <Carousel
+            // Remount on tab change so the row starts from the left again
+            // rather than holding the previous tab's scroll position.
+            key={activeId}
             gap={20}
             startInset={16}
             lgStartInset={53.333}
