@@ -38,7 +38,7 @@ export function Hero() {
       {/* Copy left, card deck right. 6.4% matches the 64px gutter the Figma
           frame carries at its 1002px width. */}
       <div className="flex flex-col gap-[32px] px-[16px] py-[37px] sm:gap-[36px] sm:px-[32px] sm:py-[40px] lg:grow lg:flex-row lg:items-center lg:gap-[24px] lg:px-[6.4%] lg:py-[40px]">
-        <div className="flex shrink-0 flex-col items-center gap-[16px] text-center sm:items-start sm:gap-[18px] sm:text-left lg:w-[50%]">
+        <div className="flex shrink-0 flex-col items-center gap-[16px] text-center sm:items-start sm:gap-[18px] sm:text-left lg:w-[46%]">
           <p
             style={{ animationDelay: "60ms" }}
             className={`text-[16px] font-semibold text-ink-muted sm:text-[18.182px] sm:font-medium ${RISE}`}
@@ -97,7 +97,7 @@ export function Hero() {
         <PhotoStack
           cards={heroCards}
           onActiveChange={setActive}
-          className="mx-auto w-full max-w-[250px] sm:max-w-[420px] lg:mx-0 lg:ml-auto lg:max-w-[560px]"
+          className="mx-auto w-full max-w-[340px] sm:max-w-[480px] lg:mx-0 lg:ml-auto lg:max-w-[640px] lg:flex-1"
         />
       </div>
     </section>
