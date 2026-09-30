@@ -37,6 +37,8 @@ const DECK_IN_MS = 1200;
 const NUDGE_AFTER_MS = 500;
 /** Matches the psNudge keyframe, so the class comes off when the tug ends. */
 const NUDGE_MS = 950;
+/** Idle spell on the landing after which the deck tugs again to re-invite. */
+const IDLE_MS = 5000;
 /** Horizontal travel that counts as a swipe rather than a stray finger. */
 const SWIPE_PX = 44;
 
@@ -151,7 +153,57 @@ export function PhotoStack({
     };
   }, []);
 
+  /**
+   * Keep inviting: while the deck is on screen and the visitor has gone quiet,
+   * tug it again every few seconds, the same tell as the load hint. Any real
+   * activity — a move, a key, a scroll — resets the wait, so it only fires
+   * during a genuine lull.
+   */
+  const busyRef = useRef(false);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const host = hostRef.current;
+    if (!host) return;
+
+    let visible = true;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(host);
+
+    let idle = 0;
+    let clear = 0;
+    const fire = () => {
+      if (visible && !busyRef.current && !document.hidden) {
+        setNudging(true);
+        clear = window.setTimeout(() => setNudging(false), NUDGE_MS);
+      }
+      idle = window.setTimeout(fire, IDLE_MS);
+    };
+    const reset = () => {
+      window.clearTimeout(idle);
+      idle = window.setTimeout(fire, IDLE_MS);
+    };
+
+    const events = ["pointerdown", "pointermove", "keydown", "wheel", "touchstart", "scroll"];
+    events.forEach((e) => window.addEventListener(e, reset, { passive: true }));
+    idle = window.setTimeout(fire, IDLE_MS);
+
+    return () => {
+      io.disconnect();
+      window.clearTimeout(idle);
+      window.clearTimeout(clear);
+      events.forEach((e) => window.removeEventListener(e, reset));
+    };
+  }, []);
+
   const busy = sending !== null;
+  useEffect(() => {
+    busyRef.current = busy;
+  }, [busy]);
 
   // One shuffle at a time; the flight is 1.5s, so the lock lifts just after.
   const tap = () => {
