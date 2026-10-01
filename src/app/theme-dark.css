@@ -1,0 +1,43 @@
+/* ─── Dark theme ────────────────────────────────────────────────────
+   Every value here is an override of a design token, keyed on
+   `html[data-theme="dark"]` (set before paint by the init script in
+   layout.tsx and flipped by the ThemeToggle). The whole feature is
+   opt-out: delete this file's @import from globals.css, the toggle from
+   the nav, and the init script, and the site is light-only again.
+
+   The already-dark sections (AI, Contact) and the brand-coloured banner
+   cards keep their own palettes — they read fine on a dark page. */
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --color-page: #0d0e11;
+  --color-surface: #16181d;
+  --color-shell-border: #282b31;
+  --color-nav-border: #23262c;
+  --color-beyond-surface: #15171b;
+  --color-experience-border: #2d3037;
+
+  /* Type */
+  --color-ink: #f2f2f0;
+  --color-ink-body: #b4b5ba;
+  --color-ink-muted: #8b8d93;
+  --color-ink-nav: #e5e5e7;
+  --color-ink-label: #9a9ca2;
+  --color-ink-date: #7e8086;
+
+  /* Tab chips (light tone) */
+  --color-chip-idle: #202228;
+  --color-chip-idle-border: #2d3037;
+
+  /* Case-study accent tint */
+  --color-accent-soft: #171c33;
+}
+
+/* A few surfaces are literal `bg-white` rather than a token; map the ones
+   that are page chrome to the dark surface. Scoped tightly so the small
+   white accents on already-dark panels are left alone. */
+html[data-theme="dark"] .theme-surface {
+  background-color: var(--color-surface);
+}

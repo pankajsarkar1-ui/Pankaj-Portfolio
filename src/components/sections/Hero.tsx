@@ -31,7 +31,7 @@ export function Hero() {
           "--fold-peek": "calc(0.0437 * min(1150px, 100vw - 40px))",
         } as CSSProperties
       }
-      className="flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-shell-border bg-white lg:min-h-[min(calc(100svh-115px-var(--fold-peek)),750px)]"
+      className="flex flex-col overflow-hidden theme-surface rounded-[var(--radius-card)] border border-shell-border bg-white lg:min-h-[min(calc(100svh-115px-var(--fold-peek)),750px)]"
     >
       <Nav />
 

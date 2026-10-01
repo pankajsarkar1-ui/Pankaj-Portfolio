@@ -9,7 +9,7 @@ export function Nav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="relative border-b border-nav-border bg-white">
+    <nav className="theme-surface relative border-b border-nav-border bg-white">
       <div className="mx-auto flex h-[72px] w-full max-w-[1190px] items-center justify-between px-[24px] sm:h-[112.673px] sm:px-[32px] lg:px-[6.4%]">
         {/* Logo and cup step aside while the mobile menu is open, leaving just
             the close control; they never move, so the X stays put. */}
@@ -105,7 +105,7 @@ export function Nav() {
           stagger. */}
       <div
         aria-hidden={!open}
-        className={`absolute inset-x-0 top-full z-50 grid bg-white transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(.22,1,.36,1)] md:hidden motion-reduce:transition-none ${
+        className={`theme-surface absolute inset-x-0 top-full z-50 grid bg-white transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(.22,1,.36,1)] md:hidden motion-reduce:transition-none ${
           open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         }`}
       >

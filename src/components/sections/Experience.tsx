@@ -14,7 +14,7 @@ export function Experience() {
     <section id="experience" className="flex flex-col gap-8">
       <SectionLabel>{experience.label}</SectionLabel>
 
-      <div className="flex flex-col gap-[20px] rounded-[var(--radius-card)] border border-experience-border bg-white p-[16px] sm:gap-[24px] sm:p-[53.333px]">
+      <div className="flex flex-col gap-[20px] theme-surface rounded-[var(--radius-card)] border border-experience-border bg-white p-[16px] sm:gap-[24px] sm:p-[53.333px]">
         <h2 className="text-[20px] font-bold text-ink sm:text-[37.333px]">
           {experience.title}
         </h2>
