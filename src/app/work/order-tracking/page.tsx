@@ -8,6 +8,7 @@ import { MoreWork } from "@/components/MoreWork";
 import { Icon, type IconName } from "@/components/case/CaseIcons";
 import { EtaDrift } from "@/components/case/EtaDrift";
 import { JourneyRail } from "@/components/case/JourneyRail";
+import { MapViews } from "@/components/case/MapViews";
 import { PlatformShots } from "@/components/case/PlatformShots";
 import { StoryTrack } from "@/components/case/StoryTrack";
 import { TicketBars } from "@/components/case/TicketBars";
@@ -24,6 +25,7 @@ const SECTIONS: readonly CaseSection[] = [
   { id: "goals", label: "Goals" },
   { id: "research", label: "Research" },
   { id: "turn", label: "The turn" },
+  { id: "iteration", label: "Iteration" },
   { id: "anatomy", label: "Anatomy" },
   { id: "flow", label: "The flow" },
   { id: "edge", label: "Edge cases" },
@@ -143,16 +145,16 @@ export default function OrderTrackingPage() {
         <div className="mt-[16px] flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-shell-border bg-white sm:mt-[28px]">
           {/* gutters track the hero copy below, so the mark lines up with the title */}
           <nav className="flex items-center justify-between border-b border-nav-border px-[16px] py-[16px] sm:px-[48px] sm:py-[22px]">
-            <Link href="/" className="flex items-center text-ink">
-              <Logo className="h-[20px] w-auto sm:h-[24px]" />
-              <span className="sr-only">{site.name} — home</span>
-            </Link>
             <Link
               href="/#work"
-              className="flex items-center gap-[8px] rounded-full px-[14px] py-[8px] text-[13px] font-medium text-ink-nav transition-colors hover:bg-chip-idle hover:text-ink"
+              className="-ml-[6px] flex items-center gap-[8px] rounded-full px-[14px] py-[8px] text-[13px] font-medium text-ink-nav transition-colors hover:bg-chip-idle hover:text-ink"
             >
               <Icon name="arrow" className="size-[16px] rotate-180" />
               All work
+            </Link>
+            <Link href="/" className="flex items-center text-ink">
+              <Logo className="h-[20px] w-auto sm:h-[24px]" />
+              <span className="sr-only">{site.name} — home</span>
             </Link>
           </nav>
 
@@ -465,37 +467,33 @@ export default function OrderTrackingPage() {
               </Band>
             </section>
 
+            {/* ── iteration (placeholder — content to come) ──── */}
+            <section id="iteration" className="flex scroll-mt-[96px] flex-col gap-[28px] sm:gap-[40px]">
+              <Heading>Iteration</Heading>
+              <div className="grid min-h-[280px] place-items-center rounded-[var(--radius-card)] border border-dashed border-shell-border bg-beyond-surface p-[32px] sm:min-h-[360px]">
+                <div className="flex flex-col items-center gap-[8px] text-center">
+                  <span className="font-mono text-[13px] tracking-[0.04em] text-ink-body/70">
+                    Placeholder
+                  </span>
+                  <p className="max-w-[40ch] text-[15px] leading-[1.6] text-ink-body sm:text-[16px]">
+                    The iteration story goes here — how the design changed between rounds.
+                  </p>
+                </div>
+              </div>
+            </section>
+
             {/* ── anatomy ───────────────────────────────────── */}
             <section id="anatomy" className="flex scroll-mt-[96px] flex-col gap-[48px] sm:gap-[88px]">
               <Heading>{c.anatomy.heading}</Heading>
 
-              {/* the map — a phone-width fragment, its three behaviours beside it */}
-              <div className="flex flex-col gap-[28px] lg:flex-row-reverse lg:items-center lg:gap-[72px]">
-                <div className="mx-auto w-full max-w-[420px] shrink-0 lg:mx-0">
-                  <Piece src={c.anatomy.map.image} alt={c.anatomy.map.alt} />
-                </div>
-                <div className="flex min-w-0 flex-1 flex-col gap-[26px]">
-                  <div className="flex flex-col gap-[8px]">
-                    <h3 className="font-display text-[22px] leading-[1.1] font-bold text-ink sm:text-[28px]">
-                      {c.anatomy.map.title}
-                    </h3>
-                    <p className="text-[15px] leading-[1.6] text-ink-body sm:text-[18px]">{c.anatomy.map.body}</p>
-                  </div>
-                  <ul className="flex flex-col gap-[20px]">
-                    {c.anatomy.map.points.map((pt, i) => (
-                      <li key={pt.title} className="flex gap-[16px]">
-                        <span className="grid size-[42px] shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
-                          <Icon name={MAP_ICONS[i]} className="size-[20px]" />
-                        </span>
-                        <div className="flex flex-col gap-[4px] pt-[2px]">
-                          <p className="text-[16px] font-bold text-ink sm:text-[16px]">{pt.title}</p>
-                          <p className="text-[13px] leading-[1.55] text-ink-body sm:text-[15px]">{pt.body}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+              {/* the map — a phone-width fragment, its three behaviours selectable beside it */}
+              <MapViews
+                title={c.anatomy.map.title}
+                body={c.anatomy.map.body}
+                views={c.anatomy.map.points}
+                icons={MAP_ICONS}
+                ratio="1092 / 900"
+              />
 
               {/* the tracking card — isolated, pinned */}
               <div className="flex flex-col gap-[28px]">
