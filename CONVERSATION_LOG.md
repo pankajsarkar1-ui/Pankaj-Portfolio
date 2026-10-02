@@ -32,12 +32,17 @@ Typical loop: user gives a UI request → Claude edits source → verifies on lo
 
 ## 3. Commit state (as of last update)
 
-Branch `main`, pushed to `origin/main` at **`6be4fb1`**. The session's work is
+Branch `main`, pushed to `origin/main` at **`80348a3`** (+ this log). The session's work is
 **committed and pushed** — a fresh clone now has all of it. Commits added this
 session (newest first):
 
 | Commit | Summary |
 |---|---|
+| `80348a3` | Refer & Earn case study; homepage cards for Coins and Refer & Earn now link to their pages. |
+| `9e8b00a` | Delhivery Coins case study (with illustrative Impact figures, flagged on the page). |
+| `b0109b8` | Shared case-study blocks (`CasePrimitives`, `Phone`), image quality 90, More-work arrow fix. |
+| `e4e7113` | Order Tracking: sharper problem statement (escalation thread, knowledge gap, problem-statement band, image placeholders). |
+| `dd3a91b` | Case rail: back CTA once stuck; larger, spaced, clearer tabs. |
 | `6be4fb1` | Add a session handoff log for cross-account continuation (`CONVERSATION_LOG.md`). |
 | `170ecce` | Order Tracking: left-aligned back button, iteration placeholder, selectable map views (`page.tsx`, `orderTracking.ts`, `MapViews.tsx`). |
 | `c7d9cb1` | Theme-aware favicon from the logo mark (`icon.svg` added, `favicon.ico` removed). |
@@ -45,7 +50,7 @@ session (newest first):
 | `5b60ad2` | (prev session) Dark-mode module, switched off. |
 | `df05c02` | (prev session) Rebuild the Order Tracking case study around visuals. |
 
-**Uncommitted since the push above:**
+**Now committed** (`dd3a91b`, `e4e7113`). Kept below for reference:
 - `src/components/CaseNav.tsx` — the sticky rail now reveals a left-aligned
   "All work" back CTA (+ divider) once it's stuck to the top; tab font
   14px → 15/16px; tabs spaced out (gap 10/16px); unselected text darker
@@ -100,7 +105,130 @@ Route: `/work/order-tracking`. Page: `src/app/work/order-tracking/page.tsx`. Cop
 
 ---
 
+## 5b. Delhivery Coins case study (second project) — committed `9e8b00a`
+
+Route: `/work/delhivery-coins`. Page: `src/app/work/delhivery-coins/page.tsx`.
+Copy: `src/content/delhiveryCoins.ts`. Source design: Figma "Practice DS",
+node `1513:96747` ("Delhivery Coins — Case study"), file key
+`oHMCMxarWktahzACl6ZsrJ`.
+
+- **Assets:** 31 exports in `public/assets/work/coins/`, re-exported at
+  **2×** (coins at **3×**) with the Figma MCP `download_assets` tool
+  (`defaultScale`), which is the only route above 1× (`get_screenshot` caps at
+  native size). Sources: the Practice DS case-study nodes (vector, so they scale
+  cleanly) — same screens as the final UI file `mhNcYinqRpiTVOp6Fw2ccY`
+  ("Final Design - Tarmac | 29 June 2026", node `566:50698`). Sketch photos
+  originate in that file's Ideations section (`1:2`, rasters 1204×1600).
+  Exports carry their frame's background (`#f9f9fb` mist, white, `#3a3a3a`
+  step tiles, `#fff7eb` cream); tiles behind them match. `state-ready.png` is
+  cropped to drop a stray strip.
+- **Image quality:** `next.config.ts` allows `images.qualities: [75, 90]`; UI
+  screens render with `quality={90}` and explicit `sizes`, because the default
+  q75 WebP re-encode softened small interface text. Verified a 2× screen gets
+  ≥2× pixels for every image.
+- **Video:** the Figma "Video" node (`726:12995`, in the final UI file) can't
+  be exported through the API — only a still poster comes back. The MP4 must
+  come from the user.
+- **Colour + spacing pass:** warm, celebratory palette led by the project's
+  coral `#FF6C6C` (its homepage card). Coral bands with the grid floor: hero
+  banner, The program, Reflection. Navy `#121926` (`--color-ink` is overridden
+  to navy on this page): Context, Landing page, Outcome. Cream: Coin design.
+  Soft coral `#ffe4df`: Experience. Yellow `#fff375`: How-might-we panel and
+  the lead Impact stat. Coral "You never get there." tile. Checkout and Impact
+  stay white as rests. Text on coral is full navy (white fails contrast).
+  Spacing: section gap 96/160px, roomy band padding 24/56/72px, wider grids.
+- **Phones drawn in code:** `src/components/case/Phone.tsx` frames bare
+  720×1600 screen exports (`public/assets/work/coins/screens/`, from each
+  phone's `Screen` child node at ~3.5–3.85×) so screens sit on any colour.
+  Used in hero (fanned on coral), landing explorations (slate bezel on navy)
+  and experience. Checkout phones/cards and balance states still use the
+  framed exports on a mist tile. The floating hero coin was dropped: exports
+  are composited on opaque backgrounds and colour-to-alpha made its pale
+  highlights translucent.
+- **Band API:** `Band` now takes `tone="plain"` (caller supplies the colour
+  class), `floor` (grid on any tone) and `roomy` (bigger padding).
+- **Theme:** the page overrides `--color-accent` (`#a15c07` gold),
+  `--color-accent-soft` (`#fff7eb` cream) and `--color-accent-lime`
+  (`#f7c04a` bright gold) on `<main>`, so the shared rail/bands go gold.
+- **Rail:** Problem · Context · The program · Coin design · Landing page ·
+  Checkout · Experience · Outcome · Impact · Reflection.
+- **Impact section (HYPOTHETICAL DATA):** between Outcome and Reflection.
+  `content.outcome.impact` holds invented figures — 4,000 / 7,200 / 9,600 /
+  11,400 cumulative enrolment over weeks 1–4 (60% of the 18,991 eligible),
+  62% of earned coins redeemed, 41% redeemed within 30 days, 18% expired
+  unused, +14 pts 30-day repeat bookings. `illustrative: true` shows an
+  "Illustrative figures until launch data is in." note; replace the numbers
+  and set it false before presenting them as results. Chart is
+  `src/components/case/EnrolmentBars.tsx` (single series, gold validated with
+  the dataviz palette script on white and cream, hover tooltip, sr-only table).
+  Reflection is now its own black band; the old "Launch numbers to come" chip
+  under Measuring was removed.
+- **Tweaks vs the Figma:** dropped the uppercase eyebrows (the rail does that
+  job); hero stats (3 per ₹100 / 10 to redeem / ₹1 / 30-day) moved into a
+  "The program, in four numbers" section with an added line ("A weekly ₹300
+  order now earns 9 coins, so a shipper can redeem by their second booking");
+  added the heading "The shippers worth keeping." for the context numbers;
+  "How might we" as a cream panel; video slot and launch numbers as
+  placeholders.
+- **Shared refactor:** `src/components/case/CasePrimitives.tsx` now holds
+  `Shell`, `Heading`, `Band` (blue/black/cream) and `CaseHeroNav`; Order
+  Tracking imports them (no visual change). `ImagePlaceholder` gained an
+  `icon` prop (`image` | `play`); `CaseIcons` gained `play`.
+- **Also fixed:** `MoreWork` showed a doubled arrow ("4 min read → →").
+- `src/content/projects.ts`: Coins card `href` → `/work/delhivery-coins`.
+
+## 5c. Refer & Earn case study (third project) — committed `80348a3`
+
+Route: `/work/refer-and-earn`. Page: `src/app/work/refer-and-earn/page.tsx`.
+Copy: `src/content/referAndEarn.ts`. Sources: Figma "Practice DS" node
+`1529:116476` ("Refer & Earn — Case study", file `oHMCMxarWktahzACl6ZsrJ`) for
+copy and screens; final design file `1D2lYHdilVCNpEyjnIwH0H` ("08 - Referral",
+node `3269:72798`) for the four level crowns (transparent originals, Assets
+section `3269:96992–96998`).
+
+- **Assets:** `public/assets/work/refer/screens/*.png` — 26 bare screens
+  exported from each phone's `Screen` node at ~2× (720×1600; the six
+  "fills up" screens are 684×1520, capped at 4× scale). `breakdown-page.png`
+  is the full scrolling page (702×3798). `crown-1..4.png` trimmed to ink.
+- **Theme:** purple `#7220BF` (homepage card) leads; pink `#FF7779` and yellow
+  `#FFF375` from the card as highlights; lavender `#f3ebfc` soft; navy ink.
+  Purple bands carry white text; pink carries navy.
+- **Rail:** Problem · How it works · Ideation · Design breakdown · Levels ·
+  New user · Touchpoints · Results.
+- **Sections:** purple hero with three fanned phones + Level 1/Level 4
+  crowns; cost bars (`src/components/case/CostBars.tsx`, paid ₹600–700 vs
+  referral ₹240, slate vs purple, direct labels); pink HMW; lavender
+  "How it works" with 3 steps and a navy "Then it becomes a game" panel with
+  all four crowns; navy Ideation (4 phones); Design breakdown with numbered
+  markers on the long page and sticky numbered notes; purple Levels band (5
+  phones) + "fills up" row (6 phones with big counts); soft-pink New user (5);
+  Touchpoints (4); navy Results (30k / 6,000+ / 12k / 40%, Jan–May 2026);
+  purple "What's next" close.
+- **Tweaks vs Figma:** no uppercase eyebrows; hero stats removed (they repeat
+  in Results); results period shown under the heading.
+- **Shared:** `STRIP`, `BAND_STRIP`, `Lede`, `Intro` moved into
+  `CasePrimitives.tsx` (Coins page now imports them).
+- `src/content/projects.ts`: Refer & Earn card `href` → `/work/refer-and-earn`.
+
 ## 6. Pending / awaiting the user
+
+- **Refer & Earn: reward mismatch in the mock.** The "How to Earn?" card in the
+  design-breakdown screen says "you get ₹100 · they get ₹150"; the copy
+  everywhere else says ₹100 each.
+- **Refer & Earn: phone numbers in the mock** ("9239179123") on the
+  design-breakdown page — likely placeholders; confirm before publishing.
+
+- **Addresses blurred (done):** "C-22, Koel Apartment, Dollar Colony" lines are
+  Gaussian-blurred in `coins/screens/exp-unlock.png`, `coins/checkout-final.png`,
+  `coins/checkout-iter-1.png`, `coins/checkout-iter-2.png`,
+  `refer/screens/referee-nudge.png`, `refer/screens/touch-rating.png`. Re-blur
+  if any of these are re-exported.
+- **Coins: check the "You never get there" maths.** With 6 coins a week and
+  a 30-day expiry, five weekly batches are alive on day 28 (30 coins, above
+  25). The claim holds only if expiry is under 28 days.
+- **Coins placeholders:** problem explainer video (16:9 MP4) and the coin
+  intro animation (MP4 for node `726:12995`) — both need the file from the
+  user. Impact figures are hypothetical (see §5b) — swap for launch data.
 
 - **Problem-section images (placeholders in place):** (1) a relatable photo,
   4:3 — someone checking their phone for a parcel / a gift at a doorstep;
