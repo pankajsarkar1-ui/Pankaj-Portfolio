@@ -86,6 +86,13 @@ const PATHS = {
       <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.4v2.2" />
     </>
   ),
+  image: (
+    <>
+      <rect x="3.5" y="5" width="17" height="14" rx="2.2" />
+      <circle cx="9" cy="10" r="1.6" />
+      <path d="m4 17.5 5-4.5 3.5 3 3-2.5 4.5 4" />
+    </>
+  ),
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
   check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
   cross: <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />,

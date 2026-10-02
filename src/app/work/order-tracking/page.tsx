@@ -6,8 +6,11 @@ import { CaseNav, type CaseSection } from "@/components/CaseNav";
 import { Logo } from "@/components/Logo";
 import { MoreWork } from "@/components/MoreWork";
 import { Icon, type IconName } from "@/components/case/CaseIcons";
+import { EscalationThread } from "@/components/case/EscalationThread";
 import { EtaDrift } from "@/components/case/EtaDrift";
+import { ImagePlaceholder } from "@/components/case/ImagePlaceholder";
 import { JourneyRail } from "@/components/case/JourneyRail";
+import { KnowledgeGap } from "@/components/case/KnowledgeGap";
 import { MapViews } from "@/components/case/MapViews";
 import { PlatformShots } from "@/components/case/PlatformShots";
 import { StoryTrack } from "@/components/case/StoryTrack";
@@ -237,11 +240,65 @@ export default function OrderTrackingPage() {
               </p>
 
               <div className="flex flex-col gap-[48px] sm:gap-[64px]">
+                {/* the moment — what waiting on a parcel actually feels like */}
+                <div className="grid gap-[24px] lg:grid-cols-2 lg:items-center lg:gap-[56px]">
+                  <div className="flex flex-col gap-[22px]">
+                    <h3 className="font-display max-w-[16ch] text-[28px] leading-[1.08] font-bold tracking-[-0.02em] text-ink sm:text-[40px]">
+                      {c.problem.moment.line}
+                    </h3>
+                    <div className="flex flex-col gap-[10px]">
+                      <span className="text-[15px] text-ink-body">{c.problem.moment.lead}</span>
+                      {/* the status as the old page showed it */}
+                      <div className="flex w-fit items-center gap-[14px] rounded-[16px] border border-shell-border bg-white py-[14px] pr-[22px] pl-[16px] shadow-[0_14px_30px_-18px_rgba(0,0,0,0.3)]">
+                        <span className="grid size-[40px] shrink-0 place-items-center rounded-full bg-beyond-surface text-ink-body">
+                          <Icon name="delay" className="size-[20px]" />
+                        </span>
+                        <div className="flex flex-col gap-[2px]">
+                          <p className="text-[16px] font-semibold text-ink">{c.problem.moment.status}</p>
+                          <p className="text-[13px] text-ink-body">{c.problem.moment.detail}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <ImagePlaceholder
+                    label={c.problem.moment.image.label}
+                    hint={c.problem.moment.image.hint}
+                    ratio="4 / 3"
+                  />
+                </div>
+
+                <EscalationThread {...c.problem.thread} />
                 <PlatformShots
                   title={c.problem.platforms.title}
                   caption={c.problem.platforms.caption}
                 />
                 <EtaDrift {...c.problem.drift} />
+                <KnowledgeGap {...c.problem.gap} />
+
+                {/* the problem, stated — the line everything after answers */}
+                <Band tone="blue">
+                  <div className="flex flex-col gap-[16px] sm:gap-[20px]">
+                    <Heading light className="max-w-[16ch]">
+                      {c.problem.statement.heading}
+                    </Heading>
+                    <p className="max-w-[52ch] text-[16px] leading-[1.6] text-white/85 sm:text-[18px]">
+                      {c.problem.statement.body}
+                    </p>
+                  </div>
+                  <ul className="mt-[32px] grid gap-[12px] sm:mt-[48px] md:grid-cols-3">
+                    {c.problem.statement.who.map((w) => (
+                      <li
+                        key={w.title}
+                        className="flex flex-col gap-[6px] rounded-[16px] bg-white/[0.1] p-[18px] backdrop-blur-sm sm:p-[22px]"
+                      >
+                        <h3 className="font-display text-[18px] leading-[1.2] font-bold text-white sm:text-[22px]">
+                          {w.title}
+                        </h3>
+                        <p className="text-[15px] leading-[1.5] text-white/85">{w.body}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </Band>
               </div>
             </section>
 

@@ -2,6 +2,8 @@
  * Case study copy for the Order Tracking project, shaped for the page's visual
  * formats: short lines, structured data for the diagrams, quotes verbatim.
  * Every figure here comes from the project itself — nothing is illustrative.
+ * The problem's escalation thread and knowledge gap are drawn from real
+ * customer escalations, paraphrased and stripped of anything identifying.
  */
 
 export const orderTracking = {
@@ -18,8 +20,56 @@ export const orderTracking = {
 
   problem: {
     heading: "2M+ visits a day. One question.",
-    lede: "The tracking page felt outdated, held back critical information, and broke trust — because every Delhivery platform showed something different.",
+    lede: "If you've ordered from Amazon, Flipkart, Myntra or Meesho, Delhivery has probably carried a parcel to your door. The order belongs to the brand. The wait belongs to us.",
     question: "Where is my package?",
+    moment: {
+      line: "A festive gift, 50 km from home, sitting still for days.",
+      lead: "All the page could say:",
+      status: "In transit",
+      detail: "Last scanned at the hub · 3 days ago",
+      image: {
+        label: "A relatable moment",
+        hint: "A photo of someone checking their phone for a parcel, or a gift waiting at a doorstep.",
+      },
+    },
+    thread: {
+      title: "Every silence becomes a ticket",
+      tally: "Five messages. Zero answers.",
+      body: "Each stock reply bought another follow-up. Support had nothing better to send — no readable view of what came next, only the last scan.",
+      caption: "Paraphrased from real escalations.",
+      messages: [
+        { from: "customer", day: "Day 1", text: "Where is my package? It's been in transit since Monday." },
+        { from: "support", day: "Day 1", text: "Your shipment is in transit and will be delivered soon." },
+        { from: "customer", day: "Day 2", text: "Same status as yesterday. Last scanned in Mumbai." },
+        { from: "support", day: "Day 2", text: "There's been an uncontrollable delay. We regret the inconvenience." },
+        { from: "customer", day: "Day 3", text: "That tells me nothing. When will it actually arrive?" },
+      ],
+      outcome: "Escalated",
+    },
+    gap: {
+      title: "We knew more than we said",
+      caption: "Tracking was built on the last scan, so it only ever reported the past. What would happen next was already in our systems, but it never reached the screen.",
+      saw: "What the customer saw",
+      knew: "What our systems knew",
+      rows: [
+        {
+          saw: "In transit, with an uncontrollable delay",
+          knew: "The truck was 130 km from Bangalore. Delivery was likely the next day.",
+        },
+        {
+          saw: "Last scanned at Vadodara. Delivery by 27 Oct.",
+          knew: "Expected in Goa by 25 Oct, two days before the date we showed.",
+        },
+        {
+          saw: "A route from Delhi to Vadodara",
+          knew: "A Vadodara to Goa parcel. Delhi was only where the order was manifested.",
+        },
+      ],
+      image: {
+        label: "The misleading route",
+        hint: "The old app drawing a Delhi to Vadodara path for a Vadodara to Goa parcel. Blur any address or phone number.",
+      },
+    },
     platforms: {
       title: "One parcel, three stories",
       caption: "The same delivered parcel — on delhivery.com, direct.delhivery.com and the app.",
@@ -33,6 +83,15 @@ export const orderTracking = {
         { today: 0, promise: 2, note: "Arriving in 2 days" },
         { today: 1, promise: 5, note: "Arriving in 4 days" },
         { today: 2, promise: null, note: "Anxiety" },
+      ],
+    },
+    statement: {
+      heading: "Tracking only ever looked backwards.",
+      body: "It told people where their parcel had been, and never what would happen next. Every silence turned into a follow-up.",
+      who: [
+        { title: "The customer", body: "Refreshing the same status, with no idea what comes next." },
+        { title: "The support agent", body: "Reading raw scans, sending stock replies." },
+        { title: "The brand", body: "Taking the blame for a wait it can't see." },
       ],
     },
   },

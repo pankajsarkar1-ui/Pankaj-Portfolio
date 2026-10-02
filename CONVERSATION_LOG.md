@@ -30,27 +30,46 @@ Typical loop: user gives a UI request → Claude edits source → verifies on lo
 
 ---
 
-## 3. Current uncommitted state (as of last update)
+## 3. Commit state (as of last update)
 
-Branch `main`, last commit `5b60ad2`. **Uncommitted** working changes:
+Branch `main`, pushed to `origin/main` at **`6be4fb1`**. The session's work is
+**committed and pushed** — a fresh clone now has all of it. Commits added this
+session (newest first):
 
-| Status | File | What changed |
-|---|---|---|
-| Deleted | `src/app/favicon.ico` | Removed stale static favicon (replaced by theme-aware SVG). |
-| Added | `src/app/icon.svg` | Theme-aware favicon built from the "p" logo mark. Black in light mode, white in dark (`prefers-color-scheme`). |
-| Modified | `src/app/work/order-tracking/page.tsx` | Back button moved to left of nav, logo to right; added **Iteration** placeholder section; swapped the static anatomy map for the selectable `MapViews` component. |
-| Modified | `src/content/orderTracking.ts` | Added `image`/`alt` per anatomy map view (macro/micro/delay). Micro & delay are placeholders pointing at `anatomy-map.png` (marked `TODO`). |
-| Added | `src/components/case/MapViews.tsx` | Client component: three selectable map views; selecting one cross-fades the phone image. |
-| Modified | `src/components/CaseNav.tsx` | Section rail font changed from mono → Satoshi (via `font-sans`), 14px regular. |
-| Modified | `src/app/layout.tsx` | Added Satoshi via `next/font/local` (`--font-satoshi`, weights 400/500/700). |
-| Modified | `src/app/globals.css` | `--font-sans` → Satoshi (body); `--font-display` stays Anek (headings). |
-| Modified | `src/components/Nav.tsx` | Removed Anek baseline nudge (`translate-y-[0.19em]`) on the "Let's talk" CTA label (now Satoshi). |
-| Modified | `src/components/PillNav.tsx` | Removed Anek baseline nudge on the CTA label. |
-| Modified | `src/components/TabChips.tsx` | Removed Anek baseline nudges on tab labels. |
-| Added | `src/app/fonts/` | `Satoshi-Regular.woff2`, `Satoshi-Medium.woff2`, `Satoshi-Bold.woff2` (converted from OTF, ~27 KB each). |
-| Untracked | `public/assets/delhivery-logo.png` | Pre-existing, never committed, unreferenced. Left as-is. |
+| Commit | Summary |
+|---|---|
+| `6be4fb1` | Add a session handoff log for cross-account continuation (`CONVERSATION_LOG.md`). |
+| `170ecce` | Order Tracking: left-aligned back button, iteration placeholder, selectable map views (`page.tsx`, `orderTracking.ts`, `MapViews.tsx`). |
+| `c7d9cb1` | Theme-aware favicon from the logo mark (`icon.svg` added, `favicon.ico` removed). |
+| `cd6c109` | Self-host Satoshi for body, keep Anek for headings (`layout.tsx`, `globals.css`, `src/app/fonts/`, `Nav.tsx`, `PillNav.tsx`, `TabChips.tsx`, `CaseNav.tsx`). |
+| `5b60ad2` | (prev session) Dark-mode module, switched off. |
+| `df05c02` | (prev session) Rebuild the Order Tracking case study around visuals. |
 
-**Nothing above is committed yet.** Last two pushed commits were `df05c02` (case study rebuild) and `5b60ad2` (disabled dark-mode module).
+**Uncommitted since the push above:**
+- `src/components/CaseNav.tsx` — the sticky rail now reveals a left-aligned
+  "All work" back CTA (+ divider) once it's stuck to the top; tab font
+  14px → 15/16px; tabs spaced out (gap 10/16px); unselected text darker
+  (`text-ink-body`); selected tab semibold.
+- **Problem section strengthened** (from an internal leadership escalation —
+  used for patterns only; no names, emails or quotes on the page):
+  - `src/content/orderTracking.ts` — new lede naming Amazon/Flipkart/Myntra/
+    Meesho; new `moment`, `thread`, `gap`, `statement` blocks.
+  - `src/components/case/EscalationThread.tsx` — customer vs support thread
+    ending in "Escalated" ("Five messages. Zero answers.").
+  - `src/components/case/KnowledgeGap.tsx` — "What the customer saw" vs
+    "What our systems knew" (3 rows) + route-screenshot placeholder.
+  - `src/components/case/ImagePlaceholder.tsx` — reusable dashed placeholder
+    sized to the coming image (`tone` surface/white).
+  - `CaseIcons.tsx` — added `image` glyph.
+  - `page.tsx` — Problem order is now: heading/lede → "Where is my package?"
+    → festive-gift moment (+ photo placeholder) → escalation thread → one
+    parcel three stories → date that keeps moving → knowledge gap → blue
+    problem-statement band ("Tracking only ever looked backwards." + customer
+    / support agent / brand).
+- `CONVERSATION_LOG.md` — this file (ongoing edits fold into the next commit).
+
+**Untracked, left as-is:** `public/assets/delhivery-logo.png` (unreferenced,
+pre-existing).
 
 ---
 
@@ -83,12 +102,25 @@ Route: `/work/order-tracking`. Page: `src/app/work/order-tracking/page.tsx`. Cop
 
 ## 6. Pending / awaiting the user
 
+- **Problem-section images (placeholders in place):** (1) a relatable photo,
+  4:3 — someone checking their phone for a parcel / a gift at a doorstep;
+  (2) the misleading-route screenshot, 9:16 — old app drawing Delhi → Vadodara
+  for a Vadodara → Goa parcel (blur addresses/phones).
+- **Escalation chronology:** confirm whether the escalation predates the
+  redesign. The page frames it as the *problem the redesign answers*; if it
+  came after launch, reframe (e.g., as the next phase).
+- **Confidentiality check:** cities, dates and "130 km" come from an internal
+  escalation; the user may want to clear this with their team before it ships
+  on the public site.
+- **Deliberately left out:** IVR issues and hub-ageing ops failures (not in
+  the redesign's scope), apart from the festive-gift hook line.
+
 - **Map view images:** Micro and Delay views currently reuse `anatomy-map.png` as placeholders (marked `TODO` in `orderTracking.ts`). Need real crops (same aspect ratio, ~1092×900) to make the image actually change on selection.
 - **Iteration section content:** placeholder in place; needs the real iteration story.
 - **Mono labels elsewhere:** the IBM Plex Mono face still appears on small data labels (ETA-drift axis, platform labels, Before/After, some chips). User changed the rail only; open whether to convert these to Satoshi too.
 - **Rail font exception:** see §4 note.
 - **`public/assets/delhivery-logo.png`:** untracked, unreferenced — decision still open (keep/remove).
-- **Commit:** all §3 changes are uncommitted, awaiting a "commit and push".
+- **Commit:** session work is committed and pushed (`origin/main` at `6be4fb1`); nothing pending to push except later edits to this log.
 
 ---
 
