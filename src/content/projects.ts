@@ -103,7 +103,7 @@ export const projects: Project[] = [
     title: "Delhivery\nCoins",
     subtitle: "Score some shiny coins with every order you deliver",
     readLabel: "3 min read →",
-    href: "#",
+    href: "/work/delhivery-coins",
     design: { w: 1000, h: 438 },
     theme: {
       bg: "#FF6C6C",
@@ -127,7 +127,7 @@ export const projects: Project[] = [
     title: "Refer & Earn",
     subtitle: "Tell your friends and family about us and start making some cash!",
     readLabel: "4 min read →",
-    href: "#",
+    href: "/work/refer-and-earn",
     design: { w: 1000, h: 438 },
     theme: {
       bg: "#7220BF",
