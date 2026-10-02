@@ -70,7 +70,7 @@ export function CaseNav({ sections }: { sections: readonly CaseSection[] }) {
                 }}
                 href={`#${s.id}`}
                 aria-current={on ? "true" : undefined}
-                className={`font-mono relative block px-[12px] py-[24px] text-[13px] tracking-[0.01em] transition-colors duration-200 ${
+                className={`font-sans relative block px-[12px] py-[24px] text-[14px] font-normal transition-colors duration-200 ${
                   on ? "text-accent" : "text-ink-muted hover:text-ink"
                 }`}
               >

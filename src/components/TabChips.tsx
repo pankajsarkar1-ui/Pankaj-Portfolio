@@ -122,13 +122,10 @@ export function TabChips({
             {tab.icon ? (
               <span className={`flex items-center ${size === "lg" ? "gap-[10px]" : "gap-[7px]"}`}>
                 {tab.icon}
-                {/* Anek's font box is taller above the baseline than below, so
-                    Latin ink rides ~0.18em high in the line box; nudge it back
-                    onto the pill's centre line. */}
-                <span className="translate-y-[0.18em]">{tab.label}</span>
+                <span>{tab.label}</span>
               </span>
             ) : (
-              <span className="inline-block translate-y-[0.18em]">{tab.label}</span>
+              <span className="inline-block">{tab.label}</span>
             )}
           </button>
         );

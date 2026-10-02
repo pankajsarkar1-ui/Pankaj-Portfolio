@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import Script from "next/script";
 import {
   Anek_Devanagari,
@@ -17,6 +18,17 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
+});
+
+/** Body and all smaller text. Headings stay on Anek (see globals.css tokens). */
+const satoshi = localFont({
+  variable: "--font-satoshi",
+  display: "swap",
+  src: [
+    { path: "./fonts/Satoshi-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Satoshi-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/Satoshi-Bold.woff2", weight: "700", style: "normal" },
+  ],
 });
 
 const anek = Anek_Devanagari({
@@ -112,7 +124,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       // `data-intro` is set by the gate below before React hydrates.
       suppressHydrationWarning
-      className={`${inter.variable} ${anek.variable} ${manrope.variable} ${jakarta.variable} ${poppins.variable} ${dmSans.variable} ${plex.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${anek.variable} ${satoshi.variable} ${manrope.variable} ${jakarta.variable} ${poppins.variable} ${dmSans.variable} ${plex.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <Script

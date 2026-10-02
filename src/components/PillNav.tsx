@@ -69,8 +69,7 @@ export function PillNav() {
         {/* The cup plays on its own; "Let's talk" unfurls to its left on hover.
             The 0fr -> 1fr grid track animates width with no magic max-width,
             and it opens inward from the pill's right edge rather than pushing
-            past its rounded corner. Anek's font box sits high, so the label is
-            nudged down onto the row's centre line. */}
+            past its rounded corner. */}
         <a
           href="#contact"
           aria-label={site.contact.eyebrow}
@@ -79,7 +78,7 @@ export function PillNav() {
         >
           <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-[350ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:grid-cols-[1fr] motion-reduce:transition-none">
             <span className="overflow-hidden">
-              <span className="block translate-y-[0.19em] pr-[8px] pl-[10px] text-[14px] leading-none font-medium whitespace-nowrap text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none sm:text-[15px]">
+              <span className="block pr-[8px] pl-[10px] text-[14px] leading-none font-medium whitespace-nowrap text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none sm:text-[15px]">
                 {site.ctaLabel}
               </span>
             </span>
