@@ -43,7 +43,8 @@ export function MoreWork({ exclude }: { exclude: string }) {
                 </h3>
 
                 <span className="relative flex items-center gap-[10px] text-[13px] font-medium text-white/85 sm:text-[14px]">
-                  {live ? p.readLabel : "Coming soon"}
+                  {/* the label carries its own arrow on the homepage; this one animates its own */}
+                  {live ? p.readLabel.replace(/\s*→$/, "") : "Coming soon"}
                   {live ? (
                     <span className="transition-transform duration-300 group-hover:translate-x-[3px]">
                       →

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { AnnotatedCard } from "@/components/AnnotatedCard";
 import { CaseNav, type CaseSection } from "@/components/CaseNav";
-import { Logo } from "@/components/Logo";
 import { MoreWork } from "@/components/MoreWork";
 import { Icon, type IconName } from "@/components/case/CaseIcons";
+import { Band, CaseHeroNav, Heading, Shell } from "@/components/case/CasePrimitives";
 import { EscalationThread } from "@/components/case/EscalationThread";
 import { EtaDrift } from "@/components/case/EtaDrift";
 import { ImagePlaceholder } from "@/components/case/ImagePlaceholder";
@@ -54,65 +53,6 @@ const DIMS: Record<string, { w: number; h: number }> = {
   "/assets/work/tracking/anatomy-timeline.png": { w: 1092, h: 1350 },
 };
 
-function Shell({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mx-auto w-full max-w-[1190px] px-[16px] sm:px-[20px]">
-      {children}
-    </div>
-  );
-}
-
-function Heading({
-  children,
-  light = false,
-  className = "",
-}: {
-  children: React.ReactNode;
-  light?: boolean;
-  className?: string;
-}) {
-  return (
-    <h2
-      className={`font-display text-[28px] leading-[1.04] font-bold tracking-[-0.03em] text-balance sm:text-[48px] ${
-        light ? "text-white" : "text-ink"
-      } ${className}`}
-    >
-      {children}
-    </h2>
-  );
-}
-
-/** A full-colour slab in the project's own palette. Blue carries the banner's
- *  perspective floor, as the project card on the homepage does. */
-function Band({
-  tone,
-  children,
-  className = "",
-}: {
-  tone: "blue" | "black";
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`relative overflow-hidden rounded-[var(--radius-card)] p-[22px] sm:p-[48px] ${
-        tone === "blue" ? "bg-accent" : "bg-ink"
-      } ${className}`}
-    >
-      {tone === "blue" ? (
-        /* eslint-disable-next-line @next/next/no-img-element -- decorative, sized to the band */
-        <img
-          src="/assets/work/grid.svg"
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 w-full select-none"
-        />
-      ) : null}
-      <div className="relative">{children}</div>
-    </div>
-  );
-}
-
 function Verdict({ children }: { children: React.ReactNode }) {
   return (
     <p className="flex items-start gap-[10px] text-[16px] leading-[1.4] font-semibold text-accent-lime sm:text-[18px]">
@@ -146,20 +86,7 @@ export default function OrderTrackingPage() {
       {/* ── hero ─────────────────────────────────────────────── */}
       <Shell>
         <div className="mt-[16px] flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-shell-border bg-white sm:mt-[28px]">
-          {/* gutters track the hero copy below, so the mark lines up with the title */}
-          <nav className="flex items-center justify-between border-b border-nav-border px-[16px] py-[16px] sm:px-[48px] sm:py-[22px]">
-            <Link
-              href="/#work"
-              className="-ml-[6px] flex items-center gap-[8px] rounded-full px-[14px] py-[8px] text-[13px] font-medium text-ink-nav transition-colors hover:bg-chip-idle hover:text-ink"
-            >
-              <Icon name="arrow" className="size-[16px] rotate-180" />
-              All work
-            </Link>
-            <Link href="/" className="flex items-center text-ink">
-              <Logo className="h-[20px] w-auto sm:h-[24px]" />
-              <span className="sr-only">{site.name} — home</span>
-            </Link>
-          </nav>
+          <CaseHeroNav />
 
           <div className="flex flex-col gap-[18px] px-[16px] pt-[36px] sm:gap-[24px] sm:px-[48px] sm:pt-[64px]">
             <h1 className="font-display max-w-[14ch] text-[40px] leading-[0.98] font-bold tracking-[-0.03em] text-ink sm:text-[72px]">

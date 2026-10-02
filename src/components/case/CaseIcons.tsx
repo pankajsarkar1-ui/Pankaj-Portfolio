@@ -93,6 +93,12 @@ const PATHS = {
       <path d="m4 17.5 5-4.5 3.5 3 3-2.5 4.5 4" />
     </>
   ),
+  play: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M10.2 8.8v6.4l5.2-3.2z" />
+    </>
+  ),
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
   check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
   cross: <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />,

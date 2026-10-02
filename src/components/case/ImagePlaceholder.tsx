@@ -1,4 +1,4 @@
-import { Icon } from "./CaseIcons";
+import { Icon, type IconName } from "./CaseIcons";
 
 /**
  * Holds the place of an image that's still to come. Sized to the image it
@@ -10,6 +10,7 @@ export function ImagePlaceholder({
   hint,
   ratio,
   tone = "surface",
+  icon = "image",
   className = "",
 }: {
   label: string;
@@ -18,13 +19,15 @@ export function ImagePlaceholder({
   ratio: string;
   /** "white" when it sits on a grey tile, so it still reads as a frame. */
   tone?: "surface" | "white";
+  /** "play" when the slot is waiting on a video rather than a still. */
+  icon?: Extract<IconName, "image" | "play">;
   className?: string;
 }) {
   const onWhite = tone === "white";
   return (
     <div
       role="img"
-      aria-label={`Image placeholder: ${label}`}
+      aria-label={`${icon === "play" ? "Video" : "Image"} placeholder: ${label}`}
       style={{ aspectRatio: ratio }}
       className={`grid place-items-center rounded-[var(--radius-tile)] border border-dashed border-experience-border p-[24px] ${
         onWhite ? "bg-white" : "bg-beyond-surface"
@@ -36,7 +39,7 @@ export function ImagePlaceholder({
             onWhite ? "bg-beyond-surface" : "bg-white"
           }`}
         >
-          <Icon name="image" className="size-[22px]" />
+          <Icon name={icon} className="size-[22px]" />
         </span>
         <p className="text-[15px] font-semibold text-ink">{label}</p>
         <p className="text-[13px] leading-[1.5] text-ink-body">{hint}</p>
