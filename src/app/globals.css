@@ -272,6 +272,16 @@ body {
 }
 
 /* Hero copy entrance, staggered per word/line on first paint */
+/* Contact receipt: paper feeds out of the slot in short pulls. */
+@keyframes receiptPrint {
+  0% { transform: translateY(-100%); }
+  28% { transform: translateY(-66%); }
+  34% { transform: translateY(-64%); }
+  62% { transform: translateY(-28%); }
+  68% { transform: translateY(-26%); }
+  100% { transform: translateY(0); }
+}
+
 @keyframes heroRise {
   0% { opacity: 0; transform: translateY(0.42em); }
   100% { opacity: 1; transform: translateY(0); }

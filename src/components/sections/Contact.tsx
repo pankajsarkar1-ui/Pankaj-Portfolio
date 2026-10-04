@@ -1,9 +1,8 @@
 "use client";
 
-import { type CSSProperties, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { CopyButton } from "@/components/CopyButton";
 import { LottieMark } from "@/components/LottieMark";
-import { TabChips } from "@/components/TabChips";
 import { site } from "@/content/site";
 
 const stroke = {
@@ -76,6 +75,8 @@ const DRINKS = [
     // to sit at the same visual weight rather than the same measured height.
     scale: 0.8,
     time: "2 hours",
+    honesty: "Diplomatic",
+    ticket: "C-024",
     title: "The sensible one",
     blurb: 'A proper portfolio review. I\'ll say "it depends" at least four times.',
   },
@@ -85,6 +86,8 @@ const DRINKS = [
     lottie: "/assets/lottie/tea.json",
     scale: 1,
     time: "60 min",
+    honesty: "Candid",
+    ticket: "T-017",
     title: "Cutting chai",
     blurb: "One cup, one hour, and we'll have solved half of it.",
   },
@@ -94,6 +97,8 @@ const DRINKS = [
     lottie: "/assets/lottie/cheers.json",
     scale: 0.8,
     time: "No cap",
+    honesty: "Brutal",
+    ticket: "B-009",
     title: "No filter",
     blurb: "Two in and I'll tell you what I really think of your design system.",
   },
@@ -225,6 +230,7 @@ function Burst({ drink, x, y }: { drink: string; x: number; y: number }) {
 export function Contact() {
   const [drinkId, setDrinkId] = useState("coffee");
   const drink = DRINKS.find((d) => d.id === drinkId) ?? DRINKS[0];
+  const [agenda, setAgenda] = useState("");
 
   // The flourish erupts from the big glass, so the stage is measured on click.
   // `key` increments per click so the burst remounts and replays.
@@ -237,8 +243,28 @@ export function Contact() {
     y: number;
   } | null>(null);
 
+  // The receipt prints the first time the counter scrolls into view, then
+  // reprints for every new order.
+  const counterRef = useRef<HTMLDivElement>(null);
+  const [printed, setPrinted] = useState(false);
+  useEffect(() => {
+    const el = counterRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setPrinted(true);
+        io.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const pickDrink = (id: string) => {
     setDrinkId(id);
+    setPrinted(true);
     const stage = stageRef.current;
     if (!stage) return;
     const r = stage.getBoundingClientRect();
@@ -246,84 +272,191 @@ export function Contact() {
     setBurst({ key: burstKey.current, drink: id, x: r.width / 2, y: r.height / 2 });
   };
 
-  const { eyebrow, headline, links } = site.contact;
+  const { headline, links } = site.contact;
 
-  // Pre-composes the mail so the picked drink carries through to the inbox.
+  // Pre-composes the mail so the order, and the agenda, carry through to the inbox.
   const mailto = `${links[0].href}?subject=${encodeURIComponent(
-    `Drink's on me \u2014 ${drink.label} (${drink.time})`,
+    `Order #${drink.ticket}: ${drink.label} (${drink.time})`,
   )}&body=${encodeURIComponent(
-    `Hi Pankaj,\n\nI'd like to grab a ${drink.label.toLowerCase()} \u2014 ${drink.time.toLowerCase()}.\n\nWhat I'd love to talk about:\n\n`,
+    `Hi Pankaj,\n\nI'd like to grab a ${drink.label.toLowerCase()} \u2014 ${drink.time.toLowerCase()}.\n\nOn the agenda:\n${
+      agenda.trim() || ""
+    }\n\n`,
   )}`;
+
+  const rows = [
+    { k: `1 \u00d7 ${drink.label}`, v: drink.time },
+    { k: "Honesty", v: drink.honesty },
+    { k: "Opinions", v: "Unlimited" },
+    { k: "Paid by", v: "Pankaj" },
+  ];
 
   return (
     <footer
       id="contact"
-      className="flex flex-col gap-[36px] overflow-hidden rounded-[var(--radius-card)] bg-ink p-[20px] sm:gap-[52px] sm:p-[74.667px]"
+      className="relative flex flex-col gap-[36px] overflow-hidden rounded-[var(--radius-card)] bg-ink p-[20px] sm:gap-[56px] sm:p-[64px] lg:p-[74.667px]"
     >
-      {/* header */}
-      <div className="flex flex-col items-start gap-[10px] sm:gap-[16px]">
-        <p className="text-[11px] font-medium tracking-[2.6667px] text-ink-label uppercase sm:text-[16px]">
-          {eyebrow}
-        </p>
-        <h2 className="font-display text-[34px] leading-[1.04] font-semibold text-white sm:text-[64px] sm:leading-[1.02]">
-          {headline}
-        </h2>
-      </div>
+      {/* a warm pool of light over the counter */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -top-[30%] right-[-10%] h-[80%] w-[60%] rounded-full bg-[radial-gradient(closest-side,rgba(67,84,238,0.22),transparent)]"
+      />
 
-      {/* the picker, front and centre */}
-      <div className="flex flex-col gap-[22px] sm:gap-[30px]">
-        <TabChips
-          tabs={DRINKS}
-          activeId={drinkId}
-          onChange={pickDrink}
-          tone="dark"
-          size="lg"
-          ariaLabel="Pick a drink"
-        />
+      {/* Stacked below xl: headline, menu, drink, receipt. From xl the menu and
+          the receipt share a row, with the drink above the receipt beside the
+          headline. */}
+      <div
+        ref={counterRef}
+        className="relative grid gap-y-[28px] sm:gap-y-[40px] xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-x-[48px]"
+      >
+        <div className="flex flex-col gap-[12px] xl:col-span-2 xl:col-start-1 xl:row-start-1">
+          <h2 className="font-display text-[40px] leading-[0.98] font-bold tracking-[-0.03em] text-white sm:text-[60px]">
+            {headline}
+          </h2>
+          <p className="max-w-[40ch] text-[15px] leading-[1.55] text-white/55 sm:text-[18px] xl:max-w-[min(40ch,calc(100%-420px))]">
+            Pick your poison and place the order. I&nbsp;bring the opinions; the bill is on&nbsp;me.
+          </p>
+        </div>
 
-        {/* what that round gets you */}
-        <div className="relative flex flex-col gap-[24px] rounded-[24px] border border-white/10 bg-gradient-to-br from-white/[0.09] to-white/[0.02] p-[24px] sm:flex-row sm:items-center sm:gap-[44px] sm:p-[40px]">
-          {/* glass on a spotlight; the burst launches from here */}
-          <div
-            ref={stageRef}
-            /* No surface of its own — the mark sits straight on the panel, and
-               this box is here to size the column and anchor the burst. */
-            className="relative grid size-[150px] shrink-0 place-items-center self-center sm:size-[196px]"
-          >
+        {/* the menu board */}
+        <div className="xl:col-start-1 xl:row-start-2 xl:self-center">
+          <div role="radiogroup" aria-label="Pick a drink" className="flex flex-col">
+            {DRINKS.map((d, i) => {
+              const on = d.id === drinkId;
+              return (
+                <button
+                  key={d.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  onClick={() => pickDrink(d.id)}
+                  className={`group flex flex-col gap-[6px] border-t border-white/10 py-[16px] text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:py-[22px] ${
+                    i === DRINKS.length - 1 ? "border-b" : ""
+                  }`}
+                >
+                  <span className="flex items-baseline gap-[12px] sm:gap-[16px]">
+                    <span className={`font-mono text-[12px] transition-colors ${on ? "text-accent-lime" : "text-white/30"}`}>
+                      0{i + 1}
+                    </span>
+                    <span
+                      className={`font-display text-[30px] leading-none font-bold tracking-[-0.02em] transition-colors duration-300 sm:text-[44px] ${
+                        on ? "text-white" : "text-white/30 group-hover:text-white/70"
+                      }`}
+                    >
+                      {d.label}
+                    </span>
+                    <span aria-hidden className="mb-[5px] min-w-[16px] flex-1 border-b-2 border-dotted border-white/15" />
+                    <span
+                      className={`font-mono text-[13px] whitespace-nowrap transition-colors sm:text-[16px] ${
+                        on ? "text-accent-lime" : "text-white/35"
+                      }`}
+                    >
+                      {d.time}
+                    </span>
+                  </span>
+                  <span
+                    className={`pl-[28px] text-[14px] leading-[1.5] transition-colors duration-300 sm:pl-[34px] sm:text-[16px] ${
+                      on ? "text-white/65" : "text-white/25 group-hover:text-white/45"
+                    }`}
+                  >
+                    <span className="font-semibold">{d.title}.</span> {d.blurb}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* the counter: the drink, and the receipt printing beneath it */}
+        <div
+          ref={stageRef}
+          className="relative grid size-[140px] shrink-0 place-items-center justify-self-center sm:size-[170px] xl:col-start-2 xl:row-start-1 xl:self-end"
+        >
             {/* The files are black line art; this drives every colour in them
-                to white so they read on the dark panel, the coffee's pink
-                accent included. */}
+                to white so they read on the dark counter. */}
             <LottieMark
               key={drink.id}
               src={drink.lottie}
               scale={drink.scale}
-              className="relative size-[104px] [filter:brightness(0)_invert(1)] sm:size-[140px]"
+              className="relative size-[96px] [filter:brightness(0)_invert(1)] sm:size-[120px]"
             />
             {burst ? (
-              <div
-                key={burst.key}
-                aria-hidden
-                className="pointer-events-none absolute inset-0"
-              >
+              <div key={burst.key} aria-hidden className="pointer-events-none absolute inset-0">
                 <Burst drink={burst.drink} x={burst.x} y={burst.y} />
               </div>
             ) : null}
-          </div>
-
-          {/* copy + CTA */}
-          <div className="flex min-w-0 flex-1 flex-col items-start gap-[10px] sm:gap-[14px]">
-            <p className="font-display text-[26px] leading-[1.05] font-bold text-white sm:text-[34px]">
-              {drink.title}
-            </p>
-            <p className="max-w-[520px] text-[14px] leading-[1.55] text-white/55 sm:text-[17px]">
-              {drink.blurb}
-            </p>
-          </div>
         </div>
+
+          <div className="relative -mt-[12px] w-full max-w-[360px] justify-self-center sm:-mt-[24px] xl:col-start-2 xl:row-start-2 xl:mt-0">
+            {/* the printer's slot */}
+            <div className="relative z-10 -mx-[12px] h-[14px] rounded-full bg-[#1d1d21] shadow-[inset_0_2px_5px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.06)]" />
+            <div className="-mt-[7px] overflow-hidden px-[4px] pb-[24px]">
+              <div
+                key={printed ? drink.id : "blank"}
+                className={`bg-[#f6f4ee] px-[22px] pt-[26px] pb-[30px] font-mono text-[13px] text-[#1b1b1b] shadow-[0_24px_40px_-20px_rgba(0,0,0,0.8)] [mask:conic-gradient(from_-45deg_at_bottom,#0000,#000_1deg_89deg,#0000_90deg)_50%/16px_100%] ${
+                  printed
+                    ? "[animation:receiptPrint_1000ms_linear_both] motion-reduce:[animation:none]"
+                    : "-translate-y-full"
+                }`}
+              >
+                <div className="flex flex-col items-center gap-[2px] text-center">
+                  <span className="text-[14px] font-semibold tracking-[0.22em]">PANKAJ &amp; CO.</span>
+                  <span className="text-[11px] text-black/50">Table for two · anywhere with wifi</span>
+                </div>
+
+                <div className="my-[14px] border-t border-dashed border-black/25" />
+                <div className="flex justify-between text-[12px] text-black/55">
+                  <span>ORDER</span>
+                  <span>#{drink.ticket}</span>
+                </div>
+                <dl className="mt-[10px] flex flex-col gap-[6px]">
+                  {rows.map((r) => (
+                    <div key={r.k} className="flex items-baseline gap-[8px]">
+                      <dt>{r.k}</dt>
+                      <span aria-hidden className="flex-1 border-b border-dotted border-black/25" />
+                      <dd className="font-semibold">{r.v}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <div className="my-[14px] border-t border-dashed border-black/25" />
+                <div className="flex items-baseline justify-between">
+                  <span className="text-[13px] font-semibold">TOTAL</span>
+                  <span className="text-[24px] font-semibold tracking-[-0.02em]">₹0.00</span>
+                </div>
+
+                <label htmlFor="agenda" className="mt-[16px] block text-[11px] text-black/55">
+                  On the agenda (optional)
+                </label>
+                <textarea
+                  id="agenda"
+                  rows={2}
+                  value={agenda}
+                  onChange={(e) => setAgenda(e.target.value)}
+                  placeholder="Your app, my hot takes…"
+                  className="mt-[6px] w-full resize-none rounded-[8px] border border-dashed border-black/25 bg-transparent p-[10px] font-mono text-[12px] text-[#1b1b1b] outline-none placeholder:text-black/35 focus:border-black/60"
+                />
+
+                <a
+                  href={mailto}
+                  className="group mt-[14px] flex items-center justify-center gap-[8px] rounded-[10px] bg-ink py-[13px] font-sans text-[15px] font-semibold text-white transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
+                  Place order
+                  <span aria-hidden className="transition-transform group-hover:translate-x-[3px]">
+                    →
+                  </span>
+                </a>
+
+                <div
+                  aria-hidden
+                  className="mt-[18px] h-[32px] bg-[repeating-linear-gradient(90deg,#1b1b1b_0_2px,transparent_2px_4px,#1b1b1b_4px_5px,transparent_5px_8px,#1b1b1b_8px_11px,transparent_11px_13px)] opacity-85"
+                />
+                <p className="mt-[8px] text-center text-[11px] text-black/45">ETA: soon-ish · thank you, come again</p>
+              </div>
+            </div>
+          </div>
       </div>
 
       {/* bottom row: reach me left, nav right */}
-      <div className="flex flex-col gap-[20px] border-t border-white/10 pt-[26px] lg:flex-row lg:items-center lg:justify-between">
+      <div className="relative flex flex-col gap-[20px] border-t border-white/10 pt-[26px] lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-[12px] sm:gap-[16px]">
           <a
             href={mailto}
