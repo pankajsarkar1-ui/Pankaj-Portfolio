@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { LottieMark } from "@/components/LottieMark";
 import { site } from "@/content/site";
@@ -53,13 +54,13 @@ export function PillNav() {
         <ul className="flex items-center gap-[2px]">
           {site.nav.map((item) => (
             <li key={item.label}>
-              <a
+              <Link
                 href={item.href}
                 tabIndex={shown ? undefined : -1}
                 className="block rounded-full px-[14px] py-[7px] text-[14px] font-medium text-ink-nav transition-colors hover:bg-[#f0f0f0] hover:text-ink sm:px-[18px] sm:text-[15px]"
               >
                 {item.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

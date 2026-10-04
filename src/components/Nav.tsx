@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { LottieMark } from "@/components/LottieMark";
 import { Logo } from "@/components/Logo";
@@ -7,14 +9,17 @@ import { site } from "@/content/site";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  /** Page links (not section anchors) light up on their own page. */
+  const pathname = usePathname();
+  const current = (href: string) => href.startsWith("/") && !href.includes("#") && (pathname === href || pathname.startsWith(`${href}/`));
 
   return (
     <nav className="theme-surface relative border-b border-nav-border bg-white">
       <div className="mx-auto flex h-[72px] w-full max-w-[1190px] items-center justify-between px-[24px] sm:h-[112.673px] sm:px-[32px] lg:px-[6.4%]">
         {/* Logo and cup step aside while the mobile menu is open, leaving just
             the close control; they never move, so the X stays put. */}
-        <a
-          href="#top"
+        <Link
+          href="/#top"
           aria-hidden={open ? true : undefined}
           tabIndex={open ? -1 : undefined}
           className={`flex items-center text-ink transition-opacity duration-200 md:opacity-100 ${
@@ -23,17 +28,20 @@ export function Nav() {
         >
           <Logo className="h-[20px] w-auto sm:h-[24px]" />
           <span className="sr-only">{site.name} — home</span>
-        </a>
+        </Link>
 
         <ul className="hidden gap-[48px] text-[15px] font-medium text-ink-nav md:flex">
           {site.nav.map((item) => (
             <li key={item.label}>
-              <a
+              <Link
                 href={item.href}
-                className="rounded-full px-[14px] py-[7px] transition-colors hover:bg-[#f0f0f0] hover:text-ink"
+                aria-current={current(item.href) ? "page" : undefined}
+                className={`rounded-full px-[14px] py-[7px] transition-colors hover:bg-[#f0f0f0] hover:text-ink ${
+                  current(item.href) ? "bg-[#efefef] text-ink" : ""
+                }`}
               >
                 {item.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -110,8 +118,9 @@ export function Nav() {
           <ul className="flex flex-col px-[16px] py-[12px]">
             {site.nav.map((item, i) => (
               <li key={item.label}>
-                <a
+                <Link
                   href={item.href}
+                  aria-current={current(item.href) ? "page" : undefined}
                   tabIndex={open ? undefined : -1}
                   onClick={() => setOpen(false)}
                   style={{ transitionDelay: open ? `${90 + i * 55}ms` : "0ms" }}
@@ -120,7 +129,7 @@ export function Nav() {
                   }`}
                 >
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

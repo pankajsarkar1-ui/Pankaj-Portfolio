@@ -10,9 +10,9 @@ export const site = {
   portrait: "/assets/hero/portrait.png",
   ctaLabel: "Let's talk",
   nav: [
-    { label: "Work", href: "#work" },
-    { label: "About", href: "#beyond" },
-    { label: "Resume", href: "#experience" },
+    { label: "Work", href: "/work" },
+    { label: "About", href: "/about" },
+    { label: "Resume", href: "/#experience" },
   ],
   contact: {
     eyebrow: "Let's talk",

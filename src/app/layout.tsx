@@ -10,6 +10,7 @@ import {
   DM_Sans,
   IBM_Plex_Sans,
   IBM_Plex_Mono,
+  Caveat,
 } from "next/font/google";
 import "./globals.css";
 import { site } from "@/content/site";
@@ -92,6 +93,14 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+/** Handwriting, for the About page's "Hi," and its doodle notes. */
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  display: "swap",
+});
+
 /**
  * Decides before first paint whether the homepage intro runs, so the hero is
  * never briefly visible behind it. Plays on a first visit and on a refresh, but
@@ -124,7 +133,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       // `data-intro` is set by the gate below before React hydrates.
       suppressHydrationWarning
-      className={`${inter.variable} ${anek.variable} ${satoshi.variable} ${manrope.variable} ${jakarta.variable} ${poppins.variable} ${dmSans.variable} ${plex.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${anek.variable} ${satoshi.variable} ${manrope.variable} ${jakarta.variable} ${poppins.variable} ${dmSans.variable} ${plex.variable} ${plexMono.variable} ${caveat.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <Script

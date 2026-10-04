@@ -13,6 +13,8 @@ export function Lightbox({
   onIndexChange,
   onClose,
   ariaLabel,
+  backdrop = "solid",
+  origin = null,
 }: {
   tabs: readonly MediaTab[];
   activeTabId: string;
@@ -21,10 +23,35 @@ export function Lightbox({
   onIndexChange: (i: number) => void;
   onClose: () => void;
   ariaLabel: string;
+  /** `blur` frosts the page behind instead of blacking it out. */
+  backdrop?: "solid" | "blur";
+  /** Where the first image came from on the page; it grows out of that rect. */
+  origin?: DOMRect | null;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const thumbsRef = useRef<HTMLDivElement>(null);
   const [dir, setDir] = useState<"next" | "prev" | "init">("init");
+  const flipped = useRef(false);
+  const flip = Boolean(origin) && dir === "init";
+
+  /** Grow the first image out of the card it was opened from. */
+  const growFromOrigin = (el: HTMLElement) => {
+    if (!origin || flipped.current) return;
+    flipped.current = true;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const to = el.getBoundingClientRect();
+    if (!to.width || !to.height) return;
+    const scale = origin.height / to.height;
+    const dx = origin.left + origin.width / 2 - (to.left + to.width / 2);
+    const dy = origin.top + origin.height / 2 - (to.top + to.height / 2);
+    el.animate(
+      [
+        { transform: `translate(${dx}px, ${dy}px) scale(${scale})`, opacity: 0.4 },
+        { transform: "translate(0, 0) scale(1)", opacity: 1 },
+      ],
+      { duration: 520, easing: "cubic-bezier(.22,1,.36,1)" },
+    );
+  };
 
   const browsable = tabs.filter((t) => t.cards.length > 0);
   const tab =
@@ -96,14 +123,22 @@ export function Lightbox({
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}
-      className="fixed inset-0 z-50 flex flex-col bg-black/92 backdrop-blur-sm animate-[lbBackdrop_300ms_ease_both]"
+      className={`fixed inset-0 z-50 flex flex-col animate-[lbBackdrop_300ms_ease_both] ${
+        backdrop === "blur" ? "bg-black/55 backdrop-blur-[24px] backdrop-saturate-150" : "bg-black/92 backdrop-blur-sm"
+      }`}
       onClick={onClose}
     >
       <div
         ref={panelRef}
         tabIndex={-1}
-        onClick={(e) => e.stopPropagation()}
-        className="mx-auto flex h-full w-full max-w-[1200px] flex-col gap-[24px] px-[20px] py-[24px] outline-none sm:py-[32px] animate-[lbContent_350ms_cubic-bezier(.22,1,.36,1)_both]"
+        // Only the media and the controls hold a click; anywhere else in the
+        // frosted space falls through to the backdrop and closes the viewer.
+        onClick={(e) => {
+          if ((e.target as HTMLElement).closest("img, video, iframe, button, a")) e.stopPropagation();
+        }}
+        className={`mx-auto flex h-full w-full max-w-[1200px] flex-col gap-[24px] px-[20px] py-[24px] outline-none sm:py-[32px] ${
+          origin ? "" : "animate-[lbContent_350ms_cubic-bezier(.22,1,.36,1)_both]"
+        }`}
       >
         <div className="relative flex min-h-[36px] shrink-0 items-start justify-center pr-[48px] sm:pr-0">
           {browsable.length > 1 ? (
@@ -171,7 +206,10 @@ export function Lightbox({
                 key={card.id}
                 src={card.poster}
                 alt={card.caption}
-                className={`max-h-full max-w-full rounded-[20px] object-contain ${slideAnim}`}
+                onLoad={flip ? (e) => growFromOrigin(e.currentTarget) : undefined}
+                className={`max-h-full max-w-full rounded-[20px] object-contain ${flip ? "" : slideAnim} ${
+                  backdrop === "blur" ? "shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]" : ""
+                }`}
               />
             ) : null}
 
