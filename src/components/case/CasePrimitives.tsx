@@ -95,7 +95,7 @@ export function CaseHeroNav() {
     /* gutters track the hero copy below, so the mark lines up with the title */
     <nav className="flex items-center justify-between border-b border-nav-border px-[16px] py-[16px] sm:px-[48px] sm:py-[22px]">
       <Link
-        href="/#work"
+        href="/work"
         className="-ml-[6px] flex items-center gap-[8px] rounded-full px-[14px] py-[8px] text-[13px] font-medium text-ink-nav transition-colors hover:bg-chip-idle hover:text-ink"
       >
         <Icon name="arrow" className="size-[16px] rotate-180" />

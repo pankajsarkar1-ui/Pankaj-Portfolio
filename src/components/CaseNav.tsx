@@ -77,7 +77,7 @@ export function CaseNav({ sections }: { sections: readonly CaseSection[] }) {
       >
         <div className="overflow-hidden">
           <Link
-            href="/#work"
+            href="/work"
             aria-hidden={!stuck}
             tabIndex={stuck ? undefined : -1}
             className={`flex h-full items-center gap-[8px] pr-[14px] pl-[16px] text-[15px] font-medium whitespace-nowrap text-ink-nav transition-opacity duration-300 hover:text-ink sm:pl-[20px] sm:text-[16px] ${
