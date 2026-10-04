@@ -32,12 +32,16 @@ Typical loop: user gives a UI request → Claude edits source → verifies on lo
 
 ## 3. Commit state (as of last update)
 
-Branch `main`, pushed to `origin/main` at **`80348a3`** (+ this log). The session's work is
+Branch `main`, pushed to `origin/main` at **`ed0dbc1`** (+ this log). The session's work is
 **committed and pushed** — a fresh clone now has all of it. Commits added this
 session (newest first):
 
 | Commit | Summary |
 |---|---|
+| `ed0dbc1` | Contact footer as a café counter: menu board + printing receipt with Place order (section 5g). |
+| `aeef30f` | Work page `/work` with Selected / Product / Visual / Experiments (section 5h). |
+| `08e0cb4` | About page `/about`: plug profile, Beyond Work piles, timeline; frosted Lightbox; nav to new pages; Caveat (sections 5d–5f). |
+| `20bd14d` | Handoff log update for Coins and Refer & Earn. |
 | `80348a3` | Refer & Earn case study; homepage cards for Coins and Refer & Earn now link to their pages. |
 | `9e8b00a` | Delhivery Coins case study (with illustrative Impact figures, flagged on the page). |
 | `b0109b8` | Shared case-study blocks (`CasePrimitives`, `Phone`), image quality 90, More-work arrow fix. |
@@ -210,7 +214,163 @@ section `3269:96992–96998`).
   `CasePrimitives.tsx` (Coins page now imports them).
 - `src/content/projects.ts`: Refer & Earn card `href` → `/work/refer-and-earn`.
 
+## 5d. About / profile section (plug to connect) — committed
+
+- Source: user's design `Project Animation/Plug Profile Connection.zip`
+  (blue plug + black socket + "Pull to connect") and a sketch (title, text,
+  photo in a corner). User asked: dramatic connection; on hover the plug moves a
+  bit and the black socket moves the same direction; copy concise and less
+  serious; photo at the bottom-left corner.
+- User then asked for About as a **separate page**: `src/app/about/page.tsx`
+  (PillNav + Profile card + Contact). Removed from the homepage. The Profile
+  card carries the site `Nav` on top (as in the user's design) and `id="top"`
+  so PillNav appears on scroll; the flood stays below the bar.
+- `site.nav` is now `/#work`, `/about`, `/#experience`; Nav/PillNav use
+  `next/link`; Nav highlights the current page (`aria-current`), logo → `/#top`.
+- `src/components/sections/Profile.tsx` (client), `src/content/profile.ts`.
+- Interaction: one rAF loop writes SVG attributes (no per-frame renders).
+  Plug dangles and sways, leans toward the mouse; socket follows the same
+  direction on a shorter leash. Drag down to connect (magnet 38 units); a
+  tap/click or Enter on the plug pulls it in automatically. Arcs flicker across
+  the gap as the prongs near, plus a blue glow.
+- Connect: jolt, card shake, spark rays and ring, lime current along both
+  cables, then a blue circle flood from the joint followed by the white profile
+  panel (WAAPI `clip-path: circle()`). "Unplug" reverses it and the plug pops
+  back up. Keyboard: focus moves to the heading on connect, back to the plug on
+  unplug. Reduced motion: plain fade. Loop pauses off-screen and once connected.
+- Follow-up: card is sized to the viewport (stage `clamp(380px,
+  100svh-170px, 640px)` on sm+, `clamp(520px, 100svh-104px, 760px)` on phones)
+  so both plugs always show, and the profile fits that same height (user's
+  ask): panel is `absolute inset-0` with `container-type:size`; from md the
+  text takes the left 63%, vertically centred, type scales with `vh`; the
+  portrait is `w-[min(34cqw,75cqh)]`; phones stack text over a height-capped
+  photo. Very short screens scroll the text column instead of cropping.
+  Intro paragraph is now the user's own line ("I design the Delhivery app... well-placed loading state"); copy tightened again; the Now/Studied/From facts were dropped (they repeated
+  the paragraphs). Idle electric pulse: a lime glowing segment runs down the
+  blue cable, then lights the neck ribs, the prongs and a crackle at the tips;
+  faster as the plug nears the socket.
+- Hint reads "Pull to connect" (user disliked "Plug me in"). Connected status
+  reads "Live from Bengaluru" with a pinging dot (user rejected "Fully charged
+  (mostly on chai)"); Unplug is a small muted text button
+  with a plug glyph in the panel's top-right corner.
+- Panel: "Hi, I'm Pankaj.", three short paragraphs, cutout `public/assets/hero/portrait.png` standing in the bottom-right
+  corner (moved from bottom-left: the image's cropped right edge now meets the
+  card edge) on an accent-soft circle.
+
+## 5e. About page: Beyond Work piles — committed
+
+- Source: `Project Animation/Folder stack hover spread.zip`. Iterations: black
+  folder tiles → one big 3D deck (user: "bad execution", too noisy, not on one
+  ground, only the front image visible) → current design.
+- `src/components/sections/FolderStacks.tsx`, after the Profile card on
+  `/about`: **four piles of square prints, one per category** (Fun me, Artist
+  me, Proud me, Me in Motion; images from `src/content/beyondWork.ts`), all
+  standing on one shared floor line on the white page. Fixed hand-placed
+  scatter (`PILE`). Every print pivots on its own foot, so piled or spread they
+  stay on the floor.
+- Hover a pile: its column widens (flex-grow 1.9) and it deals out its first
+  **4** prints in a gentle fan (`DEAL = 4`; the rest stay piled behind the
+  fourth); the other categories **blur (4px) and fade (35%)**. Hovering the
+  **last dealt print** moves on to the next four (state `start`; badge "+N" on
+  that print shows how many remain); hovering the **first dealt print** goes back
+  to the previous four ("+N" badge top-left); leaving the pile resets. The "BEYOND
+  WORK" eyebrow label was removed from this section.
+  Hover a print: it lifts, scales 1.07 and tilts toward the pointer (CSS vars
+  `--rx/--ry` written on mousemove); label shows its caption.
+- Prints have a subtle 1px white border (white/80) (photo-print look, separates overlapping cards).
+- Ground: faint short reflection under each print (flipped, counter-rotated,
+  16% opacity, masked) + a barely-there contact shadow; card shadow subtle.
+- Click a print: `Lightbox` with `backdrop="blur"` (frosted page) and `origin`
+  (grows out of the print), opened on that category; chips switch categories,
+  thumbnails along the bottom. Labels are buttons (keyboard path). Touch: tap a
+  pile opens its category. Phones: 2×2 grid of piles.
+- Homepage still has the original Beyond Work carousel (not removed).
+
+## 5f. About page: career + education timeline — committed
+
+- `src/components/sections/Timeline.tsx`, after the Beyond Work piles on
+  `/about` (before Contact). Data from `src/content/experience.ts` (both tabs),
+  parsed into stops and sorted oldest → newest, ending at Delhivery "Now".
+- One spine: studies on the left, work on the right (legend: ring = studying,
+  blue dot = working); the opposite side shows the start year in big pale
+  numerals (each year once). Durations computed from the periods (month-precise
+  ends count the whole month); the current role shows no duration (today's date
+  would differ between the prerendered page and the visit).
+- Scroll-drawn: a blue line with a glowing head runs down the spine (head at
+  62% of the viewport), ends exactly on the "Now" dot; each stop lights up and
+  its card slides in from its own side. Imperative scroll updates (style height
+  + `data-on`), no re-renders. Current role card is accent blue with a pulsing
+  lime "Here now". Phones: spine on the left, cards to the right.
+
+## 5g. Contact footer redesign ("Drink's on me.") — committed
+
+- User: "feels very boring, make it superb, change anything that doesn't fit".
+  Shared footer (homepage + About), `src/components/sections/Contact.tsx`.
+- Now a café counter: big headline + line ("Pick your poison and place the
+  order. I bring the opinions; the bill is on me."), the "LET'S TALK" eyebrow
+  removed. Drinks are a **menu board** (radio group): numbered rows, big name,
+  dotted leader, mono "price" = time (2 hours / 60 min / No cap), title + blurb;
+  the picked row lights up (lime number/time).
+- The drink Lottie (white) + the existing bean/steam/fizz burst sit above a
+  **printer slot**; a paper **receipt** feeds out of it (`receiptPrint`
+  keyframes in globals.css, short stuttering pulls) the first time the footer
+  scrolls into view and again on every new pick. Receipt (mono, zig-zag edge
+  via conic mask): PANKAJ & CO., order # per drink (C-024 / T-017 / B-009),
+  1 × drink, Honesty (Diplomatic / Candid / Brutal), Opinions Unlimited, Paid by
+  Pankaj, TOTAL ₹0.00, optional "On the agenda" textarea, **Place order** button
+  (mailto with subject "Order #… : Drink (time)" and the agenda in the body),
+  barcode, "ETA: soon-ish · thank you, come again".
+- Layout: stacked below xl; from xl menu (vertically centred) left, receipt
+  right, drink above the receipt beside the headline. Bottom row unchanged.
+  The subtext is capped at xl so it stays ~175px clear of the drink animation.
+
+- About page section spacing: `<main>` gap 72px / 128px (sm) / 160px (lg).
+
+## 5h. Work page (`/work`) — committed
+
+- User picked Option 2: Selected · Product Design · Visual Design · Experiments
+  (I recommended Selected as the default view, discipline tabs as filters,
+  origin as tags, and "Experiments" instead of "Others").
+- `src/app/work/page.tsx` (PillNav + `WorkExplorer` + Contact),
+  `src/components/sections/WorkExplorer.tsx`, `src/content/work.ts`.
+- Hero card: site `Nav` on top (Work highlighted) + headline "Things I've
+  shipped, sketched and played with." at the homepage hero's size (28/48px; the
+  user rejected a giant "Work" title as redundant and off-system) + intro.
+  `TabChips` + count of the current view sit **below** the hero card. View is
+  in the URL hash (`#product`, `#visual`, `#experiments`; Selected = bare URL)
+  via `useSyncExternalStore` + `history.replaceState`.
+- Selected: the homepage `BannerCard`s. Product: 2-col cards, two framed screens
+  on the project colour that fan apart on hover, title, read time, blurb, tags;
+  Order Tracking / Coins / Refer link to case studies; app revamp, Delhivery
+  Local, PTL show "Case study in the works" (dashed placeholder). New crops
+  `public/assets/work/tracking/screen-on-the-way.png` / `screen-placed.png`
+  (720×1600 from the long tracking screens). Visual: Artist me + Stamp design
+  as square tiles with type tags. Experiments: AI experiments + Motion groups,
+  clips play on hover. Visual/experiments open the frosted `Lightbox` grown from
+  the tile.
+- `site.nav` Work → `/work`; case-study "All work" links → `/work`; Nav marks
+  the current page for `/work` and its sub-pages. Homepage Selected Work section
+  unchanged.
+
+- Profile hero polish ("make it stunning"): sketchbook dot-grid paper behind
+  the panel; title renders as a handwritten blue "Hi," (Caveat, now loaded in
+  `layout.tsx` as `--font-caveat`) + "I'm Pankaj." with a marker underline that
+  draws in; `**…**` phrases in `profile.paragraphs` get a lime highlighter that
+  sweeps across in turn (millions of parcels / from zero / Brown Pencils);
+  portrait stands on the dot-grid paper with doodled spark lines by the head
+  and a soft drop shadow (a blue circle, then a comic panel + yellow caption
+  were tried and removed at the user's request). After the flood the blue
+  wipe is shut and the plug stage hidden so no sliver shows at the edges.
+
+- `Lightbox`: clicking anywhere in the empty frosted/dark space closes it; only
+  the media, buttons and links hold a click (all viewers, homepage too).
+
 ## 6. Pending / awaiting the user
+
+- "Six years in" (user's line) checks out against work since Oct 2018.
+- **Profile copy:** "the Delhivery app" is used for what the user wrote as
+  "Delivery app"; confirm the app name. Photo is bottom-left per the message
+  (the sketch drew it bottom-right).
 
 - **Refer & Earn: reward mismatch in the mock.** The "How to Earn?" card in the
   design-breakdown screen says "you get ₹100 · they get ₹150"; the copy
