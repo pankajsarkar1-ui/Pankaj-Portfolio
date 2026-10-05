@@ -409,6 +409,40 @@ section `3269:96992–96998`).
   footer padding (sm p-56, lg px-74.667 py-64).
   Phones: edge to edge, square corners, px 24 / py 48, runs to the page bottom
   (`max-sm:-mx-[16px] -mb-[40px]`); headline 36px + 72px cup on one line.
+- Plug (About hero) now drags with a finger on phones: a non-passive
+  `touchstart` on the plug and `touchmove` on the svg (while dragging) call
+  preventDefault, because `touch-action` on SVG children isn't honoured
+  everywhere (iOS Safari) and the page scroll was cancelling the drag.
+  Swipes elsewhere on the card still scroll. Tap-to-connect is unchanged.
+- Lightbox (all viewers): finger swipe on touch screens. Media sits in a
+  `dragRef` wrapper that follows the finger (translateX + slight rotate +
+  fade); release past min(90px, 22% width) or faster than 0.5px/ms turns
+  page (new one slides in from that side), else springs back. Axis locks
+  after 8px; only horizontal claims the pointer (stage is `touch-pan-y`).
+  A swipe ending on empty space doesn't close the viewer (`swiped` flag eats
+  the click). Mouse and arrows unchanged; YouTube iframes can't be swiped.
+- **Type scale unified site-wide** (all titles in `font-display`, Anek):
+  hero 40/72 (case h1, closing h2, big stats 48/72) · page title 28/48 (home
+  + work heroes, case section titles, About hero now clamp(28px,6vh,48px),
+  reflection quotes 28/48) · section title 24/36 leading 1.1 (Experience
+  "The road so far" was body font 20/37.33, AI 26/26, others 20/36) ·
+  sub-head 28/40 leading 1.08 · card title 22/28 leading 1.1 (was 20/24,
+  22/26, leading 1.15 in places) · small 18/22 (timeline card titles,
+  per the user: 22/28 read too big).
+  HMW statements 22/32 → 24/36; small tile stats 36/52 → 36/48; Work
+  placeholder numeral 34 → 36. Left alone: BannerCard/MoreWork banner art
+  titles, Contact headline 36/60, menu labels, timeline year numerals.
+- Timeline: on phones cards wait 12px (was 24px) right of their spot before
+  revealing; the 24px pushed About 8px wider than the screen.
+- Homepage label "Selected Work" → "Selected Works" (and the hero jump
+  button's aria-label). Work page tab still says "Selected" (asked user).
+- Refer banner: the "Tap Fast!" cursor tip now shows only while the mouse is
+  over the gold level card (`overCard` via pointerenter/leave on the card
+  host), not anywhere on the banner.
+- AI Experiments "Utility" coming-soon card: the sad face is now an inline
+  SVG (yellow tile + 3 strokes) instead of `/assets/ai/utility-face.jpg`
+  (deleted); `placeholder.image` dropped from the type. Zero requests, so it
+  shows the instant the tab opens.
 
 ## 6. Pending / awaiting the user
 
