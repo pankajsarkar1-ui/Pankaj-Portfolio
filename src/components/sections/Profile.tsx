@@ -464,8 +464,21 @@ export function Profile() {
       autoConnect(true);
     };
 
+    // A finger on the plug drags it, not the page. `touch-action` on an SVG
+    // child isn't honoured everywhere (iOS Safari), so the browser would take
+    // a downward drag as a scroll and cancel the pointer mid-pull; refusing
+    // the touch itself keeps it ours. Touches anywhere else still scroll.
+    const onTouchStart = (e: TouchEvent) => {
+      if (s.mode === "idle") e.preventDefault();
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (s.drag) e.preventDefault();
+    };
+
     plug.addEventListener("pointerdown", onDown);
     plug.addEventListener("keydown", onKey);
+    plug.addEventListener("touchstart", onTouchStart, { passive: false });
+    svg.addEventListener("touchmove", onTouchMove, { passive: false });
     svg.addEventListener("pointermove", onMove);
     svg.addEventListener("pointerup", onUp);
     svg.addEventListener("pointercancel", onUp);
@@ -475,6 +488,8 @@ export function Profile() {
       io.disconnect();
       plug.removeEventListener("pointerdown", onDown);
       plug.removeEventListener("keydown", onKey);
+      plug.removeEventListener("touchstart", onTouchStart);
+      svg.removeEventListener("touchmove", onTouchMove);
       svg.removeEventListener("pointermove", onMove);
       svg.removeEventListener("pointerup", onUp);
       svg.removeEventListener("pointercancel", onUp);
@@ -727,7 +742,7 @@ export function Profile() {
               ref={headingRef}
               tabIndex={-1}
               style={rise(on, 60).style}
-              className={`font-display text-[32px] leading-[1.02] font-bold tracking-[-0.03em] text-ink outline-none md:text-[clamp(30px,6vh,56px)] ${rise(on, 60).className}`}
+              className={`font-display text-[28px] leading-[1.02] font-bold tracking-[-0.03em] text-ink outline-none md:text-[clamp(28px,6vh,48px)] ${rise(on, 60).className}`}
             >
               <span className="sr-only">{profile.title}</span>
               <span aria-hidden>

@@ -68,6 +68,62 @@ export function Lightbox({
     setDir("prev");
     onIndexChange((safeIndex - 1 + cards.length) % cards.length);
   };
+  /**
+   * Swipe on touch screens: the media follows the finger sideways, and a
+   * long or quick enough flick turns to the next or previous one (which then
+   * slides in from that side); anything less springs back. The gesture only
+   * claims the pointer once it is clearly horizontal, so vertical moves are
+   * left alone.
+   */
+  const dragRef = useRef<HTMLDivElement>(null);
+  const swipe = useRef<{ id: number; x: number; y: number; t: number; dx: number; axis: "x" | "y" | null } | null>(null);
+  /** A swipe that ends off the media must not count as a click to close. */
+  const swiped = useRef(false);
+  const settle = (animate: boolean) => {
+    const el = dragRef.current;
+    if (!el) return;
+    el.style.transition = animate ? "transform .35s cubic-bezier(.22,1,.36,1), opacity .35s ease" : "none";
+    el.style.transform = "";
+    el.style.opacity = "";
+  };
+  const onSwipeDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    swiped.current = false;
+    if (e.pointerType === "mouse" || cards.length < 2) return;
+    if ((e.target as HTMLElement).closest("button")) return;
+    swipe.current = { id: e.pointerId, x: e.clientX, y: e.clientY, t: e.timeStamp, dx: 0, axis: null };
+  };
+  const onSwipeMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const g = swipe.current;
+    if (!g || g.id !== e.pointerId) return;
+    const dx = e.clientX - g.x;
+    const dy = e.clientY - g.y;
+    if (!g.axis) {
+      if (Math.hypot(dx, dy) < 8) return;
+      g.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+      if (g.axis === "x") e.currentTarget.setPointerCapture(e.pointerId);
+    }
+    if (g.axis !== "x") return;
+    g.dx = dx;
+    const el = dragRef.current;
+    if (!el) return;
+    el.style.transition = "none";
+    el.style.transform = `translateX(${dx}px) rotate(${dx * 0.012}deg)`;
+    el.style.opacity = String(1 - Math.min(Math.abs(dx) / 700, 0.35));
+  };
+  const onSwipeEnd = (e: React.PointerEvent<HTMLDivElement>) => {
+    const g = swipe.current;
+    if (!g || g.id !== e.pointerId) return;
+    swipe.current = null;
+    if (g.axis !== "x") return;
+    swiped.current = true;
+    const speed = Math.abs(g.dx) / Math.max(1, e.timeStamp - g.t);
+    const turn = e.type === "pointerup" && (Math.abs(g.dx) > Math.min(90, window.innerWidth * 0.22) || speed > 0.5);
+    if (!turn) return settle(true);
+    settle(false);
+    if (g.dx < 0) goNext();
+    else goPrev();
+  };
+
   const goTo = (i: number) => {
     setDir(i > safeIndex ? "next" : i < safeIndex ? "prev" : "init");
     onIndexChange(i);
@@ -165,7 +221,18 @@ export function Lightbox({
         </div>
 
         <figure className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[14px]">
-          <div className="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden">
+          <div
+            onPointerDown={onSwipeDown}
+            onPointerMove={onSwipeMove}
+            onPointerUp={onSwipeEnd}
+            onPointerCancel={onSwipeEnd}
+            onClickCapture={(e) => {
+              if (!swiped.current) return;
+              swiped.current = false;
+              e.stopPropagation();
+            }}
+            className="relative flex min-h-0 w-full flex-1 touch-pan-y items-center justify-center overflow-hidden"
+          >
             {/* Left arrow */}
             {cards.length > 1 ? (
               <button
@@ -178,6 +245,7 @@ export function Lightbox({
               </button>
             ) : null}
 
+            <div ref={dragRef} className="flex size-full items-center justify-center">
             {card.youtubeId ? (
               <div key={card.id} className={`aspect-video max-h-full w-full max-w-[1100px] overflow-hidden rounded-[20px] bg-black ${slideAnim}`}>
                 <iframe
@@ -212,6 +280,7 @@ export function Lightbox({
                 }`}
               />
             ) : null}
+            </div>
 
             {/* Right arrow */}
             {cards.length > 1 ? (
