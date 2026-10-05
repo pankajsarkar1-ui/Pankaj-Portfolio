@@ -46,23 +46,37 @@ export function FolderStacks() {
   const [start, setStart] = useState(0);
   const [open, setOpen] = useState<{ tab: string; index: number; origin: DOMRect | null } | null>(null);
   const cardEls = useRef<Map<string, HTMLDivElement>>(new Map());
+  /** When and where the last page turn happened. Turning deals new prints
+   *  under a pointer that hasn't moved, and one of them can be the print that
+   *  turns back, so a turn waits for the deal to land and the pointer to move
+   *  on before it can fire again. Otherwise the two ping-pong. */
+  const turned = useRef({ at: 0, x: -1e4, y: -1e4 });
+  const canTurn = (e: MouseEvent) =>
+    e.timeStamp - turned.current.at > 650 &&
+    Math.hypot(e.clientX - turned.current.x, e.clientY - turned.current.y) > 24;
+  const turn = (e: MouseEvent, to: number) => {
+    turned.current = { at: e.timeStamp, x: e.clientX, y: e.clientY };
+    setStart(to);
+    setHot(null);
+  };
 
   const openAt = (tab: string, index: number) => {
     setOpen({ tab, index, origin: cardEls.current.get(`${tab}:${index}`)?.getBoundingClientRect() ?? null });
   };
 
-  /** Tilt toward the pointer, written straight to the element. */
-  const tilt = (e: MouseEvent<HTMLDivElement>) => {
-    const el = e.currentTarget;
-    const r = el.getBoundingClientRect();
+  /** Tilt toward the pointer, written straight to the print. Measured off
+   *  the print's slot, which doesn't lift, so the tilt can't feed itself. */
+  const tilt = (e: MouseEvent<HTMLDivElement>, el: HTMLElement | undefined) => {
+    if (!el) return;
+    const r = e.currentTarget.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width - 0.5;
     const py = (e.clientY - r.top) / r.height - 0.5;
     el.style.setProperty("--ry", `${px * 22}deg`);
     el.style.setProperty("--rx", `${-py * 18}deg`);
   };
-  const untilt = (e: MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.setProperty("--ry", "0deg");
-    e.currentTarget.style.setProperty("--rx", "0deg");
+  const untilt = (el: HTMLElement | undefined) => {
+    el?.style.setProperty("--ry", "0deg");
+    el?.style.setProperty("--rx", "0deg");
   };
 
   return (
@@ -134,9 +148,27 @@ export function FolderStacks() {
                     const nextUp = dealt && slot === m - 1 && more > 0;
                     /** Hovering the first one dealt goes back to the ones before. */
                     const prevUp = dealt && slot === 0 && from > 0;
+                    const key = `${tab.id}:${i}`;
+                    /** Hover lives on the slot, which never lifts: lifting
+                     *  the print it holds can't slide it out from under the
+                     *  pointer and set it bouncing. */
+                    const over = (e: MouseEvent<HTMLDivElement>) => {
+                      if (nextUp || prevUp) {
+                        if (canTurn(e)) turn(e, nextUp ? Math.min(from + DEAL, n - m) : Math.max(0, from - DEAL));
+                        return;
+                      }
+                      if (!isHot) setHot({ tab: fi, index: i });
+                      if (dealt) tilt(e, cardEls.current.get(key));
+                    };
                     return (
                       <div
                         key={card.id}
+                        onMouseEnter={over}
+                        onMouseMove={over}
+                        onMouseLeave={() => {
+                          untilt(cardEls.current.get(key));
+                          setHot((h) => (h?.tab === fi && h.index === i ? null : h));
+                        }}
                         className="absolute"
                         style={{
                           left,
@@ -159,7 +191,7 @@ export function FolderStacks() {
                             transition: `transform .6s ${EASE} ${delay}ms`,
                           }}
                         >
-                          <div className="relative size-full -scale-y-100 overflow-hidden rounded-[12px] border border-white/80 opacity-[0.16] [mask-image:linear-gradient(to_top,#000,transparent_38%)]">
+                          <div className="relative size-full -scale-y-100 overflow-hidden rounded-[12px] border border-white/50 opacity-[0.16] [mask-image:linear-gradient(to_top,#000,transparent_38%)]">
                             {card.poster ? <Image src={card.poster} alt="" fill sizes="160px" className="object-cover" /> : null}
                           </div>
                         </div>
@@ -167,25 +199,11 @@ export function FolderStacks() {
                         {/* the print itself; lifts and tilts on hover */}
                         <div
                           ref={(el) => {
-                            if (el) cardEls.current.set(`${tab.id}:${i}`, el);
-                            else cardEls.current.delete(`${tab.id}:${i}`);
-                          }}
-                          onMouseEnter={() => {
-                            if (nextUp) {
-                              setStart(Math.min(from + DEAL, n - m));
-                              setHot(null);
-                            } else if (prevUp) {
-                              setStart(Math.max(0, from - DEAL));
-                              setHot(null);
-                            } else setHot({ tab: fi, index: i });
-                          }}
-                          onMouseMove={dealt ? tilt : undefined}
-                          onMouseLeave={(e) => {
-                            untilt(e);
-                            setHot((h) => (h?.tab === fi && h.index === i ? null : h));
+                            if (el) cardEls.current.set(key, el);
+                            else cardEls.current.delete(key);
                           }}
                           onClick={() => openAt(tab.id, spread ? i : 0)}
-                          className="relative size-full cursor-pointer overflow-hidden rounded-[12px] border border-white/80 bg-[#f1f1f1] shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.05),0_10px_18px_-12px_rgba(0,0,0,0.22)]"
+                          className="relative size-full cursor-pointer overflow-hidden rounded-[12px] border border-white/50 bg-[#f1f1f1] shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.05),0_10px_18px_-12px_rgba(0,0,0,0.22)]"
                           style={
                             {
                               "--rx": "0deg",
