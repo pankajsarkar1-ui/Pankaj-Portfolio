@@ -14,12 +14,19 @@ import { MARK_BOX, MARK_STRETCH, markPath } from "@/components/mark";
  * and shoves the nav around.
  */
 
-export function Logo({ className }: { className?: string }) {
+export function Logo({
+  className,
+  still = false,
+}: {
+  className?: string;
+  /** Skip the hover stretch where there is no room for it (the pill nav). */
+  still?: boolean;
+}) {
   const pathRef = useRef<SVGPathElement>(null);
 
   useEffect(() => {
     const path = pathRef.current;
-    if (!path) return;
+    if (!path || still) return;
     // Hover belongs to the whole link, not just the glyph's own ink.
     const host = path.closest("a") ?? path.closest("svg");
     if (!host) return;
@@ -57,7 +64,7 @@ export function Logo({ className }: { className?: string }) {
       host.removeEventListener("blur", leave, true);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [still]);
 
   return (
     <svg

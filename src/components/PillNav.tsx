@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
+import { Logo } from "@/components/Logo";
 import { LottieMark } from "@/components/LottieMark";
 import { site } from "@/content/site";
 
@@ -51,6 +52,17 @@ export function PillNav() {
         aria-label="Sections"
         className="flex items-center rounded-full border border-shell-border bg-white py-[5px] pr-[5px] pl-[6px] shadow-[0_8px_24px_-12px_rgba(0,0,0,0.30)]"
       >
+        {/* the mark, home */}
+        <Link
+          href="/#top"
+          tabIndex={shown ? undefined : -1}
+          className="flex items-center rounded-full py-[7px] pr-[8px] pl-[12px] text-ink transition-opacity hover:opacity-70"
+        >
+          <Logo still className="h-[16px] w-auto sm:h-[18px]" />
+          <span className="sr-only">{site.name} — home</span>
+        </Link>
+        <span aria-hidden className="mx-[4px] h-[18px] w-px bg-shell-border" />
+
         <ul className="flex items-center gap-[2px]">
           {site.nav.map((item) => (
             <li key={item.label}>
@@ -84,7 +96,7 @@ export function PillNav() {
               </span>
             </span>
           </span>
-          <LottieMark src="/assets/lottie/coffee.json" className="size-[30px] shrink-0 sm:size-[32px]" />
+          <LottieMark src="/assets/lottie/coffee.json" className="size-[24px] shrink-0 sm:size-[26px]" />
         </a>
       </nav>
     </div>
