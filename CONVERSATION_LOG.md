@@ -279,7 +279,7 @@ section `3269:96992–96998`).
   WORK" eyebrow label was removed from this section.
   Hover a print: it lifts, scales 1.07 and tilts toward the pointer (CSS vars
   `--rx/--ry` written on mousemove); label shows its caption.
-- Prints have a subtle 1px white border (white/80) (photo-print look, separates overlapping cards).
+- Prints have a subtle 1px white border (white/50) (photo-print look, separates overlapping cards).
 - Ground: faint short reflection under each print (flipped, counter-rotated,
   16% opacity, masked) + a barely-there contact shadow; card shadow subtle.
 - Click a print: `Lightbox` with `backdrop="blur"` (frosted page) and `origin`
@@ -373,6 +373,26 @@ section `3269:96992–96998`).
   chevrons climbing in turn (`chevronClimb` keyframes); smooth scroll to top.
 - PillNav now leads with the p logo (→ `/#top`, `Logo still` so its hover
   stretch can't overlap the links) + divider; coffee cup 24/26px.
+- Nav hand-off is now a scroll-scrubbed **morph** (uncommitted until asked):
+  the moment the hero card's top reaches the viewport top, PillNav sits exactly
+  over the hero bar (`data-hero-nav` on Nav; its items go `invisible` while
+  `data-docked=true`) and, over ~1.25× the bar's height of scroll, shrinks
+  into the pill: width/height/padding/radius/offset written per frame in px,
+  inner items (logo, cup, link gap, dividers, shadow, phone menu glyph) read
+  `--p` in calc. Scroll back unwinds it. Verified at 1440 and 390.
+  Smoothed: the run is 2× the bar height, and the drawn `--p` trails the
+  scroll target with an exponential follow (TAU 140ms), so wheel steps glide;
+  while unwinding the pill rides down with the card and hands back exactly.
+- Beyond Work piles: fixed hover jitter on the 4th print. Hover now lives on
+  the non-lifting slot (so the lift can't slide the print out from under the
+  pointer), and a page turn waits 650ms and 24px of pointer travel after the
+  previous one (`turned` ref, event timestamps), which stops the forward/back
+  ping-pong when the "go back" print is dealt under a still pointer.
+- Timeline decluttered: school rows (HS, Secondary) carry `school: true` in
+  `experience.ts` and are filtered out of the About timeline only (homepage
+  list unchanged). All cards now sit left of the spine (right-aligned toward
+  it), year numerals only on the right; cards use `bg-beyond-surface` (#f6f6f6)
+  instead of an outline. Studying vs working is told by the dot + legend.
 
 ## 6. Pending / awaiting the user
 
