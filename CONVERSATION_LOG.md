@@ -32,12 +32,14 @@ Typical loop: user gives a UI request → Claude edits source → verifies on lo
 
 ## 3. Commit state (as of last update)
 
-Branch `main`, pushed to `origin/main` at **`ed0dbc1`** (+ this log). The session's work is
+Branch `main`, pushed to `origin/main` (+ this log). The session's work is
 **committed and pushed** — a fresh clone now has all of it. Commits added this
 session (newest first):
 
 | Commit | Summary |
 |---|---|
+| `0bae75e` | Pill nav leads with the logo (held still), smaller cup. |
+| `d258ea2` | Floating back-to-top button over the footer. |
 | `ed0dbc1` | Contact footer as a café counter: menu board + printing receipt with Place order (section 5g). |
 | `aeef30f` | Work page `/work` with Selected / Product / Visual / Experiments (section 5h). |
 | `08e0cb4` | About page `/about`: plug profile, Beyond Work piles, timeline; frosted Lightbox; nav to new pages; Caveat (sections 5d–5f). |
@@ -364,6 +366,13 @@ section `3269:96992–96998`).
 
 - `Lightbox`: clicking anywhere in the empty frosted/dark space closes it; only
   the media, buttons and links hold a click (all viewers, homepage too).
+
+- Floating **Back to top** (`src/components/BackToTop.tsx`, rendered by Contact):
+  appears while the footer is ≥15% on screen, bottom-right, black (ink, faint
+  white ring) with two
+  chevrons climbing in turn (`chevronClimb` keyframes); smooth scroll to top.
+- PillNav now leads with the p logo (→ `/#top`, `Logo still` so its hover
+  stretch can't overlap the links) + divider; coffee cup 24/26px.
 
 ## 6. Pending / awaiting the user
 
