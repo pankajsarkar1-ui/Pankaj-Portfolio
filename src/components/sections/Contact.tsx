@@ -228,10 +228,82 @@ function Burst({ drink, x, y }: { drink: string; x: number; y: number }) {
   );
 }
 
+const smooth = (a: number, b: number, t: number) => {
+  const x = Math.min(1, Math.max(0, (t - a) / (b - a)));
+  return x * x * (3 - 2 * x);
+};
+
+/**
+ * From `sm` up, the black field behind the footer opens out of the card to
+ * the edges of the window, and down to the bottom of the page, as the footer
+ * scrolls in, and stays open. Only the field moves; the counter's own layout
+ * never changes, so nothing reflows mid-scroll.
+ *
+ * The field spans the whole window and is cut down with a clip-path inset
+ * (card width and corners at rest, nothing at full width), written per frame
+ * and eased a beat behind the scroll like the pill nav.
+ */
+function useWidenOnScroll(
+  wrapRef: React.RefObject<HTMLDivElement | null>,
+  fieldRef: React.RefObject<HTMLSpanElement | null>,
+) {
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    const field = fieldRef.current;
+    if (!wrap || !field) return;
+    const wide = window.matchMedia("(min-width: 640px)");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const TAU = 120;
+    let g = -1;
+    let last = 0;
+    let raf = 0;
+
+    const frame = (now: number) => {
+      raf = 0;
+      const vw = document.documentElement.clientWidth;
+      const r = wrap.getBoundingClientRect();
+      const radius = parseFloat(getComputedStyle(wrap).getPropertyValue("--radius-card")) || 32;
+      // 0 as the footer's top meets the bottom of the window, 1 at the end of
+      // the page
+      const below = document.documentElement.scrollHeight - (r.bottom + window.scrollY);
+      const t = (window.innerHeight - r.top) / Math.max(1, r.height + below);
+      const target = !wide.matches ? 0 : reduce.matches ? 1 : smooth(0.05, 0.4, t);
+
+      const dt = last ? Math.min(64, now - last) : 16;
+      last = now;
+      if (g < 0) g = target;
+      else g += (target - g) * (1 - Math.exp(-dt / TAU));
+      if (Math.abs(target - g) < 0.0005) g = target;
+      else raf = requestAnimationFrame(frame);
+      if (!raf) last = 0;
+
+      const k = 1 - g;
+      field.style.left = `${-r.left}px`;
+      field.style.width = `${vw}px`;
+      // the card's place inside the field, for the light that sits on it
+      field.style.setProperty("--cl", `${r.left}px`);
+      field.style.setProperty("--cw", `${r.width}px`);
+      // once open it also runs on down to the bottom of the page
+      field.style.bottom = `${-below}px`;
+      field.style.clipPath = `inset(0 ${(vw - r.right) * k}px ${below * k}px ${r.left * k}px round ${radius * k}px)`;
+    };
+    const kick = () => {
+      if (!raf) raf = requestAnimationFrame(frame);
+    };
+    kick();
+    window.addEventListener("scroll", kick, { passive: true });
+    window.addEventListener("resize", kick);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", kick);
+      window.removeEventListener("resize", kick);
+    };
+  }, [wrapRef, fieldRef]);
+}
+
 export function Contact() {
   const [drinkId, setDrinkId] = useState("coffee");
   const drink = DRINKS.find((d) => d.id === drinkId) ?? DRINKS[0];
-  const [agenda, setAgenda] = useState("");
 
   // The flourish erupts from the big glass, so the stage is measured on click.
   // `key` increments per click so the burst remounts and replays.
@@ -248,6 +320,9 @@ export function Contact() {
   // reprints for every new order.
   const counterRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const fieldRef = useRef<HTMLSpanElement>(null);
+  useWidenOnScroll(wrapRef, fieldRef);
   const [printed, setPrinted] = useState(false);
   useEffect(() => {
     const el = counterRef.current;
@@ -276,13 +351,11 @@ export function Contact() {
 
   const { headline, links } = site.contact;
 
-  // Pre-composes the mail so the order, and the agenda, carry through to the inbox.
+  // Pre-composes the mail so the order carries through to the inbox.
   const mailto = `${links[0].href}?subject=${encodeURIComponent(
     `Order #${drink.ticket}: ${drink.label} (${drink.time})`,
   )}&body=${encodeURIComponent(
-    `Hi Pankaj,\n\nI'd like to grab a ${drink.label.toLowerCase()} \u2014 ${drink.time.toLowerCase()}.\n\nOn the agenda:\n${
-      agenda.trim() || ""
-    }\n\n`,
+    `Hi Pankaj,\n\nI'd like to grab a ${drink.label.toLowerCase()} \u2014 ${drink.time.toLowerCase()}.\n\n`,
   )}`;
 
   const rows = [
@@ -293,35 +366,76 @@ export function Contact() {
   ];
 
   return (
+    // Phones run the footer edge to edge with square corners, down to the
+    // bottom of the page, for room. From `sm` it is a card whose black field
+    // widens on scroll (see useWidenOnScroll); from `xl` the card steps out of
+    // the page column to the full 1190px, since it opens to the window anyway,
+    // which lets the headline, menu and receipt sit side by side and short.
+    <div
+      ref={wrapRef}
+      className="relative max-sm:-mx-[16px] max-sm:-mb-[40px] xl:mx-[calc((100%-min(1190px,100vw-48px))/2)]"
+    >
+      <span
+        ref={fieldRef}
+        aria-hidden
+        className="pointer-events-none absolute top-0 bottom-0 left-0 hidden w-full overflow-hidden bg-ink sm:block"
+      >
+        {/* a warm pool of light over the counter */}
+        <span className="absolute -top-[30%] left-[calc(var(--cl)+var(--cw)*0.5)] h-[80%] w-[calc(var(--cw)*0.6)] rounded-full bg-[radial-gradient(closest-side,rgba(67,84,238,0.22),transparent)]" />
+      </span>
     <footer
       ref={footerRef}
       id="contact"
-      className="relative flex flex-col gap-[36px] overflow-hidden rounded-[var(--radius-card)] bg-ink p-[20px] sm:gap-[56px] sm:p-[64px] lg:p-[74.667px]"
+      className="relative flex flex-col gap-[36px] overflow-hidden bg-ink px-[24px] py-[48px] sm:gap-[48px] sm:rounded-[var(--radius-card)] sm:bg-transparent sm:p-[56px] lg:px-[74.667px] lg:py-[64px]"
     >
-      {/* a warm pool of light over the counter */}
+      {/* the same light on phones, where the footer carries its own fill */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -top-[30%] right-[-10%] h-[80%] w-[60%] rounded-full bg-[radial-gradient(closest-side,rgba(67,84,238,0.22),transparent)]"
+        className="pointer-events-none absolute -top-[30%] right-[-10%] h-[80%] w-[60%] rounded-full bg-[radial-gradient(closest-side,rgba(67,84,238,0.22),transparent)] sm:hidden"
       />
 
-      {/* Stacked below xl: headline, menu, drink, receipt. From xl the menu and
-          the receipt share a row, with the drink above the receipt beside the
-          headline. */}
+      {/* Stacked below xl: headline (with the drink beside it), menu, receipt.
+          From xl the receipt stands beside the headline and menu, top to
+          top, so the counter is only as tall as the receipt. */}
       <div
         ref={counterRef}
-        className="relative grid gap-y-[28px] sm:gap-y-[40px] xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-x-[48px]"
+        className="relative grid gap-y-[28px] sm:gap-y-[36px] xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-x-[56px]"
       >
-        <div className="flex flex-col gap-[12px] xl:col-span-2 xl:col-start-1 xl:row-start-1">
-          <h2 className="font-display text-[40px] leading-[0.98] font-bold tracking-[-0.03em] text-white sm:text-[60px]">
-            {headline}
-          </h2>
-          <p className="max-w-[40ch] text-[15px] leading-[1.55] text-white/55 sm:text-[18px] xl:max-w-[min(40ch,calc(100%-420px))]">
-            Pick your poison and place the order. I&nbsp;bring the opinions; the bill is on&nbsp;me.
-          </p>
+        <div className="flex flex-col gap-[24px] sm:gap-[32px] xl:col-start-1 xl:row-start-1">
+        <div className="flex items-center justify-between gap-[16px]">
+          <div className="flex flex-col gap-[12px]">
+            <h2 className="font-display text-[36px] leading-[0.98] font-bold tracking-[-0.03em] text-white sm:text-[60px]">
+              {headline}
+            </h2>
+            <p className="max-w-[34ch] text-[15px] leading-[1.55] text-white/55 sm:text-[18px]">
+              Pick your poison and place the order. I&nbsp;bring the opinions; the bill is on&nbsp;me.
+            </p>
+          </div>
+
+          {/* the drink on the counter; the flourish plays off it, scaled to
+              stay inside the footer */}
+          <div
+            ref={stageRef}
+            className="relative grid size-[72px] shrink-0 place-items-center sm:size-[132px]"
+          >
+            {/* The files are black line art; this drives every colour in them
+                to white so they read on the dark counter. */}
+            <LottieMark
+              key={drink.id}
+              src={drink.lottie}
+              scale={drink.scale}
+              className="relative size-[64px] [filter:brightness(0)_invert(1)] sm:size-[112px]"
+            />
+            {burst ? (
+              <div key={burst.key} aria-hidden className="pointer-events-none absolute inset-0 scale-[0.7]">
+                <Burst drink={burst.drink} x={burst.x} y={burst.y} />
+              </div>
+            ) : null}
+          </div>
         </div>
 
         {/* the menu board */}
-        <div className="xl:col-start-1 xl:row-start-2 xl:self-center">
+        <div>
           <div role="radiogroup" aria-label="Pick a drink" className="flex flex-col">
             {DRINKS.map((d, i) => {
               const on = d.id === drinkId;
@@ -332,7 +446,7 @@ export function Contact() {
                   role="radio"
                   aria-checked={on}
                   onClick={() => pickDrink(d.id)}
-                  className={`group flex flex-col gap-[6px] border-t border-white/10 py-[16px] text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:py-[22px] ${
+                  className={`group flex flex-col border-t border-white/10 py-[14px] text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:py-[18px] ${
                     i === DRINKS.length - 1 ? "border-b" : ""
                   }`}
                 >
@@ -356,12 +470,17 @@ export function Contact() {
                       {d.time}
                     </span>
                   </span>
+                  {/* only the picked drink says what it is; the others fold */}
                   <span
-                    className={`pl-[28px] text-[14px] leading-[1.5] transition-colors duration-300 sm:pl-[34px] sm:text-[16px] ${
-                      on ? "text-white/65" : "text-white/25 group-hover:text-white/45"
+                    className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none ${
+                      on ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                     }`}
                   >
-                    <span className="font-semibold">{d.title}.</span> {d.blurb}
+                    <span className="overflow-hidden">
+                      <span className="block pt-[8px] pl-[28px] text-[14px] leading-[1.5] text-white/65 sm:pl-[34px] sm:text-[16px]">
+                        <span className="font-semibold">{d.title}.</span> {d.blurb}
+                      </span>
+                    </span>
                   </span>
                 </button>
               );
@@ -369,33 +488,16 @@ export function Contact() {
           </div>
         </div>
 
-        {/* the counter: the drink, and the receipt printing beneath it */}
-        <div
-          ref={stageRef}
-          className="relative grid size-[140px] shrink-0 place-items-center justify-self-center sm:size-[170px] xl:col-start-2 xl:row-start-1 xl:self-end"
-        >
-            {/* The files are black line art; this drives every colour in them
-                to white so they read on the dark counter. */}
-            <LottieMark
-              key={drink.id}
-              src={drink.lottie}
-              scale={drink.scale}
-              className="relative size-[96px] [filter:brightness(0)_invert(1)] sm:size-[120px]"
-            />
-            {burst ? (
-              <div key={burst.key} aria-hidden className="pointer-events-none absolute inset-0">
-                <Burst drink={burst.drink} x={burst.x} y={burst.y} />
-              </div>
-            ) : null}
         </div>
 
-          <div className="relative -mt-[12px] w-full max-w-[360px] justify-self-center sm:-mt-[24px] xl:col-start-2 xl:row-start-2 xl:mt-0">
+        {/* the receipt, printing out of the counter */}
+          <div className="relative w-full max-w-[360px] justify-self-center xl:col-start-2 xl:row-start-1 xl:self-start">
             {/* the printer's slot */}
             <div className="relative z-10 -mx-[12px] h-[14px] rounded-full bg-[#1d1d21] shadow-[inset_0_2px_5px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.06)]" />
             <div className="-mt-[7px] overflow-hidden px-[4px] pb-[24px]">
               <div
                 key={printed ? drink.id : "blank"}
-                className={`bg-[#f6f4ee] px-[22px] pt-[26px] pb-[30px] font-mono text-[13px] text-[#1b1b1b] shadow-[0_24px_40px_-20px_rgba(0,0,0,0.8)] [mask:conic-gradient(from_-45deg_at_bottom,#0000,#000_1deg_89deg,#0000_90deg)_50%/16px_100%] ${
+                className={`bg-[#f6f4ee] px-[22px] pt-[22px] pb-[26px] font-mono text-[13px] text-[#1b1b1b] shadow-[0_24px_40px_-20px_rgba(0,0,0,0.8)] [mask:conic-gradient(from_-45deg_at_bottom,#0000,#000_1deg_89deg,#0000_90deg)_50%/16px_100%] ${
                   printed
                     ? "[animation:receiptPrint_1000ms_linear_both] motion-reduce:[animation:none]"
                     : "-translate-y-full"
@@ -426,21 +528,9 @@ export function Contact() {
                   <span className="text-[24px] font-semibold tracking-[-0.02em]">₹0.00</span>
                 </div>
 
-                <label htmlFor="agenda" className="mt-[16px] block text-[11px] text-black/55">
-                  On the agenda (optional)
-                </label>
-                <textarea
-                  id="agenda"
-                  rows={2}
-                  value={agenda}
-                  onChange={(e) => setAgenda(e.target.value)}
-                  placeholder="Your app, my hot takes…"
-                  className="mt-[6px] w-full resize-none rounded-[8px] border border-dashed border-black/25 bg-transparent p-[10px] font-mono text-[12px] text-[#1b1b1b] outline-none placeholder:text-black/35 focus:border-black/60"
-                />
-
                 <a
                   href={mailto}
-                  className="group mt-[14px] flex items-center justify-center gap-[8px] rounded-[10px] bg-ink py-[13px] font-sans text-[15px] font-semibold text-white transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  className="group mt-[18px] flex items-center justify-center gap-[8px] rounded-[10px] bg-ink py-[13px] font-sans text-[15px] font-semibold text-white transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                   Place order
                   <span aria-hidden className="transition-transform group-hover:translate-x-[3px]">
@@ -450,7 +540,7 @@ export function Contact() {
 
                 <div
                   aria-hidden
-                  className="mt-[18px] h-[32px] bg-[repeating-linear-gradient(90deg,#1b1b1b_0_2px,transparent_2px_4px,#1b1b1b_4px_5px,transparent_5px_8px,#1b1b1b_8px_11px,transparent_11px_13px)] opacity-85"
+                  className="mt-[16px] h-[26px] bg-[repeating-linear-gradient(90deg,#1b1b1b_0_2px,transparent_2px_4px,#1b1b1b_4px_5px,transparent_5px_8px,#1b1b1b_8px_11px,transparent_11px_13px)] opacity-85"
                 />
                 <p className="mt-[8px] text-center text-[11px] text-black/45">ETA: soon-ish · thank you, come again</p>
               </div>
@@ -506,5 +596,6 @@ export function Contact() {
       </div>
       <BackToTop watch={footerRef} />
     </footer>
+    </div>
   );
 }
