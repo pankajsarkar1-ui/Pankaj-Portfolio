@@ -393,6 +393,22 @@ section `3269:96992–96998`).
   list unchanged). All cards now sit left of the spine (right-aligned toward
   it), year numerals only on the right; cards use `bg-beyond-surface` (#f6f6f6)
   instead of an outline. Studying vs working is told by the dot + legend.
+- Project banner cards: the decorative "reading progress" strip beside the
+  read pill (pin/sparkle/crown + dashes) is removed from all cards;
+  `BannerTimeline.tsx` deleted and `theme.timeline` dropped from projects.ts.
+- Contact footer: wrapped in a div holding a full-window black "field" (sm+)
+  cut down by a clip-path inset; `useWidenOnScroll` opens it to the window
+  edges, and down to the page bottom, as the footer scrolls in (t 0.05→0.4)
+  and it STAYS open (user: don't shrink back). Footer content never reflows;
+  the blue glow lives in the field (--cl/--cw vars). From xl the card steps out
+  of the page column to min(1190px, 100vw-48px).
+  Height cut 1061→709px at desktop: agenda textarea removed (mailto body no
+  longer carries an agenda); the drink Lottie sits beside the headline (burst
+  scaled 0.7 to stay inside); only the picked drink's blurb shows (others fold
+  via grid rows); receipt top-aligns beside headline+menu; tighter receipt and
+  footer padding (sm p-56, lg px-74.667 py-64).
+  Phones: edge to edge, square corners, px 24 / py 48, runs to the page bottom
+  (`max-sm:-mx-[16px] -mb-[40px]`); headline 36px + 72px cup on one line.
 
 ## 6. Pending / awaiting the user
 
