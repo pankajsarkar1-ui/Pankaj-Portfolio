@@ -2,6 +2,8 @@ export type ExperienceRow = {
   period: string;
   title: string;
   org: string;
+  /** School years: on the homepage list, left off the About timeline. */
+  school?: boolean;
 };
 
 export type ExperienceTab = {
@@ -34,8 +36,8 @@ export const experience = {
       rows: [
         { period: "2021 — 2023", title: "M. Des", org: "IIT Delhi" },
         { period: "2013 — 2017", title: "BE (Bachelor of Engineering)", org: "IIEST Shibpur · IT" },
-        { period: "2010 — 2012", title: "HS - Science", org: "Jalpaiguri Zilla School, WB" },
-        { period: "2005 — 2010", title: "Secondary", org: "Belakoba High School, WB" },
+        { period: "2010 — 2012", title: "HS - Science", org: "Jalpaiguri Zilla School, WB", school: true },
+        { period: "2005 — 2010", title: "Secondary", org: "Belakoba High School, WB", school: true },
       ],
     },
   ] satisfies ExperienceTab[],

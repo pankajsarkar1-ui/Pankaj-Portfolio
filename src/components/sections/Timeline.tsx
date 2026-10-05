@@ -4,12 +4,13 @@ import { useEffect, useRef } from "react";
 import { experience } from "@/content/experience";
 
 /**
- * Career and education on one spine, oldest first, ending at "Now". Studies
- * sit on the left, work on the right, and the opposite side carries the year
- * in big quiet numerals. The spine draws itself as you scroll: a blue line with
- * a glowing head runs down it, each stop lights up as the head reaches it, and
- * its card slides in from its own side. Phones fold everything to the right of
- * a spine on the left.
+ * Career and college on one spine, oldest first, ending at "Now" (school years
+ * are left off). Every stop sits on the left of the spine on a soft grey card,
+ * and the right carries only the year, in big quiet numerals, once per year;
+ * the dot tells studying from working. The spine draws itself as you scroll: a
+ * blue line with a glowing head runs down it, each stop lights up as the head
+ * reaches it, and its card slides in toward the spine. Phones fold everything
+ * to the right of a spine on the left.
  *
  * Scroll work is imperative (a style height and a data attribute per stop), so
  * nothing re-renders while you scroll.
@@ -48,7 +49,7 @@ type Stop = {
 
 const STOPS: Stop[] = experience.tabs
   .flatMap((tab) =>
-    tab.rows.map((row) => {
+    tab.rows.filter((row) => !row.school).map((row) => {
       const [a, b] = row.period.split("—");
       const start = point(a)!;
       const end = point(b);
@@ -136,7 +137,6 @@ export function Timeline() {
         </div>
 
         {STOPS.map((stop, i) => {
-          const left = stop.kind === "study";
           /** A year shows once, at its first stop. */
           const newYear = i === 0 || STOPS[i - 1].year !== stop.year;
           return (
@@ -157,30 +157,20 @@ export function Timeline() {
                 } ${stop.now ? "group-data-[on=true]:shadow-[0_0_0_6px_rgba(150,255,154,0.45)]" : ""}`}
               />
 
-              {/* the year, big and quiet, on the other side */}
+              {/* the year, big and quiet, on the right */}
               <span
                 aria-hidden
-                className={`font-display hidden self-start text-[64px] leading-[0.9] font-bold tracking-[-0.04em] text-[#f2f2f2] transition-colors duration-700 group-data-[on=true]:text-accent-soft sm:row-start-1 sm:block lg:text-[80px] ${
-                  left ? "sm:col-start-3 sm:pl-[28px]" : "sm:col-start-1 sm:pr-[28px] sm:text-right"
-                }`}
+                className="font-display hidden self-start text-[64px] leading-[0.9] font-bold tracking-[-0.04em] text-[#f2f2f2] transition-colors duration-700 group-data-[on=true]:text-accent-soft sm:col-start-3 sm:row-start-1 sm:block sm:pl-[28px] lg:text-[80px]"
               >
                 {newYear ? stop.year : ""}
               </span>
 
-              {/* the card, sliding in from its own side */}
-              <div
-                className={`col-start-2 row-start-1 transition-[opacity,transform] duration-700 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none group-data-[on=false]:opacity-0 group-data-[on=true]:translate-x-0 group-data-[on=true]:opacity-100 ${
-                  left
-                    ? "group-data-[on=false]:-translate-x-[24px] sm:col-start-1 sm:pr-[28px]"
-                    : "group-data-[on=false]:translate-x-[24px] sm:col-start-3 sm:pl-[28px]"
-                }`}
-              >
+              {/* the card, sliding in toward the spine */}
+              <div className="col-start-2 row-start-1 transition-[opacity,transform] duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-data-[on=false]:translate-x-[24px] group-data-[on=false]:opacity-0 group-data-[on=true]:translate-x-0 group-data-[on=true]:opacity-100 motion-reduce:transition-none sm:col-start-1 sm:pr-[28px] sm:group-data-[on=false]:-translate-x-[24px]">
                 <div
-                  className={`flex flex-col gap-[6px] rounded-[20px] p-[18px] sm:p-[22px] ${
-                    stop.now
-                      ? "bg-accent text-white shadow-[0_18px_40px_-18px_rgba(67,84,238,0.7)]"
-                      : "border border-shell-border bg-white"
-                  } ${left ? "sm:items-end sm:text-right" : ""}`}
+                  className={`flex flex-col gap-[6px] rounded-[20px] p-[18px] sm:items-end sm:p-[22px] sm:text-right ${
+                    stop.now ? "bg-accent text-white shadow-[0_18px_40px_-18px_rgba(67,84,238,0.7)]" : "bg-beyond-surface"
+                  }`}
                 >
                   <span className={`text-[13px] font-medium sm:text-[14px] ${stop.now ? "text-white/80" : "text-ink-date"}`}>
                     {stop.period}
