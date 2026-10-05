@@ -37,12 +37,6 @@ export type Project = {
     /** Optional override used only on the portrait (mobile) card. */
     bgMobile?: string;
     title: string;
-    /** Progress slider: filled colour, position marker, and start icon. */
-    timeline: {
-      fill: string;
-      marker: string;
-      icon: "pin" | "sparkle" | "crown";
-    };
   };
   layers: BannerLayer[];
   /**
@@ -80,7 +74,6 @@ export const projects: Project[] = [
       bg: "#4354EE",
       bgMobile: "#3D5375",
       title: "#96FF9A",
-      timeline: { fill: "#96FF9A", marker: "#27457A", icon: "pin" },
     },
     // Two upright card stripes exported from Figma (transparent gaps), rotated
     // 30° in CSS and placed so their top-left maps to the Figma instance origin.
@@ -108,7 +101,6 @@ export const projects: Project[] = [
     theme: {
       bg: "#FF6C6C",
       title: "#FFF375",
-      timeline: { fill: "#FFF375", marker: "#8A3A18", icon: "sparkle" },
     },
     // Coins has no baked static — CoinCardAnimation renders continuously (still
     // frame at rest, pointer parallax on hover), so there is no swap to smooth.
@@ -132,7 +124,6 @@ export const projects: Project[] = [
     theme: {
       bg: "#7220BF",
       title: "#FF7779",
-      timeline: { fill: "#FFF375", marker: "#7A1E10", icon: "crown" },
     },
     layers: [],
     // The level card draws taller than its declared box (its own stage is

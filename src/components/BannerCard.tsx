@@ -8,7 +8,6 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { BannerTimeline } from "@/components/BannerTimeline";
 import { CoinCardAnimation } from "@/components/CoinCardAnimation";
 import { LevelCardAnimation } from "@/components/LevelCardAnimation";
 import { TrackingAnimation } from "@/components/TrackingAnimation";
@@ -253,12 +252,9 @@ export function BannerCard({ project }: { project: Project }) {
           </p>
         </div>
 
-        <div className="mt-[36px] flex items-center gap-[16px] sm:mt-0">
+        <div className="mt-[36px] flex items-center sm:mt-0">
           <span className="rounded-full bg-white/20 px-[12px] py-[6px] text-[12px] font-medium whitespace-nowrap text-white backdrop-blur-[8px] sm:px-[2.4cqw] sm:py-[1cqw] sm:text-[clamp(11px,1.3cqw,14px)]">
             {project.readLabel}
-          </span>
-          <span className="hidden sm:block">
-            <BannerTimeline theme={theme.timeline} />
           </span>
         </div>
       </div>
