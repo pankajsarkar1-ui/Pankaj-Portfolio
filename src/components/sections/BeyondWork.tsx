@@ -21,7 +21,7 @@ export function BeyondWork() {
 
       <div className="flex flex-col gap-[24px] rounded-[var(--radius-card)] bg-beyond-surface p-[16px] sm:gap-[48px] sm:p-[53.333px]">
         <div className="flex flex-col gap-[16px] sm:gap-[27px]">
-          <h2 className="font-display text-[20px] font-bold text-ink sm:text-[36px]">
+          <h2 className="font-display text-[24px] leading-[1.1] font-bold text-ink sm:text-[36px]">
             {beyondWork.title}
           </h2>
           <TabChips

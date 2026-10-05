@@ -82,7 +82,7 @@ export function FolderStacks() {
   return (
     <section id="beyond" className="flex flex-col gap-8">
       <div className="flex flex-col gap-[28px] sm:gap-[40px]">
-        <h2 className="font-display text-[20px] font-bold text-ink sm:text-[36px]">{beyondWork.title}</h2>
+        <h2 className="font-display text-[24px] leading-[1.1] font-bold text-ink sm:text-[36px]">{beyondWork.title}</h2>
 
         <div
           onMouseLeave={() => {

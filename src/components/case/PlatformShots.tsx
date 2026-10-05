@@ -48,7 +48,7 @@ export function PlatformShots({ title, caption }: { title: string; caption: stri
   return (
     <figure className="flex flex-col gap-[24px] sm:gap-[28px]">
       <figcaption className="flex flex-col gap-[6px]">
-        <span className="font-display text-[22px] leading-[1.15] font-bold text-ink sm:text-[28px]">
+        <span className="font-display text-[22px] leading-[1.1] font-bold text-ink sm:text-[28px]">
           {title}
         </span>
         <span className="text-[15px] leading-[1.5] text-ink-body">{caption}</span>

@@ -15,7 +15,7 @@ export function Experience() {
       <SectionLabel>{experience.label}</SectionLabel>
 
       <div className="flex flex-col gap-[20px] theme-surface rounded-[var(--radius-card)] border border-experience-border bg-white p-[16px] sm:gap-[24px] sm:p-[53.333px]">
-        <h2 className="text-[20px] font-bold text-ink sm:text-[37.333px]">
+        <h2 className="font-display text-[24px] leading-[1.1] font-bold text-ink sm:text-[36px]">
           {experience.title}
         </h2>
 

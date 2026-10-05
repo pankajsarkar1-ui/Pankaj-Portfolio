@@ -127,7 +127,7 @@ export default function DelhiveryCoinsPage() {
                   <li key={b.label} className="flex flex-col gap-[10px] rounded-[var(--radius-tile)] bg-accent-soft p-[24px] sm:p-[32px]">
                     <span className="text-[13px] font-semibold text-accent">{b.label}</span>
                     <p className="flex items-baseline gap-[8px]">
-                      <span className="font-display text-[56px] leading-[0.9] font-bold tracking-[-0.03em] text-ink sm:text-[72px]">
+                      <span className="font-display text-[48px] leading-[0.95] font-bold tracking-[-0.03em] text-ink sm:text-[72px]">
                         {b.value}
                       </span>
                       <span className="font-display text-[22px] font-bold text-accent sm:text-[28px]">{b.unit}</span>
@@ -137,7 +137,7 @@ export default function DelhiveryCoinsPage() {
                 ))}
                 <li className={`flex flex-col gap-[12px] rounded-[var(--radius-tile)] p-[24px] sm:p-[32px] ${CORAL}`}>
                   <span className="text-[13px] font-semibold text-ink">{c.problem.result.label}</span>
-                  <h3 className="font-display text-[28px] leading-[1.02] font-bold tracking-[-0.02em] text-ink sm:text-[40px]">
+                  <h3 className="font-display text-[28px] leading-[1.08] font-bold tracking-[-0.02em] text-ink sm:text-[40px]">
                     {c.problem.result.title}
                   </h3>
                   <p className="text-[15px] leading-[1.5] text-ink">{c.problem.result.body}</p>
@@ -146,7 +146,7 @@ export default function DelhiveryCoinsPage() {
 
               <div className={`flex flex-col gap-[10px] rounded-[var(--radius-tile)] px-[24px] py-[26px] sm:flex-row sm:items-baseline sm:gap-[24px] sm:px-[40px] sm:py-[36px] ${YELLOW}`}>
                 <span className="shrink-0 text-[15px] font-semibold text-ink sm:text-[16px]">{c.problem.hmw.lead}</span>
-                <p className="font-display text-[22px] leading-[1.2] font-bold text-ink sm:text-[32px]">{c.problem.hmw.question}</p>
+                <p className="font-display text-[24px] leading-[1.2] font-bold text-ink sm:text-[36px]">{c.problem.hmw.question}</p>
               </div>
 
               <ImagePlaceholder label={c.problem.video.label} hint={c.problem.video.hint} ratio="16 / 9" icon="play" />
@@ -159,7 +159,7 @@ export default function DelhiveryCoinsPage() {
                 <ul className="mt-[36px] grid gap-[16px] sm:mt-[56px] md:grid-cols-3 md:gap-[20px]">
                   {c.context.numbers.map((n) => (
                     <li key={n.value} className="flex flex-col gap-[12px] rounded-[var(--radius-tile)] bg-white/[0.06] p-[24px] sm:p-[32px]">
-                      <span className="font-display text-[44px] leading-[1] font-bold tracking-[-0.03em] text-accent-lime sm:text-[64px]">
+                      <span className="font-display text-[48px] leading-[0.95] font-bold tracking-[-0.03em] text-accent-lime sm:text-[72px]">
                         {n.value}
                       </span>
                       <p className="max-w-[32ch] text-[15px] leading-[1.5] text-white/80 sm:text-[16px]">{n.body}</p>
@@ -180,7 +180,7 @@ export default function DelhiveryCoinsPage() {
                   {c.program.rules.map((r) => (
                     <div key={r.body} className="flex flex-col gap-[8px] rounded-[var(--radius-tile)] bg-accent-soft p-[24px] sm:p-[32px]">
                       <dt className="order-last text-[15px] text-ink-body sm:text-[16px]">{r.body}</dt>
-                      <dd className="font-display text-[48px] leading-[0.95] font-bold tracking-[-0.03em] text-accent sm:text-[80px]">
+                      <dd className="font-display text-[48px] leading-[0.95] font-bold tracking-[-0.03em] text-accent sm:text-[72px]">
                         {r.value}
                       </dd>
                     </div>
@@ -376,7 +376,7 @@ export default function DelhiveryCoinsPage() {
                       key={st.body}
                       className={`flex flex-col gap-[10px] rounded-[var(--radius-tile)] p-[20px] sm:p-[28px] ${i === 0 ? YELLOW : "bg-accent-soft"}`}
                     >
-                      <span className="font-display text-[36px] leading-[0.95] font-bold tracking-[-0.03em] text-ink sm:text-[52px]">{st.value}</span>
+                      <span className="font-display text-[36px] leading-[0.95] font-bold tracking-[-0.03em] text-ink sm:text-[48px]">{st.value}</span>
                       <p className="text-[13px] leading-[1.45] text-ink-body sm:text-[15px]">{st.body}</p>
                     </li>
                   ))}
@@ -389,7 +389,7 @@ export default function DelhiveryCoinsPage() {
               <Band tone="plain" floor roomy className={CORAL}>
                 <div className="flex flex-col gap-[16px] pb-[24px] sm:pb-[56px]">
                   <h2 className="text-[15px] font-semibold text-ink sm:text-[16px]">{c.outcome.reflection.title}</h2>
-                  <p className="font-display max-w-[30ch] text-[28px] leading-[1.12] font-bold tracking-[-0.02em] text-ink sm:text-[44px]">
+                  <p className="font-display max-w-[30ch] text-[28px] leading-[1.12] font-bold tracking-[-0.02em] text-ink sm:text-[48px]">
                     {c.outcome.reflection.text}
                   </p>
                 </div>

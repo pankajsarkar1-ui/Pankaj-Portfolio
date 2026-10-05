@@ -118,7 +118,7 @@ export function WorkExplorer() {
               ] as const
             ).map((group, gi) => (
               <div key={group.id} className="flex flex-col gap-[20px]">
-                <h2 style={rise(gi * 3)} className={`font-display text-[22px] font-bold text-ink sm:text-[28px] ${RISE}`}>
+                <h2 style={rise(gi * 3)} className={`font-display text-[22px] leading-[1.1] font-bold text-ink sm:text-[28px] ${RISE}`}>
                   {group.label}
                 </h2>
                 <PieceGrid
@@ -177,7 +177,7 @@ function ProductCard({ p }: { p: ProductWork }) {
     </div>
   ) : (
     <div className="relative flex aspect-[4/3] flex-col items-center justify-center gap-[10px] overflow-hidden rounded-[var(--radius-tile)] border border-dashed border-[#d6d6d6] bg-[#f7f7f7] p-[24px] text-center">
-      <span className="font-display text-[34px] leading-none font-bold tracking-[-0.03em] text-[#e2e2e2] sm:text-[48px]">
+      <span className="font-display text-[36px] leading-none font-bold tracking-[-0.03em] text-[#e2e2e2] sm:text-[48px]">
         {p.title}
       </span>
       <span className="text-[13px] font-medium text-ink-muted sm:text-[14px]">Case study in the works</span>
@@ -189,7 +189,7 @@ function ProductCard({ p }: { p: ProductWork }) {
       {art}
       <div className="flex flex-col gap-[8px] px-[4px] pt-[18px]">
         <div className="flex items-baseline justify-between gap-[12px]">
-          <h3 className="font-display text-[22px] leading-[1.1] font-bold text-ink sm:text-[26px]">{p.title}</h3>
+          <h3 className="font-display text-[22px] leading-[1.1] font-bold text-ink sm:text-[28px]">{p.title}</h3>
           {p.read ? (
             <span className="flex shrink-0 items-center gap-[6px] text-[13px] font-medium text-ink-body sm:text-[14px]">
               {p.read}

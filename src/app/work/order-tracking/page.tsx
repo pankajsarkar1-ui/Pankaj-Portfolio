@@ -295,7 +295,7 @@ export default function OrderTrackingPage() {
                 <div className="mt-[36px] flex flex-col sm:mt-[56px]">
                   {/* alter ego — as the dialogue it was */}
                   <div className="grid gap-[22px] border-t border-white/12 py-[30px] lg:grid-cols-[230px_1fr] lg:gap-[48px] lg:py-[44px]">
-                    <h3 className="font-display text-[22px] leading-[1.15] font-bold text-white sm:text-[28px]">
+                    <h3 className="font-display text-[22px] leading-[1.1] font-bold text-white sm:text-[28px]">
                       {r.alterEgo.title}
                     </h3>
                     <div className="flex flex-col gap-[22px]">
@@ -323,7 +323,7 @@ export default function OrderTrackingPage() {
 
                   {/* customer service — the failure modes, as the tickets they were */}
                   <div className="grid gap-[22px] border-t border-white/12 py-[30px] lg:grid-cols-[230px_1fr] lg:gap-[48px] lg:py-[44px]">
-                    <h3 className="font-display text-[22px] leading-[1.15] font-bold text-white sm:text-[28px]">
+                    <h3 className="font-display text-[22px] leading-[1.1] font-bold text-white sm:text-[28px]">
                       {r.support.title}
                     </h3>
                     <div className="flex flex-col gap-[20px]">
@@ -357,7 +357,7 @@ export default function OrderTrackingPage() {
 
                   {/* customers — seven conversations, five of them quiet */}
                   <div className="grid gap-[22px] border-t border-white/12 pt-[30px] lg:grid-cols-[230px_1fr] lg:gap-[48px] lg:pt-[44px]">
-                    <h3 className="font-display text-[22px] leading-[1.15] font-bold text-white sm:text-[28px]">
+                    <h3 className="font-display text-[22px] leading-[1.1] font-bold text-white sm:text-[28px]">
                       {r.customers.title}
                     </h3>
                     <div className="flex flex-col gap-[22px]">
@@ -527,7 +527,7 @@ export default function OrderTrackingPage() {
               <div className="rounded-[var(--radius-card)] bg-beyond-surface p-[24px] sm:p-[56px]">
                 <div className="flex flex-col items-center gap-[32px] lg:flex-row lg:gap-[72px]">
                   <div className="order-2 flex flex-1 flex-col gap-[16px] lg:order-1">
-                    <h3 className="font-display text-[28px] leading-[1.08] font-bold text-ink sm:text-[40px]">
+                    <h3 className="font-display text-[28px] leading-[1.08] font-bold tracking-[-0.02em] text-ink sm:text-[40px]">
                       {c.anatomy.whole.title}
                     </h3>
                     <p className="max-w-[44ch] text-[15px] leading-[1.6] text-ink-body sm:text-[18px]">

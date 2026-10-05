@@ -17,7 +17,7 @@ export function TicketBars({
   return (
     <figure className="flex flex-col gap-[22px]">
       <div className="flex items-end gap-[14px]">
-        <span className="font-display text-[48px] leading-[0.85] font-bold tracking-[-0.03em] text-accent-lime sm:text-[72px]">
+        <span className="font-display text-[48px] leading-[0.95] font-bold tracking-[-0.03em] text-accent-lime sm:text-[72px]">
           {stat}
         </span>
         <span className="font-display max-w-[11ch] pb-[6px] text-[18px] leading-[1.15] font-semibold text-white sm:pb-[10px] sm:text-[22px]">

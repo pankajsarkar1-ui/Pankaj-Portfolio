@@ -24,7 +24,7 @@ export function EtaDrift({
   return (
     <figure className="flex flex-col gap-[24px] rounded-[var(--radius-tile)] bg-beyond-surface p-[22px] sm:p-[32px] lg:grid lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] lg:items-center lg:gap-[56px] lg:p-[48px]">
       <figcaption className="flex flex-col gap-[6px]">
-        <span className="font-display text-[22px] leading-[1.15] font-bold text-ink sm:text-[28px]">
+        <span className="font-display text-[22px] leading-[1.1] font-bold text-ink sm:text-[28px]">
           {title}
         </span>
         <span className="text-[15px] leading-[1.5] text-ink-body">{caption}</span>

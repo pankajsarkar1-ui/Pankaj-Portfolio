@@ -158,7 +158,7 @@ export default function ReferAndEarnPage() {
               <CostBars {...c.problem.cost} />
               <div className={`flex flex-col gap-[10px] rounded-[var(--radius-tile)] px-[24px] py-[26px] sm:flex-row sm:items-baseline sm:gap-[24px] sm:px-[40px] sm:py-[36px] ${PINK}`}>
                 <span className="shrink-0 text-[15px] font-semibold text-ink sm:text-[16px]">{c.problem.hmw.lead}</span>
-                <p className="font-display text-[22px] leading-[1.2] font-bold text-ink sm:text-[32px]">{c.problem.hmw.question}</p>
+                <p className="font-display text-[24px] leading-[1.2] font-bold text-ink sm:text-[36px]">{c.problem.hmw.question}</p>
               </div>
             </section>
 
@@ -170,8 +170,8 @@ export default function ReferAndEarnPage() {
                 <ol className="mt-[36px] grid gap-[16px] sm:mt-[56px] md:grid-cols-3 md:gap-[20px]">
                   {c.solution.steps.map((s, i) => (
                     <li key={s.title} className="flex flex-col gap-[12px] rounded-[var(--radius-tile)] bg-white p-[24px] sm:p-[32px]">
-                      <span className="font-display text-[48px] leading-[0.9] font-bold text-accent sm:text-[64px]">{i + 1}</span>
-                      <h3 className="font-display text-[20px] leading-[1.15] font-bold text-ink sm:text-[24px]">{s.title}</h3>
+                      <span className="font-display text-[48px] leading-[0.95] font-bold tracking-[-0.03em] text-accent sm:text-[72px]">{i + 1}</span>
+                      <h3 className="font-display text-[22px] leading-[1.1] font-bold text-ink sm:text-[28px]">{s.title}</h3>
                       <p className="text-[15px] leading-[1.55] text-ink-body sm:text-[16px]">{s.body}</p>
                     </li>
                   ))}
@@ -188,7 +188,7 @@ export default function ReferAndEarnPage() {
                     ))}
                   </ul>
                   <div className="flex flex-col gap-[8px]">
-                    <h3 className="font-display text-[22px] leading-[1.15] font-bold text-accent-lime sm:text-[28px]">{c.solution.game.title}</h3>
+                    <h3 className="font-display text-[22px] leading-[1.1] font-bold text-accent-lime sm:text-[28px]">{c.solution.game.title}</h3>
                     <p className="max-w-[56ch] text-[15px] leading-[1.55] text-white/80 sm:text-[16px]">{c.solution.game.body}</p>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ export default function ReferAndEarnPage() {
                         {i + 1}
                       </span>
                       <div className="flex flex-col gap-[6px]">
-                        <h3 className="font-display text-[20px] leading-[1.15] font-bold text-ink sm:text-[24px]">{n.title}</h3>
+                        <h3 className="font-display text-[22px] leading-[1.1] font-bold text-ink sm:text-[28px]">{n.title}</h3>
                         <p className="text-[15px] leading-[1.55] text-ink-body sm:text-[16px]">{n.body}</p>
                       </div>
                     </li>
@@ -343,7 +343,7 @@ export default function ReferAndEarnPage() {
                   {c.results.numbers.map((n) => (
                     <div key={n.body} className="flex flex-col gap-[10px] border-t-2 border-accent-lime/40 pt-[20px]">
                       <dt className="order-last text-[15px] leading-[1.45] text-white/80 sm:text-[16px]">{n.body}</dt>
-                      <dd className="font-display text-[44px] leading-[0.95] font-bold tracking-[-0.03em] text-accent-lime sm:text-[64px]">{n.value}</dd>
+                      <dd className="font-display text-[48px] leading-[0.95] font-bold tracking-[-0.03em] text-accent-lime sm:text-[72px]">{n.value}</dd>
                     </div>
                   ))}
                 </dl>
@@ -355,7 +355,7 @@ export default function ReferAndEarnPage() {
               <Band tone="plain" floor roomy className={PURPLE}>
                 <div className="flex flex-col gap-[16px] pb-[24px] sm:pb-[56px]">
                   <h2 className="text-[15px] font-semibold text-accent-lime sm:text-[16px]">{c.results.next.title}</h2>
-                  <p className="font-display max-w-[30ch] text-[28px] leading-[1.12] font-bold tracking-[-0.02em] text-white sm:text-[44px]">
+                  <p className="font-display max-w-[30ch] text-[28px] leading-[1.12] font-bold tracking-[-0.02em] text-white sm:text-[48px]">
                     {c.results.next.text}
                   </p>
                 </div>

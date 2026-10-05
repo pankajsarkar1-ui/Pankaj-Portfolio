@@ -114,7 +114,7 @@ export function Timeline() {
   return (
     <section id="journey" className="flex flex-col gap-[24px] sm:gap-[36px]">
       <div className="flex flex-wrap items-end justify-between gap-[12px]">
-        <h2 className="font-display text-[20px] font-bold text-ink sm:text-[36px]">{experience.title}</h2>
+        <h2 className="font-display text-[24px] leading-[1.1] font-bold text-ink sm:text-[36px]">{experience.title}</h2>
         <p className="flex items-center gap-[16px] text-[13px] text-ink-body sm:text-[14px]">
           <span className="flex items-center gap-[6px]">
             <span className="size-[8px] rounded-full border-[2px] border-ink" /> Studying
@@ -166,7 +166,7 @@ export function Timeline() {
               </span>
 
               {/* the card, sliding in toward the spine */}
-              <div className="col-start-2 row-start-1 transition-[opacity,transform] duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-data-[on=false]:translate-x-[24px] group-data-[on=false]:opacity-0 group-data-[on=true]:translate-x-0 group-data-[on=true]:opacity-100 motion-reduce:transition-none sm:col-start-1 sm:pr-[28px] sm:group-data-[on=false]:-translate-x-[24px]">
+              <div className="col-start-2 row-start-1 transition-[opacity,transform] duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-data-[on=false]:translate-x-[12px] group-data-[on=false]:opacity-0 group-data-[on=true]:translate-x-0 group-data-[on=true]:opacity-100 motion-reduce:transition-none sm:col-start-1 sm:pr-[28px] sm:group-data-[on=false]:-translate-x-[24px]">
                 <div
                   className={`flex flex-col gap-[6px] rounded-[20px] p-[18px] sm:items-end sm:p-[22px] sm:text-right ${
                     stop.now ? "bg-accent text-white shadow-[0_18px_40px_-18px_rgba(67,84,238,0.7)]" : "bg-beyond-surface"
@@ -176,7 +176,7 @@ export function Timeline() {
                     {stop.period}
                     {stop.span ? ` · ${stop.span}` : ""}
                   </span>
-                  <span className="font-display text-[20px] leading-[1.1] font-bold sm:text-[24px]">{stop.title}</span>
+                  <span className="font-display text-[18px] leading-[1.2] font-bold sm:text-[22px]">{stop.title}</span>
                   <span className={`text-[14px] sm:text-[16px] ${stop.now ? "text-white/85" : "text-ink-body"}`}>{stop.org}</span>
                   {stop.now ? (
                     <span className="mt-[6px] flex items-center gap-[8px] text-[13px] font-medium text-white">

@@ -26,7 +26,7 @@ export function KnowledgeGap({
     <figure className="flex flex-col gap-[28px] rounded-[var(--radius-tile)] bg-beyond-surface p-[22px] sm:p-[32px] lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-[48px] lg:p-[48px]">
       <div className="flex min-w-0 flex-col gap-[28px]">
         <figcaption className="flex flex-col gap-[6px]">
-          <h3 className="font-display text-[22px] leading-[1.15] font-bold text-ink sm:text-[28px]">
+          <h3 className="font-display text-[22px] leading-[1.1] font-bold text-ink sm:text-[28px]">
             {title}
           </h3>
           <p className="max-w-[60ch] text-[15px] leading-[1.6] text-ink-body sm:text-[16px]">{caption}</p>
