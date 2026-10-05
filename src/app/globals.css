@@ -272,6 +272,13 @@ body {
 }
 
 /* Hero copy entrance, staggered per word/line on first paint */
+/* Back-to-top chevrons: each climbs and fades, the second a beat behind. */
+@keyframes chevronClimb {
+  0% { opacity: 0.25; transform: translateY(3px); }
+  45% { opacity: 1; transform: translateY(-2px); }
+  100% { opacity: 0.25; transform: translateY(3px); }
+}
+
 /* Contact receipt: paper feeds out of the slot in short pulls. */
 @keyframes receiptPrint {
   0% { transform: translateY(-100%); }

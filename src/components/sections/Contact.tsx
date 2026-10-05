@@ -1,6 +1,7 @@
 "use client";
 
 import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { BackToTop } from "@/components/BackToTop";
 import { CopyButton } from "@/components/CopyButton";
 import { LottieMark } from "@/components/LottieMark";
 import { site } from "@/content/site";
@@ -246,6 +247,7 @@ export function Contact() {
   // The receipt prints the first time the counter scrolls into view, then
   // reprints for every new order.
   const counterRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLElement>(null);
   const [printed, setPrinted] = useState(false);
   useEffect(() => {
     const el = counterRef.current;
@@ -292,6 +294,7 @@ export function Contact() {
 
   return (
     <footer
+      ref={footerRef}
       id="contact"
       className="relative flex flex-col gap-[36px] overflow-hidden rounded-[var(--radius-card)] bg-ink p-[20px] sm:gap-[56px] sm:p-[64px] lg:p-[74.667px]"
     >
@@ -501,6 +504,7 @@ export function Contact() {
           ))}
         </ul>
       </div>
+      <BackToTop watch={footerRef} />
     </footer>
   );
 }
