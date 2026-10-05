@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Fragment, useState } from "react";
 import { Carousel } from "@/components/Carousel";
 import { Lightbox } from "@/components/Lightbox";
@@ -59,7 +58,7 @@ export function AiExperiments() {
 
         <div className="relative flex flex-col justify-center gap-[60px] lg:h-full">
           <div className="flex flex-col items-center gap-[24px] px-[24px]">
-            <h2 className="font-display text-[26px] text-white">
+            <h2 className="font-display text-[24px] leading-[1.1] text-white sm:text-[36px]">
               {aiExperiments.titleLead}
               <strong className="font-bold">{aiExperiments.titleAccent}</strong>
               {aiExperiments.titleTrail}
@@ -122,13 +121,15 @@ function ComingSoon({
     <div className="flex h-[300px] items-center justify-center">
       {/* The frame clips the ribbon, so it runs off both edges of the artwork. */}
       <div className="relative size-[300px] overflow-hidden">
-        <Image
-          src={placeholder.image}
-          alt=""
-          fill
-          sizes="300px"
-          className="rounded-[24px] object-cover"
-        />
+        {/* Drawn rather than loaded: a flat yellow tile and three strokes,
+            so it is there the moment the tab opens. */}
+        <svg viewBox="0 0 700 700" aria-hidden className="absolute inset-0 size-full rounded-[24px]">
+          <rect width="700" height="700" fill="#F2C40F" />
+          <g fill="none" stroke="#241604" strokeLinecap="round">
+            <path d="M198 253h102M392 255h110" strokeWidth="27" />
+            <path d="M260 448c50-54 116-56 164 2" strokeWidth="25" />
+          </g>
+        </svg>
         <div className="absolute top-[43px] left-[-55px] flex w-[412px] rotate-[4deg] items-center gap-[10px] bg-black p-[10px]">
           {Array.from({ length: placeholder.repeat }).map((_, i) => (
             <Fragment key={i}>

@@ -22,7 +22,8 @@ export type MediaTab = {
 
 /** A tab with no clips yet shows a centred illustration instead of a row. */
 export type AiTab = MediaTab & {
-  placeholder?: { image: string; ribbon: string; repeat: number };
+  /** A "coming soon" card: the sad face is drawn inline, so it costs no load. */
+  placeholder?: { ribbon: string; repeat: number };
 };
 
 export const aiExperiments = {
@@ -81,7 +82,6 @@ export const aiExperiments = {
       label: "Utility",
       cards: [],
       placeholder: {
-        image: "/assets/ai/utility-face.jpg",
         ribbon: "Will Update soon",
         repeat: 3,
       },
