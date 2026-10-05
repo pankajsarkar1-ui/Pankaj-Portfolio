@@ -14,8 +14,10 @@ export function Nav() {
   const current = (href: string) => href.startsWith("/") && !href.includes("#") && (pathname === href || pathname.startsWith(`${href}/`));
 
   return (
-    <nav className="theme-surface relative border-b border-nav-border bg-white">
-      <div className="mx-auto flex h-[72px] w-full max-w-[1190px] items-center justify-between px-[24px] sm:h-[112.673px] sm:px-[32px] lg:px-[6.4%]">
+    // `data-hero-nav` is how the pill nav finds this bar to take its place;
+    // while the pill has it (docked), the bar's own items step out.
+    <nav data-hero-nav className="group/hero theme-surface relative border-b border-nav-border bg-white">
+      <div className="mx-auto flex group-data-[docked=true]/hero:invisible h-[72px] w-full max-w-[1190px] items-center justify-between px-[24px] sm:h-[112.673px] sm:px-[32px] lg:px-[6.4%]">
         {/* Logo and cup step aside while the mobile menu is open, leaving just
             the close control; they never move, so the X stays put. */}
         <Link
