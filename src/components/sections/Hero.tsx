@@ -71,7 +71,7 @@ export function Hero() {
 
           <a
             href="#work"
-            aria-label="Jump to selected work"
+            aria-label="Jump to selected works"
             style={{ animationDelay: `${afterRole}ms` }}
             className={`mt-[8px] hidden h-[48px] w-[32px] items-center justify-center rounded-full border-[1.5px] border-ink bg-white text-ink transition-colors hover:bg-ink hover:text-white sm:mt-[15.909px] sm:flex sm:h-[60px] sm:w-[36px] ${RISE}`}
           >

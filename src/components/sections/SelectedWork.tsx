@@ -49,7 +49,7 @@ function ScrollReveal({ children }: { children: React.ReactNode }) {
 export function SelectedWork() {
   return (
     <section id="work" className="flex flex-col gap-5">
-      <SectionLabel>Selected Work</SectionLabel>
+      <SectionLabel>Selected Works</SectionLabel>
 
       <div className="flex flex-col gap-[32px]">
         {projects.map((project) => (

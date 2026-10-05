@@ -103,6 +103,9 @@ export function LevelCardAnimation({
     return () => cancelAnimationFrame(raf);
   }, [refers]);
 
+  /** Whether the mouse is on the card itself (see showCursorTip). */
+  const [overCard, setOverCard] = useState(false);
+
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
@@ -141,7 +144,9 @@ export function LevelCardAnimation({
   const { x: px, y: py } = p;
   // Desktop follows the cursor; the mobile crop shows a static, pulsing hint
   // instead, since there is no pointer to trail and tap is the whole point.
-  const showCursorTip = hovered && !congrats && !contained;
+  // The tip asks you to tap the card, so it only trails the cursor while the
+  // cursor is on the card, not anywhere on the banner around it.
+  const showCursorTip = hovered && overCard && !congrats && !contained;
   const showTapHint = hovered && !congrats && !!contained;
 
   const layer = (mx: number, my: number, extra = "") =>
@@ -154,6 +159,8 @@ export function LevelCardAnimation({
       className={className}
       style={{ fontFamily: FONT, cursor: hovered ? "pointer" : undefined }}
       onClick={handleClick}
+      onPointerEnter={(e) => e.pointerType === "mouse" && setOverCard(true)}
+      onPointerLeave={() => setOverCard(false)}
     >
       {scale > 0 ? (
         <div
