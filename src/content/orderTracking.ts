@@ -10,16 +10,16 @@ export const orderTracking = {
   slug: "order-tracking",
   title: "Order Tracking System",
   subtitle:
-    "Rebuilding parcel tracking for 2M+ daily visits — across three platforms that each told the customer a different story.",
+    "Rebuilding parcel tracking for 3M+ daily users — across three platforms that each told the customer a different story.",
   meta: [
     { label: "Role", value: "Lead Product Designer" },
-    { label: "Scale", value: "2M+ daily visits" },
+    { label: "Scale", value: "3M+ daily users" },
     { label: "Platforms", value: "Android · iOS · Web" },
     { label: "Duration", value: "3 months" },
   ],
 
   problem: {
-    heading: "2M+ visits a day. One question.",
+    heading: "3M+ users a day. One question.",
     lede: "If you've ordered from Amazon, Flipkart, Myntra or Meesho, Delhivery has probably carried a parcel to your door. The order belongs to the brand. The wait belongs to us.",
     question: "Where is my package?",
     moment: {
@@ -27,10 +27,6 @@ export const orderTracking = {
       lead: "All the page could say:",
       status: "In transit",
       detail: "Last scanned at the hub · 3 days ago",
-      image: {
-        label: "A relatable moment",
-        hint: "A photo of someone checking their phone for a parcel, or a gift waiting at a doorstep.",
-      },
     },
     thread: {
       title: "Every silence becomes a ticket",
@@ -65,10 +61,6 @@ export const orderTracking = {
           knew: "A Vadodara to Goa parcel. Delhi was only where the order was manifested.",
         },
       ],
-      image: {
-        label: "The misleading route",
-        hint: "The old app drawing a Delhi to Vadodara path for a Vadodara to Goa parcel. Blur any address or phone number.",
-      },
     },
     platforms: {
       title: "One parcel, three stories",
@@ -208,22 +200,14 @@ export const orderTracking = {
         {
           title: "Macro view",
           body: "The whole journey. Straight lines between hubs — no polylines, less noise.",
-          image: "/assets/work/tracking/anatomy-map.png",
-          alt: "Macro view — hub nodes joined by straight lines across the journey",
         },
         {
           title: "Micro view",
           body: "Out for delivery: a real route and the executive's live location.",
-          // TODO: swap in the real micro-view crop (placeholder shares the macro image for now).
-          image: "/assets/work/tracking/anatomy-map.png",
-          alt: "Micro view — a real route and the delivery executive's live location",
         },
         {
           title: "Delay, on the map",
           body: "Delays sit on the map. Tap a node to see the hub behind the estimate.",
-          // TODO: swap in the real delay-view crop (placeholder shares the macro image for now).
-          image: "/assets/work/tracking/anatomy-map.png",
-          alt: "Delay view — a late node on the map with the hub behind the estimate",
         },
       ],
     },

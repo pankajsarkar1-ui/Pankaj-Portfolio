@@ -5,8 +5,6 @@ import { CaseNav, type CaseSection } from "@/components/CaseNav";
 import { MoreWork } from "@/components/MoreWork";
 import { Icon } from "@/components/case/CaseIcons";
 import { BAND_STRIP, Band, CaseHeroNav, Heading, Intro, Lede, STRIP, Shell } from "@/components/case/CasePrimitives";
-import { EnrolmentBars } from "@/components/case/EnrolmentBars";
-import { ImagePlaceholder } from "@/components/case/ImagePlaceholder";
 import { Phone } from "@/components/case/Phone";
 import { delhiveryCoins as c } from "@/content/delhiveryCoins";
 import { site } from "@/content/site";
@@ -25,7 +23,6 @@ const SECTIONS: readonly CaseSection[] = [
   { id: "checkout", label: "Checkout" },
   { id: "experience", label: "Experience" },
   { id: "outcome", label: "Outcome" },
-  { id: "impact", label: "Impact" },
   { id: "reflection", label: "Reflection" },
 ];
 
@@ -148,8 +145,6 @@ export default function DelhiveryCoinsPage() {
                 <span className="shrink-0 text-[15px] font-semibold text-ink sm:text-[16px]">{c.problem.hmw.lead}</span>
                 <p className="font-display text-[24px] leading-[1.2] font-bold text-ink sm:text-[36px]">{c.problem.hmw.question}</p>
               </div>
-
-              <ImagePlaceholder label={c.problem.video.label} hint={c.problem.video.hint} ratio="16 / 9" icon="play" />
             </section>
 
             {/* ── context — on navy ─────────────────────────── */}
@@ -355,33 +350,6 @@ export default function DelhiveryCoinsPage() {
                   ))}
                 </div>
               </Band>
-            </section>
-
-            {/* ── impact — the first month ───────────────────── */}
-            <section id="impact" className="flex scroll-mt-[96px] flex-col gap-[36px] sm:gap-[56px]">
-              <div className="flex flex-col gap-[14px]">
-                <Heading>{c.outcome.impact.heading}</Heading>
-                {c.outcome.impact.illustrative ? (
-                  <p className="w-fit rounded-full border border-dashed border-experience-border px-[12px] py-[6px] text-[13px] text-ink-body">
-                    {c.outcome.impact.note}
-                  </p>
-                ) : null}
-              </div>
-
-              <div className="grid gap-[16px] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-[20px]">
-                <EnrolmentBars {...c.outcome.impact.enrolment} />
-                <ul className="grid grid-cols-2 gap-[16px] lg:gap-[20px]">
-                  {c.outcome.impact.stats.map((st, i) => (
-                    <li
-                      key={st.body}
-                      className={`flex flex-col gap-[10px] rounded-[var(--radius-tile)] p-[20px] sm:p-[28px] ${i === 0 ? YELLOW : "bg-accent-soft"}`}
-                    >
-                      <span className="font-display text-[36px] leading-[0.95] font-bold tracking-[-0.03em] text-ink sm:text-[48px]">{st.value}</span>
-                      <p className="text-[13px] leading-[1.45] text-ink-body sm:text-[15px]">{st.body}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </section>
 
             {/* ── reflection — the closing thought, back on coral ── */}

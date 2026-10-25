@@ -7,7 +7,6 @@ import { Icon, type IconName } from "@/components/case/CaseIcons";
 import { Band, CaseHeroNav, Heading, Shell } from "@/components/case/CasePrimitives";
 import { EscalationThread } from "@/components/case/EscalationThread";
 import { EtaDrift } from "@/components/case/EtaDrift";
-import { ImagePlaceholder } from "@/components/case/ImagePlaceholder";
 import { JourneyRail } from "@/components/case/JourneyRail";
 import { KnowledgeGap } from "@/components/case/KnowledgeGap";
 import { MapViews } from "@/components/case/MapViews";
@@ -27,7 +26,6 @@ const SECTIONS: readonly CaseSection[] = [
   { id: "goals", label: "Goals" },
   { id: "research", label: "Research" },
   { id: "turn", label: "The turn" },
-  { id: "iteration", label: "Iteration" },
   { id: "anatomy", label: "Anatomy" },
   { id: "flow", label: "The flow" },
   { id: "edge", label: "Edge cases" },
@@ -167,31 +165,25 @@ export default function OrderTrackingPage() {
               </p>
 
               <div className="flex flex-col gap-[48px] sm:gap-[64px]">
-                {/* the moment — what waiting on a parcel actually feels like */}
-                <div className="grid gap-[24px] lg:grid-cols-2 lg:items-center lg:gap-[56px]">
-                  <div className="flex flex-col gap-[22px]">
-                    <h3 className="font-display max-w-[16ch] text-[28px] leading-[1.08] font-bold tracking-[-0.02em] text-ink sm:text-[40px]">
-                      {c.problem.moment.line}
-                    </h3>
-                    <div className="flex flex-col gap-[10px]">
-                      <span className="text-[15px] text-ink-body">{c.problem.moment.lead}</span>
-                      {/* the status as the old page showed it */}
-                      <div className="flex w-fit items-center gap-[14px] rounded-[16px] border border-shell-border bg-white py-[14px] pr-[22px] pl-[16px] shadow-[0_14px_30px_-18px_rgba(0,0,0,0.3)]">
-                        <span className="grid size-[40px] shrink-0 place-items-center rounded-full bg-beyond-surface text-ink-body">
-                          <Icon name="delay" className="size-[20px]" />
-                        </span>
-                        <div className="flex flex-col gap-[2px]">
-                          <p className="text-[16px] font-semibold text-ink">{c.problem.moment.status}</p>
-                          <p className="text-[13px] text-ink-body">{c.problem.moment.detail}</p>
-                        </div>
+                {/* the moment — what waiting on a parcel actually feels like, and
+                    all the old page had to say about it */}
+                <div className="grid gap-[22px] lg:grid-cols-2 lg:items-center lg:gap-[56px]">
+                  <h3 className="font-display max-w-[16ch] text-[28px] leading-[1.08] font-bold tracking-[-0.02em] text-ink sm:text-[40px]">
+                    {c.problem.moment.line}
+                  </h3>
+                  <div className="flex flex-col gap-[10px]">
+                    <span className="text-[15px] text-ink-body">{c.problem.moment.lead}</span>
+                    {/* the status as the old page showed it */}
+                    <div className="flex w-fit items-center gap-[14px] rounded-[16px] border border-shell-border bg-white py-[14px] pr-[22px] pl-[16px] shadow-[0_14px_30px_-18px_rgba(0,0,0,0.3)]">
+                      <span className="grid size-[40px] shrink-0 place-items-center rounded-full bg-beyond-surface text-ink-body">
+                        <Icon name="delay" className="size-[20px]" />
+                      </span>
+                      <div className="flex flex-col gap-[2px]">
+                        <p className="text-[16px] font-semibold text-ink">{c.problem.moment.status}</p>
+                        <p className="text-[13px] text-ink-body">{c.problem.moment.detail}</p>
                       </div>
                     </div>
                   </div>
-                  <ImagePlaceholder
-                    label={c.problem.moment.image.label}
-                    hint={c.problem.moment.image.hint}
-                    ratio="4 / 3"
-                  />
                 </div>
 
                 <EscalationThread {...c.problem.thread} />
@@ -451,30 +443,17 @@ export default function OrderTrackingPage() {
               </Band>
             </section>
 
-            {/* ── iteration (placeholder — content to come) ──── */}
-            <section id="iteration" className="flex scroll-mt-[96px] flex-col gap-[28px] sm:gap-[40px]">
-              <Heading>Iteration</Heading>
-              <div className="grid min-h-[280px] place-items-center rounded-[var(--radius-card)] border border-dashed border-shell-border bg-beyond-surface p-[32px] sm:min-h-[360px]">
-                <div className="flex flex-col items-center gap-[8px] text-center">
-                  <span className="font-mono text-[13px] tracking-[0.04em] text-ink-body/70">
-                    Placeholder
-                  </span>
-                  <p className="max-w-[40ch] text-[15px] leading-[1.6] text-ink-body sm:text-[16px]">
-                    The iteration story goes here — how the design changed between rounds.
-                  </p>
-                </div>
-              </div>
-            </section>
-
             {/* ── anatomy ───────────────────────────────────── */}
             <section id="anatomy" className="flex scroll-mt-[96px] flex-col gap-[48px] sm:gap-[88px]">
               <Heading>{c.anatomy.heading}</Heading>
 
-              {/* the map — a phone-width fragment, its three behaviours selectable beside it */}
+              {/* the map — a phone-width fragment, its three behaviours beside it */}
               <MapViews
                 title={c.anatomy.map.title}
                 body={c.anatomy.map.body}
-                views={c.anatomy.map.points}
+                image={c.anatomy.map.image}
+                alt={c.anatomy.map.alt}
+                points={c.anatomy.map.points}
                 icons={MAP_ICONS}
                 ratio="1092 / 900"
               />
@@ -630,7 +609,7 @@ export default function OrderTrackingPage() {
                     {c.edge.cases.map((cs) => (
                       <li
                         key={cs.id}
-                        className="flex flex-col gap-[16px] rounded-[16px] bg-beyond-surface p-[16px] transition-colors duration-300 hover:bg-accent-soft"
+                        className="flex flex-col gap-[16px] rounded-[16px] bg-beyond-surface p-[16px]"
                       >
                         <Icon name={cs.id as IconName} className="size-[22px] text-accent" />
                         <span className="text-[13px] leading-[1.25] font-semibold text-ink sm:text-[15px]">

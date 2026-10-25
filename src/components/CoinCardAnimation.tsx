@@ -11,10 +11,17 @@ const STAGE = { w: 520, h: 312 };
 /** Multiplier on every parallax offset. */
 const K = 1;
 
+/**
+ * Redeemed and expired are fixed; earned is whatever the balance implies, so
+ * the card always adds up (balance = earned − redeemed − expired), including
+ * while the balance counts up on hover.
+ */
+const REDEEMED = 124;
+const EXPIRED = 142;
 const STATS = [
-  { label: "Earned", glyph: "↗", value: "450", color: "#0d9f6e", chip: "#e6f7f0" },
-  { label: "Redeemed", glyph: "↙", value: "124", color: "#ef5d6a", chip: "#fdeaec" },
-  { label: "Expired", glyph: "!", value: "142", color: "#6b6f8a", chip: "#eeecf9", valueColor: "#3f3f46" },
+  { label: "Earned", glyph: "↗", color: "#0d9f6e", chip: "#e6f7f0" },
+  { label: "Redeemed", glyph: "↙", value: REDEEMED, color: "#ef5d6a", chip: "#fdeaec" },
+  { label: "Expired", glyph: "!", value: EXPIRED, color: "#6b6f8a", chip: "#eeecf9", valueColor: "#3f3f46" },
 ];
 
 const HEX_CLIP = "polygon(50% 0%, 100% 26%, 100% 74%, 50% 100%, 0% 74%, 0% 26%)";
@@ -30,9 +37,9 @@ export function CoinCardAnimation({
 }: {
   className?: string;
   /**
-   * Play the hover state without a pointer — for the mobile card, which scrolls
-   * itself into its animated pose. It lifts the coin, warms the glow and counts
-   * the balance up, and drives a slow parallax sway in place of the cursor.
+   * Play the hover state, driven by the banner's own hover (phones keep the
+   * card still and never set it). It lifts the coin, warms the glow, counts the
+   * balance up, and sways the parallax slowly while no pointer is on the card.
    */
   active?: boolean;
 }) {
@@ -305,7 +312,7 @@ export function CoinCardAnimation({
                             color: s.valueColor ?? s.color,
                           }}
                         >
-                          {s.value}
+                          {s.value ?? count + REDEEMED + EXPIRED}
                         </div>
                       </div>
                     </div>

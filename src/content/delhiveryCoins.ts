@@ -33,16 +33,12 @@ export const delhiveryCoins = {
     ],
     result: {
       label: "Result",
-      title: "You never get there.",
-      body: "Book weekly and the oldest coins expire just as the balance nears 25.",
+      title: "Five weeks, no gaps.",
+      body: "Book every week and the balance only reaches 25 on your fifth order. Skip a single week and the oldest coins expire before you get there.",
     },
     hmw: {
       lead: "How might we",
       question: "reward frequent shippers with coins they actually get to spend?",
-    },
-    video: {
-      label: "Problem explainer video",
-      hint: "A 16:9 MP4 that walks through why the balance never reaches the redeem bar.",
     },
   },
 
@@ -146,34 +142,6 @@ export const delhiveryCoins = {
         body: "The redemption cap sits between 5% and 10% of an order. I'd settle it with live data before scaling the program.",
       },
     ],
-    impact: {
-      heading: "The first month, in numbers.",
-      /**
-       * HYPOTHETICAL. These figures are illustrative, not launch data. While
-       * `illustrative` is true the page says so; swap in real numbers and set it
-       * to false before presenting them as results.
-       */
-      illustrative: true,
-      note: "Illustrative figures until launch data is in.",
-      enrolment: {
-        title: "Shippers enrolled, cumulative",
-        /** Out of the 18,991 who met the entry bar (see context). */
-        eligible: 18991,
-        weeks: [
-          { label: "Week 1", value: 4000 },
-          { label: "Week 2", value: 7200 },
-          { label: "Week 3", value: 9600 },
-          { label: "Week 4", value: 11400 },
-        ],
-        caption: "60% of eligible shippers enrolled by week four.",
-      },
-      stats: [
-        { value: "62%", body: "of earned coins redeemed before they expired" },
-        { value: "41%", body: "of enrolled shippers redeemed within 30 days" },
-        { value: "18%", body: "of coins expired unused" },
-        { value: "+14 pts", body: "30-day repeat bookings against shippers not enrolled" },
-      ],
-    },
     reflection: {
       title: "Reflection",
       text: "The best loyalty UI turned out to be mostly arithmetic: a toggle that starts off, a count of coins still to go, and a date on every coin.",
