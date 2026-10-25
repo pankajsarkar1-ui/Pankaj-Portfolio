@@ -4,7 +4,7 @@ import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { BackToTop } from "@/components/BackToTop";
 import { CopyButton } from "@/components/CopyButton";
 import { LottieMark } from "@/components/LottieMark";
-import { site } from "@/content/site";
+import { opensFile, site } from "@/content/site";
 
 const stroke = {
   fill: "none",
@@ -587,7 +587,11 @@ export function Contact() {
         <ul className="flex gap-[24px] text-[14px] text-white sm:gap-[30px]">
           {site.nav.map((item) => (
             <li key={item.label}>
-              <a href={item.href} className="hover:opacity-70">
+              <a
+                href={item.href}
+                {...(opensFile(item.href) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="hover:opacity-70"
+              >
                 {item.label}
               </a>
             </li>

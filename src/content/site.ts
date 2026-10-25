@@ -1,18 +1,24 @@
+/** The CV, served as a file from /public; it opens in a new tab. */
+export const RESUME = "/Pankaj-Sarkar-Resume.pdf";
+
+/** Links to files (the CV) open in a new tab and skip route prefetching. */
+export const opensFile = (href: string) => /\.pdf$/i.test(href);
+
 export const site = {
   name: "Pankaj Sarkar",
   greeting: "Hey, I'm Pankaj Sarkar",
   role: "Senior Product Designer at Delhivery",
   summary:
-    "I lead mobile design for one of India's largest logistics platform - from courier booking to order tracking.",
+    "I lead mobile design for one of India's largest logistics platforms — from courier booking to order tracking.",
   summaryLines: [
-    "I lead mobile design for one of India's largest logistics platform",
+    "I lead mobile design for one of India's largest logistics platforms",
   ],
   portrait: "/assets/hero/portrait.png",
   ctaLabel: "Let's talk",
   nav: [
     { label: "Work", href: "/work" },
     { label: "About", href: "/about" },
-    { label: "Resume", href: "/#experience" },
+    { label: "Resume", href: RESUME },
   ],
   contact: {
     eyebrow: "Let's talk",
