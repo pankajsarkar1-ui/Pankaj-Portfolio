@@ -126,9 +126,11 @@ export function LevelCardAnimation({
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
+      // Only the hovered (desktop) card is a game; otherwise the click is the
+      // card's own link and goes through.
+      if (!hovered) return;
       e.preventDefault();
       e.stopPropagation();
-      if (!hovered) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       setTapping(true);
       setRefers((r) => Math.min(MAX_REFERS, r + 5));

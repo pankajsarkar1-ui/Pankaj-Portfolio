@@ -1,13 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- decorative layers are pre-sized and positioned in % of the card box */
 
-import {
-  type CSSProperties,
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import { type CSSProperties, useState, useSyncExternalStore } from "react";
 import { CoinCardAnimation } from "@/components/CoinCardAnimation";
 import { LevelCardAnimation } from "@/components/LevelCardAnimation";
 import { TrackingAnimation } from "@/components/TrackingAnimation";
@@ -57,6 +51,8 @@ export function BannerCard({ project }: { project: Project }) {
   const anim = project.animation;
 
   const start = () => {
+    // Phones keep the cards still: a tap is a tap to open the case study.
+    if (portrait) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     setHovered(true);
     if (anim) setPlaying(true);
@@ -65,37 +61,6 @@ export function BannerCard({ project }: { project: Project }) {
     setHovered(false);
     setPlaying(false);
   };
-
-  /**
-   * Touch has no hover to play the artwork off, so on the portrait layout the
-   * card runs itself: it starts when it scrolls into view and resets when it
-   * leaves, so scrolling back to it plays it again. Desktop is left to hover.
-   */
-  const cardRef = useRef<HTMLAnchorElement>(null);
-  useEffect(() => {
-    // Runs for every card, not just the ones with a live animation: the order
-    // tracking card's motion is its stripes sliding on `hovered`, no `anim`.
-    if (!portrait) return;
-    const el = cardRef.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHovered(true);
-          setPlaying(true);
-        } else {
-          setHovered(false);
-          setPlaying(false);
-        }
-      },
-      // Wait until it is comfortably on screen before it plays.
-      { threshold: 0.5 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [portrait, anim]);
 
   const vars = {
     "--card-ratio": `${design.w} / ${design.h}`,
@@ -120,14 +85,13 @@ export function BannerCard({ project }: { project: Project }) {
 
   return (
     <a
-      ref={cardRef}
       href={project.href}
       style={vars}
       onMouseEnter={start}
       onMouseLeave={stop}
       onFocus={start}
       onBlur={stop}
-      className="group relative flex w-full flex-col overflow-hidden rounded-[24px] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:block sm:aspect-[var(--card-ratio)] sm:rounded-[40px]"
+      className="group relative flex w-full flex-col overflow-hidden rounded-[24px] transition-transform duration-300 sm:hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:block sm:aspect-[var(--card-ratio)] sm:rounded-[40px]"
     >
       {/* Perspective grid floor (exact vector from Figma). Both shapes stand it
           on the card's bottom edge; only its scale differs. */}
@@ -153,7 +117,7 @@ export function BannerCard({ project }: { project: Project }) {
 
       {/* The artwork box: a cropped window on the stage when portrait, the whole
           card when landscape. */}
-      <div className="relative mx-[21px] mt-[23px] aspect-[var(--art-ratio)] overflow-hidden rounded-[16px] bg-[var(--art-bg)] sm:absolute sm:inset-0 sm:m-0 sm:aspect-auto sm:rounded-none sm:bg-transparent">
+      <div className="relative mx-[8px] mt-[9px] aspect-[var(--art-ratio)] overflow-hidden rounded-[16px] bg-[var(--art-bg)] sm:absolute sm:inset-0 sm:m-0 sm:aspect-auto sm:rounded-none sm:bg-transparent">
         <div className="absolute top-[calc(-100%*var(--cy)/var(--ch))] left-[calc(-100%*var(--cx)/var(--cw))] h-[calc(100%*var(--dh)/var(--ch))] w-[calc(100%*var(--dw)/var(--cw))] sm:inset-0 sm:size-full">
           {/* Illustration / stripes. Rotated stripes with a `move` slide along
               their own axis on hover (rotate first, so translateY runs down the
@@ -221,7 +185,12 @@ export function BannerCard({ project }: { project: Project }) {
                     ? "trackReveal 360ms ease 300ms both"
                     : undefined,
               }}
-              className={`absolute ${anim.kind === "levels" ? "" : "pointer-events-none"}`}
+              // Phones keep the card still: every loop inside (the floating
+              // coin, the crown's glow and sparks, the moving floor) holds its
+              // first frame.
+              className={`absolute ${anim.kind === "levels" ? "" : "pointer-events-none"} ${
+                portrait ? "[&_*]:![animation-play-state:paused]" : ""
+              }`}
             >
               {anim.kind === "coins" ? (
                 <CoinCardAnimation className="absolute inset-0" active={hovered} />
