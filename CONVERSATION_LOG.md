@@ -98,15 +98,15 @@ pre-existing).
 
 Route: `/work/order-tracking`. Page: `src/app/work/order-tracking/page.tsx`. Copy: `src/content/orderTracking.ts`.
 
-**Section rail order** (`SECTIONS` in page.tsx): Problem · Goals · Research · The turn · **Iteration** (placeholder) · Anatomy · The flow · Edge cases · Impact.
+**Section rail order** (`SECTIONS` in page.tsx): Problem · Goals · Research · The turn · Anatomy · The flow · Edge cases · Impact. (The Iteration placeholder was removed in the site cleanup; add it back with real content.)
 
 **Case components** (`src/components/case/`): `PlatformShots`, `EtaDrift`, `StoryTrack`, `JourneyRail`, `TicketBars`, `CaseIcons`, `AnnotatedCard`, and the new **`MapViews`**.
 
 ### Recent work this session
 1. **Favicon** → theme-aware SVG from the logo mark (`src/app/icon.svg`); deleted `favicon.ico`.
 2. **Case nav** → back button ("All work") moved to the left, logo to the right.
-3. **Iteration section** → placeholder added before Anatomy (dashed panel, "The iteration story goes here…"). **Awaiting real content from the user.**
-4. **Selectable map views** → `MapViews.tsx`. Macro/Micro/Delay are clickable; selected state = filled accent icon + accent-soft panel + accent title; the phone image cross-fades.
+3. **Iteration section** → placeholder added before Anatomy. *Removed in the site cleanup (§5h); comes back only with the real story.*
+4. **Selectable map views** → `MapViews.tsx`. *Since the cleanup it is static: one real image (macro) with the three behaviours listed beside it, because Micro/Delay had no images of their own.*
 5. **Typography** → Anek headings / Satoshi body (see §4).
 
 ---
@@ -140,8 +140,8 @@ node `1513:96747` ("Delhivery Coins — Case study"), file key
   banner, The program, Reflection. Navy `#121926` (`--color-ink` is overridden
   to navy on this page): Context, Landing page, Outcome. Cream: Coin design.
   Soft coral `#ffe4df`: Experience. Yellow `#fff375`: How-might-we panel and
-  the lead Impact stat. Coral "You never get there." tile. Checkout and Impact
-  stay white as rests. Text on coral is full navy (white fails contrast).
+  the lead Impact stat (since removed). Coral result tile ("Five weeks, no
+  gaps." since the cleanup). Checkout stays white as a rest. Text on coral is full navy (white fails contrast).
   Spacing: section gap 96/160px, roomy band padding 24/56/72px, wider grids.
 - **Phones drawn in code:** `src/components/case/Phone.tsx` frames bare
   720×1600 screen exports (`public/assets/work/coins/screens/`, from each
@@ -157,8 +157,9 @@ node `1513:96747` ("Delhivery Coins — Case study"), file key
   `--color-accent-soft` (`#fff7eb` cream) and `--color-accent-lime`
   (`#f7c04a` bright gold) on `<main>`, so the shared rail/bands go gold.
 - **Rail:** Problem · Context · The program · Coin design · Landing page ·
-  Checkout · Experience · Outcome · Impact · Reflection.
-- **Impact section (HYPOTHETICAL DATA):** between Outcome and Reflection.
+  Checkout · Experience · Outcome · Reflection.
+- **Impact section — REMOVED in the site cleanup (§5h).** It showed invented
+  numbers; add a real one back only with launch data. Former contents:
   `content.outcome.impact` holds invented figures — 4,000 / 7,200 / 9,600 /
   11,400 cumulative enrolment over weeks 1–4 (60% of the 18,991 eligible),
   62% of earned coins redeemed, 41% redeemed within 30 days, 18% expired
@@ -443,6 +444,71 @@ section `3269:96992–96998`).
   SVG (yellow tile + 3 strokes) instead of `/assets/ai/utility-face.jpg`
   (deleted); `placeholder.image` dropped from the type. Zero requests, so it
   shows the instant the tab opens.
+- **Site cleanup after the hiring audit** (user: "just do the site cleanup";
+  audit saved outside the repo at `Claude try Fable/HIRING_AUDIT.md`):
+  - Order Tracking: removed both image placeholders (the "relatable moment"
+    photo slot, and the "misleading route" slot inside `KnowledgeGap`, whose
+    hint said "Blur any address or phone number."), the Iteration stub and
+    its rail entry. `MapViews` is static now (one real map + three listed
+    behaviours) — no switcher showing the same image three times. Edge-case
+    tiles lost their hover tint (they were never clickable). The moment block
+    is now the line on the left, the old status chip on the right.
+  - Coins: removed the explainer-video placeholder and the whole invented
+    "first month" Impact section (+ rail entry, content, `EnrolmentBars.tsx`).
+    Result tile corrected from "You never get there." to "Five weeks, no
+    gaps." — with 6/week, 25 to redeem and 30-day expiry, five straight weekly
+    batches reach 30 on day 28; any gap caps you at 24.
+  - Coin-hub numbers now add up (balance 342 = earned − 124 − 142): the
+    homepage card derives Earned from the balance (608 at rest, 632 at the
+    hover peak), and `coins/screens/exp-track.png` had "450" redrawn as "608"
+    (Open Sans at 28px + 0.5px embolden, the closest local match to the app's
+    Noto Sans SemiBold; ~80% pixel overlap on the original digits).
+  - `tracking/delay.png`: "Heavy rain in <city>" → "Heavy rain in Nanded"
+    (the map on the same screen says Nanded), whole line redrawn in IBM Plex
+    Sans 36px, centred, rain streaks restored outside the old letters.
+  - Privacy blurs (standing rule): the mobile number in the contact list of
+    `refer/breakdown-page.png` (3×), and the delivery address + driver's
+    number plate in `refer/screens/touch-delivery.png`. Removed the literal
+    address/number strings from this log.
+  - `ImagePlaceholder.tsx` deleted (no users left). Summary copy fixed:
+    "largest logistics platforms — from…".
+- Project banner cards on phones: the artwork box inset cut by 60%
+  (`mx-[21px] mt-[23px]` → `mx-[8px] mt-[9px]` in `BannerCard.tsx`).
+- **Nav is its own card** (home, About, Work): `#top` is now a flex column
+  (gap 8/12px) holding the Nav card (rounded, bordered; `data-[docked=true]:
+  invisible` hides the whole card while the pill has it) and a separate
+  content card. The phone menu opens as a floating card under the bar.
+  `PillNav` measures the bar card itself (not its parent) and morphs all four
+  corners from the card radius to the pill; hand-off verified to the pixel.
+  About's stage height subtracts the new gap (104→112px, 170→182px).
+  **Revised (user: "keep them connected like before but once scrolled make
+  them separate"):** no gap; at rest the bar is the top of one card (rounded
+  top, `border-b-nav-border` divider) and the content card below has a square,
+  transparent-bordered top. The bar carries `peer`; once docked the content
+  card gets `peer-data-[docked=true]:rounded-t-[…] border-t-shell-border`
+  (300ms transition), and the pill morphs from the bar's own corners (rounded
+  top, square bottom) to a pill. About stage heights now 105/171px.
+  **Then scroll-linked:** the content card's top no longer toggles on
+  `peer-data-[docked]`; PillNav writes `--dock` (the morph's p, 0–1) on `#top`
+  and the card uses `rounded-t-[calc(var(--radius-card)*var(--dock,0))]` and a
+  top border mixed in with `color-mix(… calc(var(--dock)*100%) …)`, so its
+  corners square off in step with the pill on the way back up (on phones the
+  two radii match to the pixel at every step).
+- **Resume PDF added:** `public/Pankaj-Sarkar-Resume.pdf` (copy of the user's
+  "Pankaj CV - 2026.pdf", 1 page, 1.5 MB). `site.ts` exports `RESUME` and
+  `opensFile()`; the nav "Resume" item (bar, mobile menu, pill, footer) now
+  opens the PDF in a new tab (`prefetch={false}` on Links). The homepage
+  Experience section has a "Download résumé ↓" pill beside its title.
+  Note: the CV carries the user's mobile number (now public), and says Order
+  Tracking reaches "3M+ daily users"; the case study now matches it
+  (subtitle, Scale meta and problem heading changed from "2M+ daily visits").
+- Project banner cards on phones are still (user: "no hover, keep the cards
+  steady"): the IntersectionObserver auto-play is gone, `start()` is a no-op
+  on the portrait layout (a tap only opens the case study), the lift is
+  `sm:hover:` only, and every CSS loop inside the artwork (coin float, crown
+  glow/sparks/floor) is paused via `[&_*]:![animation-play-state:paused]`.
+  `LevelCardAnimation` only swallows the click when hovered, so tapping the
+  gold card on a phone opens Refer & Earn. Desktop hover is unchanged.
 
 ## 6. Pending / awaiting the user
 
@@ -451,28 +517,26 @@ section `3269:96992–96998`).
   "Delivery app"; confirm the app name. Photo is bottom-left per the message
   (the sketch drew it bottom-right).
 
-- **Refer & Earn: reward mismatch in the mock.** The "How to Earn?" card in the
-  design-breakdown screen says "you get ₹100 · they get ₹150"; the copy
-  everywhere else says ₹100 each.
-- **Refer & Earn: phone numbers in the mock** ("9239179123") on the
-  design-breakdown page — likely placeholders; confirm before publishing.
-
-- **Addresses blurred (done):** "C-22, Koel Apartment, Dollar Colony" lines are
-  Gaussian-blurred in `coins/screens/exp-unlock.png`, `coins/checkout-final.png`,
+- **Refer & Earn: reward amounts disagree** (needs the shipped values from
+  the user; NOT changed in the cleanup). Copy says ₹100 each + a ₹200 bonus
+  every 5 referrals. The "How to Earn?" card in the design-breakdown image
+  says "you get ₹100 · they get ₹150"; level screens show other totals. Also
+  "Total Succesful Refers" (typo) is baked into the level screen exports.
+- **Addresses/phones blurred (done):** the delivery-address lines in
+  `coins/screens/exp-unlock.png`, `coins/checkout-final.png`,
   `coins/checkout-iter-1.png`, `coins/checkout-iter-2.png`,
-  `refer/screens/referee-nudge.png`, `refer/screens/touch-rating.png`. Re-blur
-  if any of these are re-exported.
-- **Coins: check the "You never get there" maths.** With 6 coins a week and
-  a 30-day expiry, five weekly batches are alive on day 28 (30 coins, above
-  25). The claim holds only if expiry is under 28 days.
-- **Coins placeholders:** problem explainer video (16:9 MP4) and the coin
-  intro animation (MP4 for node `726:12995`) — both need the file from the
-  user. Impact figures are hypothetical (see §5b) — swap for launch data.
-
-- **Problem-section images (placeholders in place):** (1) a relatable photo,
-  4:3 — someone checking their phone for a parcel / a gift at a doorstep;
-  (2) the misleading-route screenshot, 9:16 — old app drawing Delhi → Vadodara
-  for a Vadodara → Goa parcel (blur addresses/phones).
+  `refer/screens/referee-nudge.png`, `refer/screens/touch-rating.png`,
+  `refer/screens/touch-delivery.png` (+ number plate); the contact-list
+  mobile number in `refer/breakdown-page.png`. Re-blur if any are re-exported.
+  `refer/screens/referee-code.png` still shows a personal Gmail
+  (sapankaj29@…) in the sign-up form; left as is, likely the user's own.
+- **Coins assets still wanted:** problem explainer video (16:9 MP4) and the
+  coin intro animation (MP4 for node `726:12995`); their slots were removed,
+  so add sections back when the files exist. Real launch numbers would allow
+  an Impact section again.
+- **Order Tracking images still wanted:** a relatable 4:3 photo and the
+  misleading-route screenshot (old app drawing Delhi → Vadodara for a
+  Vadodara → Goa parcel); real Micro/Delay map crops; an iteration story.
 - **Escalation chronology:** confirm whether the escalation predates the
   redesign. The page frames it as the *problem the redesign answers*; if it
   came after launch, reframe (e.g., as the next phase).
@@ -482,8 +546,6 @@ section `3269:96992–96998`).
 - **Deliberately left out:** IVR issues and hub-ageing ops failures (not in
   the redesign's scope), apart from the festive-gift hook line.
 
-- **Map view images:** Micro and Delay views currently reuse `anatomy-map.png` as placeholders (marked `TODO` in `orderTracking.ts`). Need real crops (same aspect ratio, ~1092×900) to make the image actually change on selection.
-- **Iteration section content:** placeholder in place; needs the real iteration story.
 - **Mono labels elsewhere:** the IBM Plex Mono face still appears on small data labels (ETA-drift axis, platform labels, Before/After, some chips). User changed the rail only; open whether to convert these to Satoshi too.
 - **Rail font exception:** see §4 note.
 - **`public/assets/delhivery-logo.png`:** untracked, unreferenced — decision still open (keep/remove).
