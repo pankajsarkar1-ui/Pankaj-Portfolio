@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { LottieMark } from "@/components/LottieMark";
 import { Logo } from "@/components/Logo";
-import { site } from "@/content/site";
+import { opensFile, site } from "@/content/site";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -14,10 +14,15 @@ export function Nav() {
   const current = (href: string) => href.startsWith("/") && !href.includes("#") && (pathname === href || pathname.startsWith(`${href}/`));
 
   return (
-    // `data-hero-nav` is how the pill nav finds this bar to take its place;
-    // while the pill has it (docked), the bar's own items step out.
-    <nav data-hero-nav className="group/hero theme-surface relative border-b border-nav-border bg-white">
-      <div className="mx-auto flex group-data-[docked=true]/hero:invisible h-[72px] w-full max-w-[1190px] items-center justify-between px-[24px] sm:h-[112.673px] sm:px-[32px] lg:px-[6.4%]">
+    // At rest the bar is the top of one card with the hero below it (rounded
+    // top, a divider underneath). `data-hero-nav` is how the pill nav finds
+    // it; once scrolled (docked) the pill takes its place, the bar steps out,
+    // and the hero card below rounds its own top in step (`--dock`, PillNav).
+    <nav
+      data-hero-nav
+      className="theme-surface relative rounded-t-[var(--radius-card)] border border-shell-border border-b-nav-border bg-white data-[docked=true]:invisible"
+    >
+      <div className="mx-auto flex h-[72px] w-full max-w-[1190px] items-center justify-between px-[24px] sm:h-[112.673px] sm:px-[32px] lg:px-[6.4%]">
         {/* Logo and cup step aside while the mobile menu is open, leaving just
             the close control; they never move, so the X stays put. */}
         <Link
@@ -37,6 +42,7 @@ export function Nav() {
             <li key={item.label}>
               <Link
                 href={item.href}
+                {...(opensFile(item.href) ? { target: "_blank", rel: "noopener noreferrer", prefetch: false } : {})}
                 aria-current={current(item.href) ? "page" : undefined}
                 className={`rounded-full px-[14px] py-[7px] transition-colors hover:bg-[#f0f0f0] hover:text-ink ${
                   current(item.href) ? "bg-[#efefef] text-ink" : ""
@@ -112,16 +118,17 @@ export function Nav() {
           stagger. */}
       <div
         aria-hidden={!open}
-        className={`theme-surface absolute inset-x-0 top-full z-50 grid bg-white transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(.22,1,.36,1)] md:hidden motion-reduce:transition-none ${
-          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        className={`theme-surface absolute inset-x-0 top-[calc(100%+8px)] z-50 grid overflow-hidden rounded-[var(--radius-card)] border border-shell-border bg-white shadow-[0_18px_40px_-20px_rgba(0,0,0,0.3)] transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(.22,1,.36,1)] md:hidden motion-reduce:transition-none ${
+          open ? "grid-rows-[1fr] opacity-100" : "pointer-events-none grid-rows-[0fr] opacity-0"
         }`}
       >
-        <div className="overflow-hidden border-b border-nav-border">
+        <div className="overflow-hidden">
           <ul className="flex flex-col px-[16px] py-[12px]">
             {site.nav.map((item, i) => (
               <li key={item.label}>
                 <Link
                   href={item.href}
+                  {...(opensFile(item.href) ? { target: "_blank", rel: "noopener noreferrer", prefetch: false } : {})}
                   aria-current={current(item.href) ? "page" : undefined}
                   tabIndex={open ? undefined : -1}
                   onClick={() => setOpen(false)}

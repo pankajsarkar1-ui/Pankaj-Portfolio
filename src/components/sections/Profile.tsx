@@ -505,21 +505,22 @@ export function Profile() {
   const showHint = phase === "idle" && !dragging;
 
   return (
-    /* The About page's one card: the site bar on top, the plug below it. The
-       flood stays under the bar, so the way out is always in reach. */
-    <section
-      id="top"
-      className="flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-shell-border bg-white"
-    >
+    /* One card at rest: the site bar on top, the plug below it. Once the bar
+       lifts off into the pill, the plug's card rounds its own top. The flood
+       stays inside the lower card, so the way out is always in reach. */
+    <section id="top" className="flex flex-col">
       <Nav />
       <h1 className="sr-only">About {profile.name}</h1>
 
-      <div ref={cardRef} className="relative grid grow overflow-hidden">
+      <div
+        ref={cardRef}
+        className="relative grid grow overflow-hidden rounded-b-[var(--radius-card)] rounded-t-[calc(var(--radius-card)*var(--dock,0))] border border-shell-border border-t-[color-mix(in_srgb,var(--color-shell-border)_calc(var(--dock,0)*100%),transparent)] bg-white"
+      >
         {/* the stage: plug, socket, and everything that sparks */}
         <div
           ref={stageRef}
           inert={phase === "connected"}
-          className="relative col-start-1 row-start-1 h-[clamp(520px,calc(100svh-104px),760px)] sm:h-[clamp(380px,calc(100svh-170px),640px)]"
+          className="relative col-start-1 row-start-1 h-[clamp(520px,calc(100svh-105px),760px)] sm:h-[clamp(380px,calc(100svh-171px),640px)]"
         >
           <p className="absolute top-[20px] right-[20px] flex items-center gap-[8px] text-[13px] font-medium text-ink-body sm:top-[28px] sm:right-[32px] sm:text-[14px]">
             <span

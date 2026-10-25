@@ -4,13 +4,14 @@ import Link from "next/link";
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { Logo } from "@/components/Logo";
 import { LottieMark } from "@/components/LottieMark";
-import { site } from "@/content/site";
+import { opensFile, site } from "@/content/site";
 
 /**
- * The compact nav that the hero's bar turns into. The moment the hero card's
- * top edge reaches the top of the viewport, this takes the bar's place pixel
- * for pixel (same width, height, corners and item positions), and the bar in
- * the card goes blank underneath. Over the next stretch of scroll it shrinks
+ * The compact nav that the hero's bar turns into. At rest the bar is the top
+ * of one card with the hero; the moment its top edge reaches the top of the
+ * viewport, this takes its place pixel for pixel (same width, height, corners
+ * and item positions), the bar steps out underneath and the hero card rounds
+ * its own top, so the two read as separate cards. Over the next scroll it shrinks
  * into the floating pill: the sides draw in, the corners round off, the links
  * close up, the logo and cup scale down and the dividers and shadow come in.
  * Scroll back and it unwinds the same way, handing back to the bar at the top.
@@ -23,13 +24,13 @@ import { site } from "@/content/site";
 
 const ease = (t: number) => t * t * (3 - 2 * t);
 
-/** The hero's bar, which carries `data-hero-nav`; its parent is the card. */
+/** The hero's bar, a card of its own, which carries `data-hero-nav`. */
 const heroBar = () => document.querySelector<HTMLElement>("[data-hero-nav]");
 
-/** Docked once the card's top edge has reached the top of the viewport. */
+/** Docked once the bar's top edge has reached the top of the viewport. */
 const readDocked = () => {
-  const card = heroBar()?.parentElement;
-  return card ? card.getBoundingClientRect().top < 0 : true;
+  const bar = heroBar();
+  return bar ? bar.getBoundingClientRect().top < 0 : true;
 };
 const dockedOnServer = () => false;
 
@@ -59,10 +60,11 @@ export function PillNav() {
     const pill = pillRef.current;
     if (!wrap || !pill) return;
     const bar = heroBar();
-    const card = bar?.parentElement ?? null;
+    /** The pill grows out of exactly the bar's box. */
+    const card = bar;
 
     /** Where it starts (the hero bar) and ends (the pill). */
-    const m = { w0: 0, h0: 0, pl0: PAD_L, pr0: PAD_R, r0: 0, x0: 0, w1: 0, h1: 0, top1: 18, run: 120 };
+    const m = { w0: 0, h0: 0, pl0: PAD_L, pr0: PAD_R, r0: 0, rb0: 0, x0: 0, w1: 0, h1: 0, top1: 18, run: 120 };
 
     const measure = () => {
       // the compact size: let it lay itself out at p = 1
@@ -79,7 +81,7 @@ export function PillNav() {
       m.top1 = window.innerWidth >= 640 ? 18 : 12;
       if (!bar || !card) return;
 
-      // the full size: the card's outer box, with the bar's content edges
+      // the full size: the bar card's outer box and its content edges
       const c = card.getBoundingClientRect();
       const row = bar.firstElementChild as HTMLElement;
       const r = row.getBoundingClientRect();
@@ -88,10 +90,11 @@ export function PillNav() {
       const edge = parseFloat(cs.borderTopWidth) || 0;
       const w = wrap.getBoundingClientRect();
       m.w0 = c.width;
-      m.h0 = bar.offsetHeight + edge;
+      m.h0 = bar.offsetHeight;
       m.pl0 = r.left + parseFloat(rs.paddingLeft) - c.left - edge;
       m.pr0 = c.right - (r.right - parseFloat(rs.paddingRight)) - edge;
       m.r0 = parseFloat(cs.borderTopLeftRadius) || 0;
+      m.rb0 = parseFloat(cs.borderBottomLeftRadius) || 0;
       m.x0 = c.left + c.width / 2 - (w.left + w.width / 2);
       // the morph runs over about twice the bar's own height
       m.run = bar.offsetHeight * 2;
@@ -119,13 +122,17 @@ export function PillNav() {
       // the pill holds the stage until it has fully unwound onto the bar
       const docked = top < 0 || p > 0;
       if (bar) bar.dataset.docked = String(docked);
+      // the hero card below rounds its top in step with the morph, so the two
+      // square off together on the way back up (read as --dock in its classes)
+      bar?.parentElement?.style.setProperty("--dock", p.toFixed(4));
       wrap.style.visibility = docked ? "visible" : "hidden";
 
       const q = 1 - p;
       wrap.style.setProperty("--p", p.toFixed(4));
+      // the bar's corners (rounded top, square bottom) round off into a pill
       const end = m.h1 / 2;
       const rt = m.r0 * q + end * p;
-      const rb = end * p;
+      const rb = m.rb0 * q + end * p;
       Object.assign(pill.style, {
         width: `${m.w0 * q + m.w1 * p}px`,
         height: `${m.h0 * q + m.h1 * p}px`,
@@ -157,6 +164,7 @@ export function PillNav() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       if (bar) delete bar.dataset.docked;
+      bar?.parentElement?.style.removeProperty("--dock");
     };
   }, []);
 
@@ -194,6 +202,7 @@ export function PillNav() {
             <li key={item.label}>
               <Link
                 href={item.href}
+                {...(opensFile(item.href) ? { target: "_blank", rel: "noopener noreferrer", prefetch: false } : {})}
                 tabIndex={shown ? undefined : -1}
                 className="block rounded-full px-[14px] py-[7px] text-[14px] font-medium text-ink-nav transition-colors hover:bg-[#f0f0f0] hover:text-ink sm:px-[18px] sm:text-[15px]"
               >

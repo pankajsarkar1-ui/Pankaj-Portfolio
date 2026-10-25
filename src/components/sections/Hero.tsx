@@ -31,9 +31,12 @@ export function Hero() {
           "--fold-peek": "calc(0.0437 * min(1150px, 100vw - 40px))",
         } as CSSProperties
       }
-      className="flex flex-col overflow-hidden theme-surface rounded-[var(--radius-card)] border border-shell-border bg-white lg:min-h-[min(calc(100svh-115px-var(--fold-peek)),750px)]"
+      className="flex flex-col lg:min-h-[min(calc(100svh-115px-var(--fold-peek)),750px)]"
     >
       <Nav />
+
+      {/* joined to the bar above at rest; its own card once the bar lifts off */}
+      <div className="theme-surface flex flex-col overflow-hidden rounded-b-[var(--radius-card)] rounded-t-[calc(var(--radius-card)*var(--dock,0))] border border-shell-border border-t-[color-mix(in_srgb,var(--color-shell-border)_calc(var(--dock,0)*100%),transparent)] bg-white lg:grow">
 
       {/* Copy left, card deck right. 6.4% matches the 64px gutter the Figma
           frame carries at its 1002px width. */}
@@ -99,6 +102,7 @@ export function Hero() {
           onActiveChange={setActive}
           className="mx-auto w-full max-w-[340px] sm:max-w-[480px] lg:mx-0 lg:ml-auto lg:max-w-[640px] lg:flex-1"
         />
+      </div>
       </div>
     </section>
   );

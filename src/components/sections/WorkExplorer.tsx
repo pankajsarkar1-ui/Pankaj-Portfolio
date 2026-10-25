@@ -57,13 +57,10 @@ export function WorkExplorer() {
 
   return (
     <>
-      <section
-        id="top"
-        className="flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-shell-border bg-white"
-      >
+      <section id="top" className="flex flex-col">
         <Nav />
         {/* sized like the homepage hero's headline, so the pages read as one set */}
-        <div className="flex flex-col gap-[14px] px-[16px] py-[37px] sm:flex-row sm:items-end sm:justify-between sm:gap-[40px] sm:px-[32px] sm:py-[48px] lg:px-[6.4%]">
+        <div className="flex flex-col gap-[14px] rounded-b-[var(--radius-card)] rounded-t-[calc(var(--radius-card)*var(--dock,0))] border border-shell-border border-t-[color-mix(in_srgb,var(--color-shell-border)_calc(var(--dock,0)*100%),transparent)] bg-white px-[16px] py-[37px] sm:flex-row sm:items-end sm:justify-between sm:gap-[40px] sm:px-[32px] sm:py-[48px] lg:px-[6.4%]">
           <h1 className="font-display max-w-[22ch] text-[28px] leading-[36px] font-bold tracking-[-1px] text-balance text-ink sm:text-[48px] sm:leading-[1.12] sm:tracking-[-0.0426em]">
             {work.headline}
           </h1>
